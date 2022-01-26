@@ -41,12 +41,12 @@ extension Grammar
         {
             "parsing error"
         }
-        let problem:Swift.Error, 
+        let problem:Error, 
             source:Source, 
             index:Source.Index,
             trace:[(index:Source.Index, rule:Rule, type:Any.Type)]
         
-        init(at index:Source.Index, in source:Source, because problem:Swift.Error, 
+        init(at index:Source.Index, in source:Source, because problem:Error, 
             trace:[(index:Source.Index, rule:Rule, type:Any.Type)])
         {
             self.problem    = problem
@@ -736,7 +736,7 @@ protocol _GrammarPower
 }
 extension Grammar 
 {
-    struct EndOfStream<Terminal>:Swift.Error, Grammar.Parsable 
+    struct EndOfStream<Terminal>:Error, Grammar.Parsable 
     {
         init<C>(parsing input:inout Grammar.Input<C>) throws where C:Collection, C.Element == Terminal
         {
