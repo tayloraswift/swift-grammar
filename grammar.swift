@@ -55,22 +55,22 @@ extension Grammar
             self.trace      = trace
         }
 
-        @TraceableErrorBuilder
         var context:[String] 
         {
-            for (_, rule, type):(Source.Index, Rule, Any.Type) in trace.reversed() 
+            [ "while parsing input sequence '\(self.source)'" ]
+            +
+            trace.map 
             {
-                switch (rule, type) 
+                switch ($0.rule, $0.type) 
                 {
                 case (.literal(file: let file, line: let line), _):
-                    "while parsing productionless rule (literal sequence at \(file):\(line))"
+                    return "while parsing productionless rule (literal sequence at \(file):\(line))"
                 case (.parser(let parser), is Void.Type):
-                    "while parsing productionless rule '\(parser)'"
+                    return "while parsing productionless rule '\(parser)'"
                 case (.parser(let parser), let type):
-                    "while parsing value of type '\(type)' by rule '\(parser)'"
+                    return "while parsing value of type '\(type)' by rule '\(parser)'"
                 }
             }
-            "while parsing input sequence '\(self.source)'"
         } 
         var next:Error? 
         {

@@ -1,14 +1,3 @@
-@resultBuilder
-enum TraceableErrorBuilder:ArrayBuilder 
-{
-    typealias Element = String
-    
-    static 
-    func buildFinalResult(_ notes:[String]) -> [String]
-    {
-        notes.reversed()
-    }
-}
 protocol TraceableError:Error, CustomStringConvertible 
 {
     static 
@@ -85,51 +74,6 @@ extension TraceableError
         else 
         {
             "\("\(header)", colored: .red, bolded: true)"
-        }
-    }
-}
-
-extension Ephemera 
-{
-    struct Error:TraceableError 
-    {
-        static 
-        var namespace:String
-        {
-            "error"
-        }
-        
-        var context:[String] 
-        var next:Swift.Error?
-        
-        init(_ message:String, @TraceableErrorBuilder notes:() -> [String] = { [] })
-        {
-            self.next       = nil
-            self.context    = notes()
-            self.context.append(message)
-        }
-        
-        init(_ error:Swift.Error, @TraceableErrorBuilder notes:() -> [String]) 
-        {
-            self.next       = error 
-            self.context    = notes()
-        }
-
-        static 
-        func unsupported(_ what:String) -> Self 
-        {
-            .init("unsupported \(what)")
-        }
-        static 
-        func invalid<T>(case string:String, of enumeration:T.Type, expected:String...) -> Self 
-        {
-            .init("case literal '\(string)' is not a valid instance of '\(enumeration)'")
-            {
-                if !expected.isEmpty 
-                {
-                    "expected one of \(expected)"
-                }
-            }
         }
     }
 }
