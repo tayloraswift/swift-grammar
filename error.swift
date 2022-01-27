@@ -59,21 +59,31 @@ extension TraceableError
         return (namespace, messages) 
     }
     
-    @StringBuilder
     var description:String 
     {
-        let (header, messages):(String, [String])   = self.components 
-        if let root:String                          = messages.last 
+        func bold(_ string:String) -> String
         {
-            "\("\(header):", colored: .red) \(root)".bolded
+            "\u{1B}[1m\(string)\u{1B}[0m"
+        }
+        func color(_ string:String) -> String 
+        {
+            let color:(r:UInt8, g:UInt8, b:UInt8) = (r: 255, g:  51, b:  51)
+            return "\u{1B}[38;2;\(color.r);\(color.g);\(color.b)m\(string)\u{1B}[39m"
+        }
+        
+        let (header, messages):(String, [String])   = self.components 
+        if let root:String          = messages.last 
+        {
+            var description:String  = bold("\(color("\(header):")) \(root)")
             for note:String in messages.dropLast().reversed()
             {
-                "\("note:".bolded) \(note)"
+                description        += "\(bold("note:")) \(note)"
             }
+            return description
         }
         else 
         {
-            "\("\(header)", colored: .red, bolded: true)"
+            return bold(color(header))
         }
     }
 }
