@@ -264,6 +264,12 @@ extension Character
     }
     enum HexDigit 
     {
+        private static 
+        subscript(lowercasing value:Int) -> Character 
+        {
+            let remainder:UInt8 = .init(value)
+            return Character.init(Unicode.Scalar.init((remainder < 10 ? 0x30 : 0x57) &+ remainder))
+        }
         struct Lowercase:Grammar.TerminalClass
         {
             typealias Terminal      = Character
@@ -285,7 +291,7 @@ extension Character
             }
             var terminal:Character 
             {
-                Base16[UInt8.init(self.production)]
+                HexDigit[lowercasing: self.production]
             }
         }
         struct Anycase:Grammar.TerminalClass
@@ -308,7 +314,7 @@ extension Character
             }
             var terminal:Character 
             {
-                Base16[UInt8.init(self.production)]
+                HexDigit[lowercasing: self.production]
             }
         }
     }
