@@ -74,10 +74,10 @@ extension TraceableError
         let (header, messages):(String, [String])   = self.components 
         if let root:String          = messages.last 
         {
-            var description:String  = bold("\(color("\(header):")) \(root)")
+            var description:String  = "\(bold("\(color("\(header):")) \(root)"))\n"
             for note:String in messages.dropLast().reversed()
             {
-                description        += "\(bold("note:")) \(note)"
+                description        += "\(bold("note:")) \(note)\n"
             }
             return description
         }
