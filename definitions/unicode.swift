@@ -1,85 +1,71 @@
 extension Character 
 {
-    struct Letter:Grammar.TerminalClass 
+    enum Letter<Location>:Grammar.TerminalClass 
     {
-        typealias Terminal = Character 
-        
-        let production:Character 
-        
-        init?(terminal character:Character)
+        typealias Terminal      = Character 
+        typealias Construction  = Character 
+        static 
+        func parse(terminal character:Character) -> Character?
         {
-            guard character.isLetter
-            else 
-            {
-                return nil 
-            }
-            self.production = character
+            character.isLetter ? character : nil
         }
     }
     
     enum E 
     {
-        struct Anycase:Grammar.TerminalClass 
+        enum Anycase<Location>:Grammar.TerminalClass 
         {
-            typealias Terminal = Character
-            init?(terminal character:Character)
+            typealias Terminal      = Character 
+            typealias Construction  = Void
+            static 
+            func parse(terminal character:Character) -> Void?
             {
                 switch character 
                 {
-                case "e", "E":
-                    return 
-                default:
-                    return nil
+                case "e", "E":  return ()
+                default:        return nil
                 }
-            }
-            var terminal:Character
-            {
-                "e"
-            }
-            var production:Void 
-            {
-                ()
             }
         }
     }
     
-    struct AngleLeft:Grammar.TerminalSequence
+    enum AngleLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("<")
+        var literal:CollectionOfOne<Character> { .init("<") }
     }
-    struct AngleRight:Grammar.TerminalSequence
+    enum AngleRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init(">")
+        var literal:CollectionOfOne<Character> { .init(">") }
     }
     
-    struct Backslash:Grammar.TerminalSequence
+    enum Backslash<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("\\")
+        var literal:CollectionOfOne<Character> { .init("\\") }
     }
-    struct BracketLeft:Grammar.TerminalSequence
+    enum BracketLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("[")
+        var literal:CollectionOfOne<Character> { .init("[") }
     }
-    struct BracketRight:Grammar.TerminalSequence
+    enum BracketRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("]")
+        var literal:CollectionOfOne<Character> { .init("]") }
     }
-    struct Bracketed<Expression>:Grammar.BracketedExpression 
+    /* struct Bracketed<Expression>:Grammar.BracketedExpression 
         where Expression:Grammar.Parsable, Expression.Terminal == Character
     {
         typealias Terminal  = Character
@@ -87,30 +73,30 @@ extension Character
         typealias End       = BracketRight
         
         let production:Expression.Production
-    }
+    } */
     
-    struct And:Grammar.TerminalSequence
+    enum And<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("&")
+        var literal:CollectionOfOne<Character> { .init("&") }
     }
-    struct BraceLeft:Grammar.TerminalSequence
+    enum BraceLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("{")
+        var literal:CollectionOfOne<Character> { .init("{") }
     }
-    struct BraceRight:Grammar.TerminalSequence
+    enum BraceRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("}")
+        var literal:CollectionOfOne<Character> { .init("}") }
     }
-    struct Braced<Expression>:Grammar.BracketedExpression 
+    /* struct Braced<Expression>:Grammar.BracketedExpression 
         where Expression:Grammar.Parsable, Expression.Terminal == Character
     {
         typealias Terminal  = Character
@@ -118,45 +104,45 @@ extension Character
         typealias End       = BraceRight
         
         let production:Expression.Production
+    } */
+    
+    enum Colon<Location>:Grammar.TerminalSequence
+    {
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
+        static 
+        var literal:CollectionOfOne<Character> { .init(":") }
+    }
+    enum Comma<Location>:Grammar.TerminalSequence
+    {
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
+        static 
+        var literal:CollectionOfOne<Character> { .init(",") }
+    }
+    enum Minus<Location>:Grammar.TerminalSequence
+    {
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
+        static 
+        var literal:CollectionOfOne<Character> { .init("-") }
     }
     
-    struct Colon:Grammar.TerminalSequence
+    enum ParenthesisLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init(":")
+        var literal:CollectionOfOne<Character> { .init("(") }
     }
-    struct Comma:Grammar.TerminalSequence
+    enum ParenthesisRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init(",")
+        var literal:CollectionOfOne<Character> { .init(")") }
     }
-    struct Minus:Grammar.TerminalSequence
-    {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
-        static 
-        let terminals:CollectionOfOne<Character> = .init("-")
-    }
-    
-    struct ParenthesisLeft:Grammar.TerminalSequence
-    {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
-        static 
-        let terminals:CollectionOfOne<Character> = .init("(")
-    }
-    struct ParenthesisRight:Grammar.TerminalSequence
-    {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
-        static 
-        let terminals:CollectionOfOne<Character> = .init(")")
-    }
-    struct Parenthesized<Expression>:Grammar.BracketedExpression 
+    /* struct Parenthesized<Expression>:Grammar.BracketedExpression 
         where Expression:Grammar.Parsable, Expression.Terminal == Character
     {
         typealias Terminal  = Character
@@ -164,157 +150,140 @@ extension Character
         typealias End       = ParenthesisRight
         
         let production:Expression.Production
-    }
+    } */
     
-    struct Percent:Grammar.TerminalSequence
+    enum Percent<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("%")
+        var literal:CollectionOfOne<Character> { .init("%") }
     }
-    struct Period:Grammar.TerminalSequence
+    enum Period<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init(".")
+        var literal:CollectionOfOne<Character> { .init(".") }
     }
-    struct Plus:Grammar.TerminalSequence
+    enum Plus<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("+")
+        var literal:CollectionOfOne<Character> { .init("+") }
     }
-    struct Quote:Grammar.TerminalSequence
+    enum Quote<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("\"")
+        var literal:CollectionOfOne<Character> { .init("\"") }
     }
-    struct Slash:Grammar.TerminalSequence
+    enum Slash<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("/")
+        var literal:CollectionOfOne<Character> { .init("/") }
     }
-    struct Zero:Grammar.TerminalSequence
+    enum Zero<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal  =                 Character
-        typealias Terminals = CollectionOfOne<Character> 
+        typealias Terminal =                 Character
+        typealias Literal  = CollectionOfOne<Character> 
         static 
-        let terminals:CollectionOfOne<Character> = .init("0")
+        var literal:CollectionOfOne<Character> { .init("0") }
     }
     
     typealias Hyphen = Minus
     
-    struct Whitespace:Grammar.TerminalClass 
+    enum U
     {
-        typealias Terminal      = Character
-        typealias Production    = Void
-        
-        var production:Void 
+        enum Lowercase<Location>:Grammar.TerminalSequence 
         {
-            ()
-        }
-        init?(terminal character:Character)
-        {
-            guard character.isWhitespace 
-            else 
-            {
-                return nil
-            }
-        }
-        var terminal:Character 
-        {
-            " "
+            typealias Terminal =                 Character
+            typealias Literal  = CollectionOfOne<Character> 
+            static 
+            var literal:CollectionOfOne<Character> { .init("u") }
         }
     }
-    struct Digit:Grammar.TerminalClass
+    
+    
+    enum Whitespace<Location>:Grammar.TerminalClass 
     {
-        typealias Terminal      = Character
-        typealias Production    = Int 
-        
-        let production:Int 
-        
-        init?(terminal character:Character)
+        typealias Terminal      = Character 
+        typealias Construction  = Void
+        static 
+        func parse(terminal character:Character) -> Void?
+        {
+            character.isWhitespace ? () : nil
+        }
+    }
+    enum DecimalDigit<Location, Construction>:Grammar.Digit 
+        where Construction:BinaryInteger
+    {
+        typealias Terminal = Character 
+        static 
+        var radix:Construction 
+        {
+            10
+        }
+        static 
+        func parse(terminal character:Character) -> Construction?
         {
             switch character 
             {
-            case "0":   self.production = 0
-            case "1":   self.production = 1
-            case "2":   self.production = 2
-            case "3":   self.production = 3
-            case "4":   self.production = 4
-            case "5":   self.production = 5
-            case "6":   self.production = 6
-            case "7":   self.production = 7
-            case "8":   self.production = 8
-            case "9":   self.production = 9
+            case "0":   return 0
+            case "1":   return 1
+            case "2":   return 2
+            case "3":   return 3
+            case "4":   return 4
+            case "5":   return 5
+            case "6":   return 6
+            case "7":   return 7
+            case "8":   return 8
+            case "9":   return 9
             default:    return nil
             }
-        }
-        var terminal:Character 
-        {
-            Character.init(Unicode.Scalar.init(0x30 + UInt8.init(self.production)))
         }
     }
     enum HexDigit 
     {
-        private static 
+        /* private static 
         subscript(lowercasing value:Int) -> Character 
         {
             let remainder:UInt8 = .init(value)
             return Character.init(Unicode.Scalar.init((remainder < 10 ? 0x30 : 0x57) &+ remainder))
-        }
-        struct Lowercase:Grammar.TerminalClass
+        } */
+        enum Lowercase<Location, Construction>:Grammar.Digit
+            where Construction:BinaryInteger
         {
-            typealias Terminal      = Character
-            typealias Production    = Int 
-            
-            let production:Int 
-            
-            init?(terminal character:Character)
+            typealias Terminal = Character
+            static 
+            var radix:Construction 
+            {
+                16
+            }
+            static 
+            func parse(terminal character:Character) -> Construction?
             {
                 // 0-9 will return false for isLowercase
-                if let value:Int    = character.hexDigitValue, !character.isUppercase
-                {
-                    self.production = value 
-                }
-                else 
-                {
-                    return nil
-                }
-            }
-            var terminal:Character 
-            {
-                HexDigit[lowercasing: self.production]
+                character.isUppercase ? nil : character.hexDigitValue.map(Construction.init(_:))
             }
         }
-        struct Anycase:Grammar.TerminalClass
+        enum Anycase<Location, Construction>:Grammar.Digit
+            where Construction:BinaryInteger
         {
-            typealias Terminal      = Character
-            typealias Production    = Int 
-            
-            let production:Int 
-            
-            init?(terminal character:Character)
+            typealias Terminal = Character
+            static 
+            var radix:Construction 
             {
-                if let value:Int    = character.hexDigitValue 
-                {
-                    self.production = value 
-                }
-                else 
-                {
-                    return nil
-                }
+                16
             }
-            var terminal:Character 
+            static 
+            func parse(terminal character:Character) -> Construction?
             {
-                HexDigit[lowercasing: self.production]
+                character.hexDigitValue.map(Construction.init(_:))
             }
         }
     }

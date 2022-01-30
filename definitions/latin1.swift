@@ -6,33 +6,19 @@ extension Unicode
 }
 extension Unicode.Latin1 
 {
-    struct Printable:Grammar.TerminalClass
+    struct Printable<Location>:Grammar.TerminalClass
     {
-        typealias Terminal = UInt8 
-        
-        let terminal:UInt8 
-        
-        init?(terminal codepoint:UInt8)
+        typealias Terminal      = UInt8 
+        typealias Construction  = UInt8 
+        static 
+        func parse(terminal codepoint:UInt8) -> UInt8?
         {
             guard 0x20 ... 0x7e ~= codepoint || 0xa0 <= codepoint
             else 
             {
                 return nil 
             }
-            self.terminal = codepoint
-        }
-        
-        var scalar:Unicode.Scalar 
-        {
-            .init(self.terminal)
-        }
-        var character:Character 
-        {
-            .init(self.scalar)
-        }
-        var production:Character 
-        {
-            self.character
+            return codepoint
         }
     }
 }
