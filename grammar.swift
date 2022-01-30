@@ -344,7 +344,7 @@ extension Array:ParsingRule where Element:ParsingRule
     }
 }
 
-extension Grammar 
+enum Grammar 
 {
     struct Expected<T, Terminal>:Error, CustomStringConvertible 
     {
@@ -408,7 +408,11 @@ extension Grammar
         return construction
     }
 }
-
+extension Grammar 
+{
+    typealias TerminalClass     = _GrammarTerminalClass
+    typealias TerminalSequence  = _GrammarTerminalSequence
+}
 protocol _GrammarTerminalClass:ParsingRule
 {
     static 
@@ -502,13 +506,7 @@ extension Grammar.TerminalSequence
 
 
 // extras //
-enum Grammar 
-{
-    typealias TerminalClass     = _GrammarTerminalClass
-    typealias TerminalSequence  = _GrammarTerminalSequence
-    
 
-}
 
 
 

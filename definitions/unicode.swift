@@ -31,37 +31,32 @@ extension Character
     
     enum AngleLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character
         static 
         var literal:CollectionOfOne<Character> { .init("<") }
     }
     enum AngleRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init(">") }
     }
     
     enum Backslash<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("\\") }
     }
     enum BracketLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("[") }
     }
     enum BracketRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("]") }
     }
@@ -77,22 +72,19 @@ extension Character
     
     enum And<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("&") }
     }
     enum BraceLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("{") }
     }
     enum BraceRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("}") }
     }
@@ -108,37 +100,32 @@ extension Character
     
     enum Colon<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init(":") }
     }
     enum Comma<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init(",") }
     }
     enum Minus<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("-") }
     }
     
     enum ParenthesisLeft<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("(") }
     }
     enum ParenthesisRight<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init(")") }
     }
@@ -154,43 +141,37 @@ extension Character
     
     enum Percent<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("%") }
     }
     enum Period<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init(".") }
     }
     enum Plus<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("+") }
     }
     enum Quote<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("\"") }
     }
     enum Slash<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("/") }
     }
     enum Zero<Location>:Grammar.TerminalSequence
     {
-        typealias Terminal =                 Character
-        typealias Literal  = CollectionOfOne<Character> 
+        typealias Terminal = Character 
         static 
         var literal:CollectionOfOne<Character> { .init("0") }
     }
@@ -201,8 +182,7 @@ extension Character
     {
         enum Lowercase<Location>:Grammar.TerminalSequence 
         {
-            typealias Terminal =                 Character
-            typealias Literal  = CollectionOfOne<Character> 
+            typealias Terminal = Character 
             static 
             var literal:CollectionOfOne<Character> { .init("u") }
         }
