@@ -317,7 +317,7 @@ extension ParsingInput
     }
 }
 // these extensions are mainly useful when defined as part of a tuple rule.
-// otherwise, the overloads in the last section of code should be preferred
+// otherwise, the overloads in the previous section of code should be preferred
 extension Optional:ParsingRule where Wrapped:ParsingRule 
 {
     typealias Location  = Wrapped.Location
@@ -442,7 +442,6 @@ protocol _GrammarTerminalSequence:ParsingRule
     where Terminal:Equatable, Construction == Void 
 {
     associatedtype Literal where Literal:Sequence, Literal.Element == Terminal 
-    
     static 
     var literal:Literal
     {
@@ -470,6 +469,84 @@ extension Grammar.TerminalSequence
         }
     }
 }
+
+protocol _GrammarDigitRule:Grammar.TerminalClass where Construction:BinaryInteger
+{
+    static 
+    var radix:Construction 
+    {
+        get 
+    }
+}
+extension Grammar 
+{
+    typealias DigitRule = _GrammarDigitRule
+    
+    struct IntegerOverflowError<T>:Error, CustomStringConvertible 
+    {
+        var description:String 
+        {
+            "parsed value overflows interger type '\(T.self)'"
+        }
+    }
+    
+    enum UnsignedIntegerLiteral<Rule>:ParsingRule
+        where Rule:DigitRule, Rule.Construction:FixedWidthInteger
+    {
+        typealias Location = Rule.Location
+        typealias Terminal = Rule.Terminal
+        
+        static 
+        func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Rule.Construction
+            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        {
+            var value:Rule.Construction            = try input.parse(as: Rule.self)
+            while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
+            {
+                guard   case (let shifted, false) = value.multipliedReportingOverflow(by: Rule.radix), 
+                        case (let refined, false) = shifted.addingReportingOverflow(remainder)
+                else 
+                {
+                    throw IntegerOverflowError<Rule.Construction>.init()
+                }
+                value = refined
+            }
+            return value
+        }
+    }
+}
+
+extension Grammar 
+{
+    enum Encoding<Location, Terminal> 
+    {
+    }
+    enum Digit<Location, Terminal, Construction> where Construction:BinaryInteger 
+    {
+    }
+}
+extension Grammar 
+{
+    enum Pad<Rule, Padding>:ParsingRule
+        where   Rule:ParsingRule, Padding:ParsingRule, 
+                Rule.Location == Padding.Location,
+                Rule.Terminal == Padding.Terminal, 
+                Padding.Construction == Void
+    {
+        typealias Terminal = Rule.Terminal
+        typealias Location = Rule.Location
+        static 
+        func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Rule.Construction
+            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        {
+            input.parse(as: Padding.self, in: Void.self)
+            let construction:Rule.Construction = try input.parse(as: Rule.self) 
+            input.parse(as: Padding.self, in: Void.self)
+            return construction
+        }
+    }
+}
+
 /* extension ParsingInput where Source.Element:Equatable 
 {
     mutating 
@@ -572,7 +649,7 @@ extension Grammar
         }
     }
 }
-protocol _GrammarPower:ParsingRule
+/* protocol _GrammarPower:ParsingRule
     where Construction:RangeReplaceableCollection
 {
     associatedtype Rule 
@@ -686,7 +763,7 @@ extension Grammar
             16
         }
     }
-}
+} */
 
 /* extension Grammar 
 {
@@ -795,48 +872,3 @@ extension Grammar.BigEndian:CustomStringConvertible
         return string 
     }
 } */
-protocol _GrammarDigit:Grammar.TerminalClass where Construction:BinaryInteger
-{
-    static 
-    var radix:Construction 
-    {
-        get 
-    }
-}
-extension Grammar 
-{
-    typealias Digit = _GrammarDigit
-    
-    struct IntegerOverflowError<T>:Error, CustomStringConvertible 
-    {
-        var description:String 
-        {
-            "parsed value overflows interger type '\(T.self)'"
-        }
-    }
-    
-    enum UnsignedIntegerLiteral<Rule>:ParsingRule
-        where Rule:Digit, Rule.Construction:FixedWidthInteger
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal
-        
-        static 
-        func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Rule.Construction
-            where Source:Collection, Source.Index == Location, Source.Element == Terminal
-        {
-            var value:Rule.Construction            = try input.parse(as: Rule.self)
-            while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
-            {
-                guard   case (let shifted, false) = value.multipliedReportingOverflow(by: Rule.radix), 
-                        case (let refined, false) = shifted.addingReportingOverflow(remainder)
-                else 
-                {
-                    throw IntegerOverflowError<Rule.Construction>.init()
-                }
-                value = refined
-            }
-            return value
-        }
-    }
-}

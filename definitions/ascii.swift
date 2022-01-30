@@ -1,116 +1,111 @@
-extension Unicode.ASCII 
+extension Grammar.Encoding where Terminal == UInt8 
 {
-    enum StartOfHeader<Location>:Grammar.TerminalSequence
+    enum ASCII 
     {
-        typealias Terminal = UInt8
+    }
+}
+extension Grammar.Encoding.ASCII 
+{
+    enum StartOfHeader:Grammar.TerminalSequence
+    {
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x01) }
     }
     
-    enum Colon<Location>:Grammar.TerminalSequence
+    enum Colon:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x3a) }
     }
-    enum Equals<Location>:Grammar.TerminalSequence
+    enum Equals:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x3d) }
     }
-    enum Minus<Location>:Grammar.TerminalSequence
+    enum Minus:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x2d) }
     }
-    enum Period<Location>:Grammar.TerminalSequence
+    enum Period:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x2e) }
     }
-    enum Quote<Location>:Grammar.TerminalSequence
+    enum Quote:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x22) }
     }
-    enum Space<Location>:Grammar.TerminalSequence
+    enum Space:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x20) }
     }
     
-    enum Zero<Location>:Grammar.TerminalSequence
+    enum Zero:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x30) }
     }
-    enum One<Location>:Grammar.TerminalSequence
+    enum One:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x31) }
     }
-    enum Two<Location>:Grammar.TerminalSequence
+    enum Two:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x32) }
     }
-    enum Three<Location>:Grammar.TerminalSequence
+    enum Three:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x33) }
     }
-    enum Four<Location>:Grammar.TerminalSequence
+    enum Four:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x34) }
     }
-    enum Five<Location>:Grammar.TerminalSequence
+    enum Five:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x35) }
     }
-    enum Six<Location>:Grammar.TerminalSequence
+    enum Six:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x36) }
     }
-    enum Seven<Location>:Grammar.TerminalSequence
+    enum Seven:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x37) }
     }
-    enum Eight<Location>:Grammar.TerminalSequence
+    enum Eight:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x38) }
     }
-    enum Nine<Location>:Grammar.TerminalSequence
+    enum Nine:Grammar.TerminalSequence
     {
-        typealias Terminal = UInt8
         static 
         var literal:CollectionOfOne<UInt8> { .init(0x39) }
     }
     
     typealias Hyphen = Minus
-    
-    enum DecimalDigit<Location, Construction>:Grammar.Digit 
-        where Construction:BinaryInteger
+}
+extension Grammar.Digit where Terminal == UInt8 
+{
+    enum ASCII
     {
-        typealias Terminal = UInt8
+    }
+}
+extension Grammar.Digit.ASCII
+{
+    enum Decimal:Grammar.DigitRule 
+    {
         static 
         var radix:Construction 
         {
@@ -127,4 +122,4 @@ extension Unicode.ASCII
             return .init(codepoint - 0x30)
         }
     }
-}
+} 

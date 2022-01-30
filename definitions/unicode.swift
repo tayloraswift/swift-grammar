@@ -1,26 +1,24 @@
-extension Character 
+extension Grammar.Encoding where Terminal == Unicode.Scalar
 {
-    enum Letter<Location>:Grammar.TerminalClass 
+    /* enum Letter:Grammar.TerminalClass 
     {
-        typealias Terminal      = Character 
-        typealias Construction  = Character 
+        typealias Construction  = Unicode.Scalar 
         static 
-        func parse(terminal character:Character) -> Character?
+        func parse(terminal:Unicode.Scalar) -> Unicode.Scalar?
         {
-            character.isLetter ? character : nil
+            terminal.properties.isLetter ? terminal : nil
         }
-    }
+    } */
     
     enum E 
     {
-        enum Anycase<Location>:Grammar.TerminalClass 
+        enum Anycase:Grammar.TerminalClass 
         {
-            typealias Terminal      = Character 
             typealias Construction  = Void
             static 
-            func parse(terminal character:Character) -> Void?
+            func parse(terminal:Unicode.Scalar) -> Void?
             {
-                switch character 
+                switch terminal 
                 {
                 case "e", "E":  return ()
                 default:        return nil
@@ -29,189 +27,141 @@ extension Character
         }
     }
     
-    enum AngleLeft<Location>:Grammar.TerminalSequence
+    enum AngleLeft:Grammar.TerminalSequence
     {
-        typealias Terminal = Character
         static 
-        var literal:CollectionOfOne<Character> { .init("<") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("<") }
     }
-    enum AngleRight<Location>:Grammar.TerminalSequence
+    enum AngleRight:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init(">") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init(">") }
     }
     
-    enum Backslash<Location>:Grammar.TerminalSequence
+    enum Backslash:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("\\") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("\\") }
     }
-    enum BracketLeft<Location>:Grammar.TerminalSequence
+    enum BracketLeft:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("[") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("[") }
     }
-    enum BracketRight<Location>:Grammar.TerminalSequence
+    enum BracketRight:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("]") }
-    }
-    /* struct Bracketed<Expression>:Grammar.BracketedExpression 
-        where Expression:Grammar.Parsable, Expression.Terminal == Character
-    {
-        typealias Terminal  = Character
-        typealias Start     = BracketLeft  
-        typealias End       = BracketRight
-        
-        let production:Expression.Production
-    } */
-    
-    enum And<Location>:Grammar.TerminalSequence
-    {
-        typealias Terminal = Character 
-        static 
-        var literal:CollectionOfOne<Character> { .init("&") }
-    }
-    enum BraceLeft<Location>:Grammar.TerminalSequence
-    {
-        typealias Terminal = Character 
-        static 
-        var literal:CollectionOfOne<Character> { .init("{") }
-    }
-    enum BraceRight<Location>:Grammar.TerminalSequence
-    {
-        typealias Terminal = Character 
-        static 
-        var literal:CollectionOfOne<Character> { .init("}") }
-    }
-    /* struct Braced<Expression>:Grammar.BracketedExpression 
-        where Expression:Grammar.Parsable, Expression.Terminal == Character
-    {
-        typealias Terminal  = Character
-        typealias Start     = BraceLeft  
-        typealias End       = BraceRight
-        
-        let production:Expression.Production
-    } */
-    
-    enum Colon<Location>:Grammar.TerminalSequence
-    {
-        typealias Terminal = Character 
-        static 
-        var literal:CollectionOfOne<Character> { .init(":") }
-    }
-    enum Comma<Location>:Grammar.TerminalSequence
-    {
-        typealias Terminal = Character 
-        static 
-        var literal:CollectionOfOne<Character> { .init(",") }
-    }
-    enum Minus<Location>:Grammar.TerminalSequence
-    {
-        typealias Terminal = Character 
-        static 
-        var literal:CollectionOfOne<Character> { .init("-") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("]") }
     }
     
-    enum ParenthesisLeft<Location>:Grammar.TerminalSequence
+    enum And:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("(") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("&") }
     }
-    enum ParenthesisRight<Location>:Grammar.TerminalSequence
+    enum BraceLeft:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init(")") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("{") }
     }
-    /* struct Parenthesized<Expression>:Grammar.BracketedExpression 
-        where Expression:Grammar.Parsable, Expression.Terminal == Character
+    enum BraceRight:Grammar.TerminalSequence
     {
-        typealias Terminal  = Character
-        typealias Start     = ParenthesisLeft 
-        typealias End       = ParenthesisRight
-        
-        let production:Expression.Production
-    } */
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("}") }
+    }
     
-    enum Percent<Location>:Grammar.TerminalSequence
+    enum Colon:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("%") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init(":") }
     }
-    enum Period<Location>:Grammar.TerminalSequence
+    enum Comma:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init(".") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init(",") }
     }
-    enum Plus<Location>:Grammar.TerminalSequence
+    enum Minus:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("+") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("-") }
     }
-    enum Quote<Location>:Grammar.TerminalSequence
+    
+    enum ParenthesisLeft:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("\"") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("(") }
     }
-    enum Slash<Location>:Grammar.TerminalSequence
+    enum ParenthesisRight:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("/") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init(")") }
     }
-    enum Zero<Location>:Grammar.TerminalSequence
+    
+    enum Percent:Grammar.TerminalSequence
     {
-        typealias Terminal = Character 
         static 
-        var literal:CollectionOfOne<Character> { .init("0") }
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("%") }
+    }
+    enum Period:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init(".") }
+    }
+    enum Plus:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("+") }
+    }
+    enum Quote:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("\"") }
+    }
+    enum Slash:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("/") }
+    }
+    enum Zero:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("0") }
     }
     
     typealias Hyphen = Minus
     
     enum U
     {
-        enum Lowercase<Location>:Grammar.TerminalSequence 
+        enum Lowercase:Grammar.TerminalSequence 
         {
-            typealias Terminal = Character 
             static 
-            var literal:CollectionOfOne<Character> { .init("u") }
+            var literal:CollectionOfOne<Unicode.Scalar> { .init("u") }
         }
     }
     
-    
-    enum Whitespace<Location>:Grammar.TerminalClass 
+    enum Whitespace:Grammar.TerminalClass 
     {
-        typealias Terminal      = Character 
         typealias Construction  = Void
         static 
-        func parse(terminal character:Character) -> Void?
+        func parse(terminal:Unicode.Scalar) -> Void?
         {
-            character.isWhitespace ? () : nil
+            terminal.properties.isWhitespace ? () : nil
         }
     }
-    enum DecimalDigit<Location, Construction>:Grammar.Digit 
-        where Construction:BinaryInteger
+}
+extension Grammar.Digit where Terminal == Unicode.Scalar
+{
+    enum Decimal:Grammar.DigitRule, Grammar.TerminalClass 
     {
-        typealias Terminal = Character 
         static 
         var radix:Construction 
         {
             10
         }
         static 
-        func parse(terminal character:Character) -> Construction?
+        func parse(terminal:Terminal) -> Construction?
         {
-            switch character 
+            switch terminal 
             {
             case "0":   return 0
             case "1":   return 1
@@ -227,43 +177,57 @@ extension Character
             }
         }
     }
-    enum HexDigit 
+    enum Hex 
     {
         /* private static 
-        subscript(lowercasing value:Int) -> Character 
+        subscript(lowercasing value:Int) -> Unicode.Scalar 
         {
             let remainder:UInt8 = .init(value)
-            return Character.init(Unicode.Scalar.init((remainder < 10 ? 0x30 : 0x57) &+ remainder))
+            return Unicode.Scalar.init(Unicode.Scalar.init((remainder < 10 ? 0x30 : 0x57) &+ remainder))
         } */
-        enum Lowercase<Location, Construction>:Grammar.Digit
-            where Construction:BinaryInteger
+        enum Lowercase:Grammar.DigitRule 
         {
-            typealias Terminal = Character
             static 
             var radix:Construction 
             {
                 16
             }
             static 
-            func parse(terminal character:Character) -> Construction?
+            func parse(terminal:Unicode.Scalar) -> Construction?
             {
-                // 0-9 will return false for isLowercase
-                character.isUppercase ? nil : character.hexDigitValue.map(Construction.init(_:))
+                switch terminal 
+                {
+                case "0" ... "9":
+                    return Construction.init(terminal.value      - ("0" as Unicode.Scalar).value)
+                case "a" ... "f":
+                    return Construction.init(terminal.value + 10 - ("a" as Unicode.Scalar).value)
+                default:
+                    return nil
+                }
             }
         }
-        enum Anycase<Location, Construction>:Grammar.Digit
-            where Construction:BinaryInteger
+        enum Anycase:Grammar.DigitRule 
         {
-            typealias Terminal = Character
+            // typealias Terminal = Unicode.Scalar
             static 
             var radix:Construction 
             {
                 16
             }
             static 
-            func parse(terminal character:Character) -> Construction?
+            func parse(terminal:Unicode.Scalar) -> Construction?
             {
-                character.hexDigitValue.map(Construction.init(_:))
+                switch terminal 
+                {
+                case "0" ... "9":
+                    return Construction.init(terminal.value      - ("0" as Unicode.Scalar).value)
+                case "a" ... "f":
+                    return Construction.init(terminal.value + 10 - ("a" as Unicode.Scalar).value)
+                case "A" ... "F":
+                    return Construction.init(terminal.value + 10 - ("A" as Unicode.Scalar).value)
+                default:
+                    return nil
+                }
             }
         }
     }

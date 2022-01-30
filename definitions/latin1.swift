@@ -1,4 +1,4 @@
-extension Unicode 
+/* extension Unicode 
 {
     enum Latin1
     {
@@ -21,4 +21,4 @@ extension Unicode.Latin1
             return codepoint
         }
     }
-}
+} */
