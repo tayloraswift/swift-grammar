@@ -1,4 +1,7 @@
 // parsing // 
+protocol ParsingDiagnostics 
+{
+}
 protocol ParsingRule 
 {
     associatedtype Location
@@ -6,8 +9,10 @@ protocol ParsingRule
     associatedtype Construction
     
     static 
-    func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Construction
-        where Source:Collection, Source.Index == Location, Source.Element == Terminal
+    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) 
+        throws -> Construction
+        where   Diagnostics:ParsingDiagnostics, 
+                Source:Collection, Source.Index == Location, Source.Element == Terminal
 }
 struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source:Collection
 {
@@ -52,7 +57,13 @@ struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source
     }
 }
 
-struct ParsingInput<Source> where Source:Collection 
+enum Grammar 
+{
+    struct DefaultDiagnostics:ParsingDiagnostics 
+    {
+    }
+}
+struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:ParsingDiagnostics
 {
     private 
     let source:Source
@@ -335,8 +346,9 @@ extension Optional:ParsingRule where Wrapped:ParsingRule
     typealias Terminal  = Wrapped.Terminal 
     
     static 
-    func parse<Source>(_ input:inout ParsingInput<Source>) -> Wrapped.Construction?
-        where Source:Collection, Source.Index == Location, Source.Element == Terminal
+    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) -> Wrapped.Construction?
+        where   Diagnostics:ParsingDiagnostics,
+                Source:Collection, Source.Index == Location, Source.Element == Terminal
     {
         // will choose non-throwing overload, so no infinite recursion will occur
         input.parse(as: Wrapped?.self)
@@ -348,14 +360,15 @@ extension Array:ParsingRule where Element:ParsingRule
     typealias Terminal = Element.Terminal 
     
     static 
-    func parse<Source>(_ input:inout ParsingInput<Source>) -> [Element.Construction]
-        where Source:Collection, Source.Index == Location, Source.Element == Terminal
+    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) -> [Element.Construction]
+        where   Diagnostics:ParsingDiagnostics,
+                Source:Collection, Source.Index == Location, Source.Element == Terminal
     {
         input.parse(as: Element.self, in: [Element.Construction].self)
     }
 }
 
-enum Grammar 
+extension Grammar 
 {
     struct Expected<T, Terminal>:Error, CustomStringConvertible 
     {
@@ -388,8 +401,9 @@ enum Grammar
     enum End<Location, Terminal>:ParsingRule 
     {
         static 
-        func parse<Source>(_ input:inout ParsingInput<Source>) throws 
-            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws 
+            where   Diagnostics:ParsingDiagnostics, 
+                    Source:Collection, Source.Index == Location, Source.Element == Terminal
         {
             if let terminal:Terminal = input.next() 
             {
@@ -402,8 +416,8 @@ enum Grammar
         where   Source:Collection, Root:ParsingRule, 
                 Root.Location == Source.Index, Root.Terminal == Source.Element
     {
-        var input:ParsingInput<Source>      = .init(source)
-        let construction:Root.Construction  = try input.parse(as: Root.self)
+        var input:ParsingInput<Source, Grammar.DefaultDiagnostics> = .init(source)
+        let construction:Root.Construction          = try input.parse(as: Root.self)
         try input.parse(as: End<Root.Location, Root.Terminal>.self)
         return construction
     }
@@ -413,8 +427,8 @@ enum Grammar
                 Rule.Location == Source.Index, Rule.Terminal == Source.Element, 
                 Vector:RangeReplaceableCollection, Vector.Element == Rule.Construction
     {
-        var input:ParsingInput<Source>  = .init(source)
-        let construction:Vector         = input.parse(as: Rule.self, in: Vector.self)
+        var input:ParsingInput<Source, Grammar.DefaultDiagnostics> = .init(source)
+        let construction:Vector                     = input.parse(as: Rule.self, in: Vector.self)
         try input.parse(as: End<Rule.Location, Rule.Terminal>.self)
         return construction
     }
@@ -432,8 +446,9 @@ protocol _GrammarTerminalClass:ParsingRule
 extension Grammar.TerminalClass 
 {
     static 
-    func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Construction
-        where Source:Collection, Source.Index == Location, Source.Element == Terminal
+    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Construction
+        where   Diagnostics:ParsingDiagnostics,
+                Source:Collection, Source.Index == Location, Source.Element == Terminal
     {
         guard let terminal:Terminal     = input.next()
         else 
@@ -462,8 +477,9 @@ protocol _GrammarTerminalSequence:ParsingRule
 extension Grammar.TerminalSequence 
 {
     static 
-    func parse<Source>(_ input:inout ParsingInput<Source>) throws
-        where Source:Collection, Source.Element == Terminal
+    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws
+        where   Diagnostics:ParsingDiagnostics,
+                Source:Collection, Source.Element == Terminal
     {
         for expected:Terminal in Self.literal
         {
@@ -508,8 +524,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal
         
         static 
-        func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Rule.Construction
-            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Rule.Construction
+            where   Diagnostics:ParsingDiagnostics,
+                    Source:Collection, Source.Index == Location, Source.Element == Terminal
         {
             var value:Rule.Construction            = try input.parse(as: Rule.self)
             while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
@@ -547,8 +564,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal
         typealias Location = Rule.Location
         static 
-        func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Rule.Construction
-            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Rule.Construction
+            where   Diagnostics:ParsingDiagnostics,
+                    Source:Collection, Source.Index == Location, Source.Element == Terminal
         {
             input.parse(as: Padding.self, in: Void.self)
             let construction:Rule.Construction = try input.parse(as: Rule.self) 
@@ -611,7 +629,7 @@ extension Grammar
 }
 extension Grammar.BracketedExpression 
 {
-    init<C>(parsing input:inout ParsingInput<C>) throws where C:Collection, C.Element == Terminal
+    init<C>(parsing input:inout ParsingInput<C, Diagnostics>) throws where C:Collection, C.Element == Terminal
     {
         try input.parse(as: Start.self)
         self.init(production: try input.parse(as: Expression.self))
@@ -633,8 +651,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         
         static 
-        func parse<Source>(_ input:inout ParsingInput<Source>) -> Construction
-            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) -> Construction
+            where   Diagnostics:ParsingDiagnostics,
+                    Source:Collection, Source.Index == Location, Source.Element == Terminal
         {
             input.parse(as: Rule.self, in: Construction.self)
         }
@@ -647,8 +666,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         
         static 
-        func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Construction
-            where Source:Collection, Source.Index == Location, Source.Element == Terminal
+        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Construction
+            where   Diagnostics:ParsingDiagnostics,
+                    Source:Collection, Source.Index == Location, Source.Element == Terminal
         {
             var vector:Construction = .init()
                 vector.append(try input.parse(as: Rule.self))
@@ -675,8 +695,9 @@ extension Grammar
 extension Grammar.Power 
 {
     static 
-    func parse<Source>(_ input:inout ParsingInput<Source>) throws -> Construction
-        where Source:Collection, Source.Index == Location, Source.Element == Terminal
+    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Construction
+        where   Diagnostics:ParsingDiagnostics,
+                Source:Collection, Source.Index == Location, Source.Element == Terminal
     {
         var vector:Construction = .init()
         for _:Int in 0 ..< Self.exponent
