@@ -109,6 +109,17 @@ struct ParsingInput<Source> where Source:Collection
     func group<Rule, Construction>(_:Rule.Type, _ body:(inout Self) throws -> Construction) 
         throws -> Construction
     {
+        let _index:Source.Index = self.index 
+        do 
+        {
+            return try body(&self)
+        }
+        catch let error 
+        {
+            self.index = _index 
+            throw error
+        }
+        /* 
         self.stack.append((self.index, Rule.self, Construction.self))
         
         do 
@@ -138,7 +149,7 @@ struct ParsingInput<Source> where Source:Collection
             }
             self.index = self.stack.removeLast().index 
             throw diagnostic
-        }
+        } */
     }
     
     mutating 
