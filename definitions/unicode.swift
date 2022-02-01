@@ -10,6 +10,25 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         }
     } */
     
+    enum Newline:ParsingRule 
+    {
+        typealias Terminal = Unicode.Scalar
+        static 
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
+            where   Diagnostics:ParsingDiagnostics,
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
+        {
+            if let _:Void = input.parse(as: Linefeed?.self) 
+            {
+            }
+            else 
+            {
+                try input.parse(as: (Return, Linefeed).self)
+            }
+        }
+    }
+    
     enum E 
     {
         enum Anycase:Grammar.TerminalClass 
@@ -80,6 +99,16 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init(",") }
     }
+    enum Dollar:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("$") }
+    }
+    enum Linefeed:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("\n") }
+    }
     enum Minus:Grammar.TerminalSequence
     {
         static 
@@ -117,6 +146,11 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("\"") }
     }
+    enum Return:Grammar.TerminalSequence
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("\r") }
+    }
     enum Slash:Grammar.TerminalSequence
     {
         static 
@@ -130,6 +164,14 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
     
     typealias Hyphen = Minus
     
+    enum X
+    {
+        enum Lowercase:Grammar.TerminalSequence 
+        {
+            static 
+            var literal:CollectionOfOne<Unicode.Scalar> { .init("x") }
+        }
+    }
     enum U
     {
         enum Lowercase:Grammar.TerminalSequence 

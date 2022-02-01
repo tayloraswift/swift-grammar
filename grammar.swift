@@ -1,19 +1,3 @@
-// parsing // 
-protocol ParsingDiagnostics 
-{
-}
-protocol ParsingRule 
-{
-    associatedtype Location
-    associatedtype Terminal 
-    associatedtype Construction
-    
-    static 
-    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) 
-        throws -> Construction
-        where   Diagnostics:ParsingDiagnostics, 
-                Source:Collection, Source.Index == Location, Source.Element == Terminal
-}
 struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source:Collection
 {
     static 
@@ -57,43 +41,132 @@ struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source
     }
 }
 
+protocol ParsingRule 
+{
+    associatedtype Location
+    associatedtype Terminal 
+    associatedtype Construction
+    
+    static 
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) 
+        throws -> Construction
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
+}
+protocol ParsingDiagnostics 
+{
+    associatedtype Source where Source:Collection 
+    associatedtype Breadcrumb 
+    
+    init()
+    
+    mutating 
+    func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type) 
+        -> Breadcrumb
+    mutating 
+    func pop()
+    mutating 
+    func reset(index:inout Source.Index, in:Source, to:Breadcrumb, because:inout Error) 
+}
 enum Grammar 
 {
-    struct DefaultDiagnostics:ParsingDiagnostics 
+    struct NoDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     {
+        // force inlining because these functions ignore most of their inputs, and 
+        // don’t contain many instructions (if any)
+        @inline(__always)
+        func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type) 
+            -> Source.Index
+        {
+            index
+        }
+        @inline(__always)
+        func pop()
+        {
+        }
+        @inline(__always)
+        func reset(index:inout Source.Index, in _:Source, to breadcrumb:Source.Index, because _:inout Error) 
+        {
+            index = breadcrumb 
+        }
+    }
+    struct DefaultDiagnostics<Source>:ParsingDiagnostics where Source:Collection
+    {
+        private 
+        var stack:[(index:Source.Index, rule:Any.Type, type:Any.Type)], 
+            frontier:ParsingError<Source>?
+        
+        init() 
+        {
+            self.stack      = []
+            self.frontier   = nil 
+        }
+        mutating 
+        func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type)
+        {
+            self.stack.append((index, Rule.self, Construction.self))
+        }
+        mutating 
+        func pop()
+        {
+            self.stack.removeLast()
+        }
+        mutating 
+        func reset(index:inout Source.Index, in source:Source, to _:Void, because error:inout Error)
+        {
+            defer 
+            {
+                index = self.stack.removeLast().index 
+            }
+            if  error is ParsingError<Source> 
+            {
+                return 
+            }
+            if let diagnostic:ParsingError<Source> = self.frontier, index < diagnostic.index
+            {
+                // we did not make it as far as the previous most-successful parse 
+                error           = diagnostic 
+            }
+            else 
+            {
+                let diagnostic:ParsingError<Source> = .init(at: index, 
+                    in: source, because: error, trace: self.stack) 
+                self.frontier   = diagnostic 
+                error           = diagnostic
+            }
+        }
     }
 }
-struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:ParsingDiagnostics
+struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
 {
     private 
-    let source:Source
+    let source:Diagnostics.Source
     private(set)
-    var index:Source.Index 
-    
+    var index:Diagnostics.Source.Index 
     private 
-    var stack:[(index:Source.Index, rule:Any.Type, type:Any.Type)], 
-        frontier:ParsingError<Source>?
+    var diagnostics:Diagnostics
+
     
-    init(_ source:Source)
+    init(_ source:Diagnostics.Source)
     {
-        self.source     = source 
-        self.index      = source.startIndex 
-        self.stack      = []
-        self.frontier   = nil 
+        self.source         = source 
+        self.index          = source.startIndex 
+        self.diagnostics    = .init()
     }
     
-    subscript(_ index:Source.Index) -> Source.Element 
+    subscript(_ index:Diagnostics.Source.Index) -> Diagnostics.Source.Element 
     {
         self.source[index]
     }
-    subscript<Indices>(_ range:Indices) -> Source.SubSequence 
-        where Indices:RangeExpression, Indices.Bound == Source.Index 
+    subscript<Indices>(_ range:Indices) -> Diagnostics.Source.SubSequence 
+        where Indices:RangeExpression, Indices.Bound == Diagnostics.Source.Index 
     {
         self.source[range.relative(to: self.source)]
     }
     
     fileprivate mutating 
-    func next() -> Source.Element?
+    func next() -> Diagnostics.Source.Element?
     {
         guard self.index != self.source.endIndex
         else 
@@ -120,52 +193,24 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     func group<Rule, Construction>(_:Rule.Type, _ body:(inout Self) throws -> Construction) 
         throws -> Construction
     {
-        let _index:Source.Index = self.index 
-        do 
-        {
-            return try body(&self)
-        }
-        catch let error 
-        {
-            self.index = _index 
-            throw error
-        }
-        /* 
-        self.stack.append((self.index, Rule.self, Construction.self))
-        
+        let breadcrumb:Diagnostics.Breadcrumb = 
+            self.diagnostics.push(index: self.index, for: Construction.self, by: Rule.self)
         do 
         {
             let construction:Construction = try body(&self)
-            self.stack.removeLast()
-            return construction
+            self.diagnostics.pop()
+            return construction 
         }
-        catch let diagnostic as ParsingError<Source> 
+        catch var error 
         {
-            self.index = self.stack.removeLast().index 
-            throw diagnostic
+            self.diagnostics.reset(index: &self.index, in: self.source, to: breadcrumb, because: &error)
+            throw error
         }
-        catch let error 
-        {
-            let diagnostic:ParsingError<Source>
-            if  let frontier:ParsingError<Source>   = self.frontier, 
-                    self.index < frontier.index
-            {
-                // we did not make it as far as the previous most-successful parse 
-                diagnostic      = frontier 
-            }
-            else 
-            {
-                diagnostic      = .init(at: self.index, in: self.source, because: error, trace: self.stack) 
-                self.frontier   = diagnostic 
-            }
-            self.index = self.stack.removeLast().index 
-            throw diagnostic
-        } */
     }
     
     mutating 
     func parse<Rule>(as _:Rule.Type) throws -> Rule.Construction 
-        where   Rule:ParsingRule, Rule.Location == Source.Index, Rule.Terminal == Source.Element
+        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element
     {
         try self.group(Rule.self){ try Rule.parse(&$0) }
     }
@@ -174,8 +219,8 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     mutating 
     func parse<T0, T1>(as _:(T0, T1).Type) throws 
         -> (T0.Construction, T1.Construction) 
-        where   T0:ParsingRule, T0.Location == Source.Index, T0.Terminal == Source.Element, 
-                T1:ParsingRule, T1.Location == Source.Index, T1.Terminal == Source.Element 
+        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
+                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element 
     {
         try self.group((T0, T1).self)
         {
@@ -189,9 +234,9 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     mutating 
     func parse<T0, T1, T2>(as _:(T0, T1, T2).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction) 
-        where   T0:ParsingRule, T0.Location == Source.Index, T0.Terminal == Source.Element, 
-                T1:ParsingRule, T1.Location == Source.Index, T1.Terminal == Source.Element,
-                T2:ParsingRule, T2.Location == Source.Index, T2.Terminal == Source.Element 
+        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
+                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
+                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element 
     {
         try self.group((T0, T1, T2).self)
         {
@@ -206,10 +251,10 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     mutating 
     func parse<T0, T1, T2, T3>(as _:(T0, T1, T2, T3).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction) 
-        where   T0:ParsingRule, T0.Location == Source.Index, T0.Terminal == Source.Element, 
-                T1:ParsingRule, T1.Location == Source.Index, T1.Terminal == Source.Element,
-                T2:ParsingRule, T2.Location == Source.Index, T2.Terminal == Source.Element,
-                T3:ParsingRule, T3.Location == Source.Index, T3.Terminal == Source.Element 
+        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
+                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
+                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
+                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element 
     {
         try self.group((T0, T1, T2, T3).self)
         {
@@ -225,11 +270,11 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     mutating 
     func parse<T0, T1, T2, T3, T4>(as _:(T0, T1, T2, T3, T4).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction) 
-        where   T0:ParsingRule, T0.Location == Source.Index, T0.Terminal == Source.Element, 
-                T1:ParsingRule, T1.Location == Source.Index, T1.Terminal == Source.Element,
-                T2:ParsingRule, T2.Location == Source.Index, T2.Terminal == Source.Element,
-                T3:ParsingRule, T3.Location == Source.Index, T3.Terminal == Source.Element,
-                T4:ParsingRule, T4.Location == Source.Index, T4.Terminal == Source.Element 
+        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
+                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
+                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
+                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element,
+                T4:ParsingRule, T4.Location == Diagnostics.Source.Index, T4.Terminal == Diagnostics.Source.Element 
     {
         try self.group((T0, T1, T2, T3, T4).self)
         {
@@ -246,12 +291,12 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     mutating 
     func parse<T0, T1, T2, T3, T4, T5>(as _:(T0, T1, T2, T3, T4, T5).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction, T5.Construction) 
-        where   T0:ParsingRule, T0.Location == Source.Index, T0.Terminal == Source.Element, 
-                T1:ParsingRule, T1.Location == Source.Index, T1.Terminal == Source.Element,
-                T2:ParsingRule, T2.Location == Source.Index, T2.Terminal == Source.Element,
-                T3:ParsingRule, T3.Location == Source.Index, T3.Terminal == Source.Element,
-                T4:ParsingRule, T4.Location == Source.Index, T4.Terminal == Source.Element,
-                T5:ParsingRule, T5.Location == Source.Index, T5.Terminal == Source.Element 
+        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
+                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
+                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
+                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element,
+                T4:ParsingRule, T4.Location == Diagnostics.Source.Index, T4.Terminal == Diagnostics.Source.Element,
+                T5:ParsingRule, T5.Location == Diagnostics.Source.Index, T5.Terminal == Diagnostics.Source.Element 
     {
         try self.group((T0, T1, T2, T3, T4, T5).self)
         {
@@ -269,13 +314,13 @@ struct ParsingInput<Source, Diagnostics> where Source:Collection, Diagnostics:Pa
     mutating 
     func parse<T0, T1, T2, T3, T4, T5, T6>(as _:(T0, T1, T2, T3, T4, T5, T6).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction, T5.Construction, T6.Construction) 
-        where   T0:ParsingRule, T0.Location == Source.Index, T0.Terminal == Source.Element, 
-                T1:ParsingRule, T1.Location == Source.Index, T1.Terminal == Source.Element,
-                T2:ParsingRule, T2.Location == Source.Index, T2.Terminal == Source.Element,
-                T3:ParsingRule, T3.Location == Source.Index, T3.Terminal == Source.Element,
-                T4:ParsingRule, T4.Location == Source.Index, T4.Terminal == Source.Element,
-                T5:ParsingRule, T5.Location == Source.Index, T5.Terminal == Source.Element,
-                T6:ParsingRule, T6.Location == Source.Index, T6.Terminal == Source.Element 
+        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
+                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
+                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
+                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element,
+                T4:ParsingRule, T4.Location == Diagnostics.Source.Index, T4.Terminal == Diagnostics.Source.Element,
+                T5:ParsingRule, T5.Location == Diagnostics.Source.Index, T5.Terminal == Diagnostics.Source.Element,
+                T6:ParsingRule, T6.Location == Diagnostics.Source.Index, T6.Terminal == Diagnostics.Source.Element 
     {
         try self.group((T0, T1, T2, T3, T4, T5, T6).self)
         {
@@ -296,13 +341,13 @@ extension ParsingInput
     // this overload will be preferred over the `throws` overload
     mutating 
     func parse<Rule>(as _:Rule?.Type) -> Rule.Construction? 
-        where   Rule:ParsingRule, Rule.Location == Source.Index, Rule.Terminal == Source.Element
+        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element
     {
         try? self.parse(as: Rule.self)
     }
     mutating 
     func parse<Rule>(as _:Rule.Type, in _:Void.Type) 
-        where   Rule:ParsingRule, Rule.Location == Source.Index, Rule.Terminal == Source.Element, 
+        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element, 
                 Rule.Construction == Void 
     {
         while let _:Void = self.parse(as: Rule?.self)
@@ -311,7 +356,7 @@ extension ParsingInput
     }
     mutating 
     func parse<Rule, Vector>(as _:Rule.Type, in _:Vector.Type) -> Vector
-        where   Rule:ParsingRule, Rule.Location == Source.Index, Rule.Terminal == Source.Element, 
+        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element, 
                 Rule.Construction == Vector.Element, 
                 Vector:RangeReplaceableCollection
     {
@@ -324,16 +369,16 @@ extension ParsingInput
     }
     
     mutating 
-    func parse(prefix count:Int) throws -> Source.SubSequence
+    func parse(prefix count:Int) throws -> Diagnostics.Source.SubSequence
     {
-        guard let index:Source.Index = 
+        guard let index:Diagnostics.Source.Index = 
             self.source.index(self.index, offsetBy: count, limitedBy: self.source.endIndex)
         else 
         {
-            throw Grammar.Expected<Any, Source.Element>.init(encountered: nil)
+            throw Grammar.Expected<Any, Diagnostics.Source.Element>.init(encountered: nil)
         }
         
-        let prefix:Source.SubSequence = self.source[self.index ..< index]
+        let prefix:Diagnostics.Source.SubSequence = self.source[self.index ..< index]
         self.index = index 
         return prefix
     }
@@ -346,9 +391,10 @@ extension Optional:ParsingRule where Wrapped:ParsingRule
     typealias Terminal  = Wrapped.Terminal 
     
     static 
-    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) -> Wrapped.Construction?
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Wrapped.Construction?
         where   Diagnostics:ParsingDiagnostics,
-                Source:Collection, Source.Index == Location, Source.Element == Terminal
+                Diagnostics.Source.Index == Location,
+                Diagnostics.Source.Element == Terminal
     {
         // will choose non-throwing overload, so no infinite recursion will occur
         input.parse(as: Wrapped?.self)
@@ -360,9 +406,10 @@ extension Array:ParsingRule where Element:ParsingRule
     typealias Terminal = Element.Terminal 
     
     static 
-    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) -> [Element.Construction]
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> [Element.Construction]
         where   Diagnostics:ParsingDiagnostics,
-                Source:Collection, Source.Index == Location, Source.Element == Terminal
+                Diagnostics.Source.Index == Location,
+                Diagnostics.Source.Element == Terminal
     {
         input.parse(as: Element.self, in: [Element.Construction].self)
     }
@@ -401,9 +448,10 @@ extension Grammar
     enum End<Location, Terminal>:ParsingRule 
     {
         static 
-        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws 
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
             where   Diagnostics:ParsingDiagnostics, 
-                    Source:Collection, Source.Index == Location, Source.Element == Terminal
+                    Diagnostics.Source.Index == Location, 
+                    Diagnostics.Source.Element == Terminal
         {
             if let terminal:Terminal = input.next() 
             {
@@ -416,8 +464,8 @@ extension Grammar
         where   Source:Collection, Root:ParsingRule, 
                 Root.Location == Source.Index, Root.Terminal == Source.Element
     {
-        var input:ParsingInput<Source, Grammar.DefaultDiagnostics> = .init(source)
-        let construction:Root.Construction          = try input.parse(as: Root.self)
+        var input:ParsingInput<NoDiagnostics<Source>> = .init(source)
+        let construction:Root.Construction = try input.parse(as: Root.self)
         try input.parse(as: End<Root.Location, Root.Terminal>.self)
         return construction
     }
@@ -427,8 +475,8 @@ extension Grammar
                 Rule.Location == Source.Index, Rule.Terminal == Source.Element, 
                 Vector:RangeReplaceableCollection, Vector.Element == Rule.Construction
     {
-        var input:ParsingInput<Source, Grammar.DefaultDiagnostics> = .init(source)
-        let construction:Vector                     = input.parse(as: Rule.self, in: Vector.self)
+        var input:ParsingInput<NoDiagnostics<Source>> = .init(source)
+        let construction:Vector = input.parse(as: Rule.self, in: Vector.self)
         try input.parse(as: End<Rule.Location, Rule.Terminal>.self)
         return construction
     }
@@ -446,9 +494,10 @@ protocol _GrammarTerminalClass:ParsingRule
 extension Grammar.TerminalClass 
 {
     static 
-    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Construction
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
         where   Diagnostics:ParsingDiagnostics,
-                Source:Collection, Source.Index == Location, Source.Element == Terminal
+                Diagnostics.Source.Index == Location,
+                Diagnostics.Source.Element == Terminal
     {
         guard let terminal:Terminal     = input.next()
         else 
@@ -477,13 +526,14 @@ protocol _GrammarTerminalSequence:ParsingRule
 extension Grammar.TerminalSequence 
 {
     static 
-    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws
-        where   Diagnostics:ParsingDiagnostics,
-                Source:Collection, Source.Element == Terminal
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location,
+                Diagnostics.Source.Element == Terminal
     {
         for expected:Terminal in Self.literal
         {
-            guard let element:Source.Element = input.next()
+            guard let element:Terminal = input.next()
             else 
             {
                 throw Grammar.Expected<Self, Terminal>.init(encountered: nil)
@@ -524,9 +574,10 @@ extension Grammar
         typealias Terminal = Rule.Terminal
         
         static 
-        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Rule.Construction
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
             where   Diagnostics:ParsingDiagnostics,
-                    Source:Collection, Source.Index == Location, Source.Element == Terminal
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
         {
             var value:Rule.Construction            = try input.parse(as: Rule.self)
             while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
@@ -564,9 +615,10 @@ extension Grammar
         typealias Terminal = Rule.Terminal
         typealias Location = Rule.Location
         static 
-        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Rule.Construction
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
             where   Diagnostics:ParsingDiagnostics,
-                    Source:Collection, Source.Index == Location, Source.Element == Terminal
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
         {
             input.parse(as: Padding.self, in: Void.self)
             let construction:Rule.Construction = try input.parse(as: Rule.self) 
@@ -651,9 +703,10 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         
         static 
-        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) -> Construction
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Construction
             where   Diagnostics:ParsingDiagnostics,
-                    Source:Collection, Source.Index == Location, Source.Element == Terminal
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
         {
             input.parse(as: Rule.self, in: Construction.self)
         }
@@ -666,9 +719,10 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         
         static 
-        func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Construction
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
             where   Diagnostics:ParsingDiagnostics,
-                    Source:Collection, Source.Index == Location, Source.Element == Terminal
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
         {
             var vector:Construction = .init()
                 vector.append(try input.parse(as: Rule.self))
@@ -695,9 +749,10 @@ extension Grammar
 extension Grammar.Power 
 {
     static 
-    func parse<Source, Diagnostics>(_ input:inout ParsingInput<Source, Diagnostics>) throws -> Construction
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
         where   Diagnostics:ParsingDiagnostics,
-                Source:Collection, Source.Index == Location, Source.Element == Terminal
+                Diagnostics.Source.Index == Location,
+                Diagnostics.Source.Element == Terminal
     {
         var vector:Construction = .init()
         for _:Int in 0 ..< Self.exponent
