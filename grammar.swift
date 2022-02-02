@@ -563,7 +563,7 @@ extension Grammar
     {
         var description:String 
         {
-            "parsed value overflows interger type '\(T.self)'"
+            "parsed value overflows integer type '\(T.self)'"
         }
     }
     
