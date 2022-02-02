@@ -15,10 +15,46 @@ extension Grammar.Encoding.ASCII
     }
     
     public
+    enum Backslash:Grammar.TerminalSequence
+    {
+        public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x5c) }
+    }
+    public
+    enum BraceLeft:Grammar.TerminalSequence
+    {
+        public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x7b) }
+    }
+    public 
+    enum BraceRight:Grammar.TerminalSequence
+    {
+        public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x7d) }
+    }
+    public
+    enum BracketLeft:Grammar.TerminalSequence
+    {
+        public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x5b) }
+    }
+    public 
+    enum BracketRight:Grammar.TerminalSequence
+    {
+        public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x5d) }
+    }
+    public
     enum Colon:Grammar.TerminalSequence
     {
         public static 
         var literal:CollectionOfOne<UInt8> { .init(0x3a) }
+    }
+    public
+    enum Comma:Grammar.TerminalSequence
+    {
+        public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x2c) }
     }
     public
     enum Equals:Grammar.TerminalSequence
@@ -49,6 +85,46 @@ extension Grammar.Encoding.ASCII
     {
         public static 
         var literal:CollectionOfOne<UInt8> { .init(0x20) }
+    }
+    
+    public 
+    enum E 
+    {
+        public 
+        enum Anycase:Grammar.TerminalClass 
+        {
+            public 
+            typealias Construction  = Void
+            public static 
+            func parse(terminal:UInt8) -> Void?
+            {
+                switch terminal 
+                {
+                case 0x65, 0x45:    return ()
+                default:            return nil
+                }
+            }
+        }
+    }
+    public 
+    enum X
+    {
+        public
+        enum Lowercase:Grammar.TerminalSequence 
+        {
+            public static 
+            var literal:CollectionOfOne<UInt8> { .init(0x78) }
+        }
+    }
+    public 
+    enum U
+    {
+        public
+        enum Lowercase:Grammar.TerminalSequence 
+        {
+            public static 
+            var literal:CollectionOfOne<UInt8> { .init(0x75) }
+        }
     }
     
     public
@@ -140,6 +216,49 @@ extension Grammar.Digit.ASCII
                 return nil 
             }
             return .init(codepoint - 0x30)
+        }
+    }
+    public 
+    enum Hex 
+    {
+        public 
+        enum Lowercase:Grammar.DigitRule 
+        {
+            public static 
+            var radix:Construction 
+            {
+                16
+            }
+            public static 
+            func parse(terminal:UInt8) -> Construction?
+            {
+                switch terminal 
+                {
+                case 0x30 ... 0x39: return Construction.init(terminal - 0x30)
+                case 0x61 ... 0x66: return Construction.init(terminal + 0xa0 - 0x61)
+                default:            return nil
+                }
+            }
+        }
+        public 
+        enum Anycase:Grammar.DigitRule 
+        {
+            public static 
+            var radix:Construction 
+            {
+                16
+            }
+            public static 
+            func parse(terminal:UInt8) -> Construction?
+            {
+                switch terminal 
+                {
+                case 0x30 ... 0x39: return Construction.init(terminal - 0x30)
+                case 0x61 ... 0x66: return Construction.init(terminal + 0xa0 - 0x61)
+                case 0x41 ... 0x46: return Construction.init(terminal + 0xa0 - 0x41)
+                default:            return nil
+                }
+            }
         }
     }
 } 
