@@ -1,3 +1,4 @@
+public 
 protocol TraceableError:Error, CustomStringConvertible 
 {
     static 
@@ -14,6 +15,7 @@ protocol TraceableError:Error, CustomStringConvertible
         get 
     }
 }
+public 
 protocol TraceableErrorRoot:TraceableError 
 {
     var message:String 
@@ -21,6 +23,7 @@ protocol TraceableErrorRoot:TraceableError
         get 
     }
 }
+public 
 extension TraceableErrorRoot 
 {
     var context:[String]
@@ -34,7 +37,7 @@ extension TraceableErrorRoot
 }
 extension TraceableError 
 {
-    fileprivate 
+    private  
     var components:(header:String, messages:[String])
     {
         var namespace:String        = Self.namespace
@@ -58,7 +61,7 @@ extension TraceableError
         }
         return (namespace, messages) 
     }
-    
+    public 
     var description:String 
     {
         func bold(_ string:String) -> String

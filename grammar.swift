@@ -1,15 +1,17 @@
+public 
 struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source:Collection
 {
-    static 
+    public static 
     var namespace:String 
     {
         "parsing error"
     }
+    public 
     let problem:Error, 
         source:Source, 
         index:Source.Index,
         trace:[(index:Source.Index, rule:Any.Type, type:Any.Type)]
-    
+    public 
     init(at index:Source.Index, in source:Source, because problem:Error, 
         trace:[(index:Source.Index, rule:Any.Type, type:Any.Type)])
     {
@@ -18,7 +20,7 @@ struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source
         self.index      = index 
         self.trace      = trace
     }
-
+    public 
     var context:[String] 
     {
         [ "while parsing input sequence '\(self.source)'" ]
@@ -35,12 +37,13 @@ struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source
             }
         }
     } 
+    public 
     var next:Error? 
     {
         self.problem 
     }
 }
-
+public 
 protocol ParsingRule 
 {
     associatedtype Location
@@ -54,6 +57,7 @@ protocol ParsingRule
                 Diagnostics.Source.Index == Location, 
                 Diagnostics.Source.Element == Terminal
 }
+public
 protocol ParsingDiagnostics 
 {
     associatedtype Source where Source:Collection 
@@ -69,50 +73,62 @@ protocol ParsingDiagnostics
     mutating 
     func reset(index:inout Source.Index, in:Source, to:Breadcrumb, because:inout Error) 
 }
+public 
 enum Grammar 
 {
+    @frozen 
+    public 
     struct NoDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     {
+        @inlinable 
+        public 
+        init() 
+        {
+        }
         // force inlining because these functions ignore most of their inputs, and 
         // don’t contain many instructions (if any)
-        @inline(__always)
+        @inlinable @inline(__always)
+        public 
         func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type) 
             -> Source.Index
         {
             index
         }
-        @inline(__always)
+        @inlinable @inline(__always)
+        public 
         func pop()
         {
         }
-        @inline(__always)
+        @inlinable @inline(__always)
+        public 
         func reset(index:inout Source.Index, in _:Source, to breadcrumb:Source.Index, because _:inout Error) 
         {
             index = breadcrumb 
         }
     }
+    public 
     struct DefaultDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     {
         private 
         var stack:[(index:Source.Index, rule:Any.Type, type:Any.Type)], 
             frontier:ParsingError<Source>?
-        
+        public 
         init() 
         {
             self.stack      = []
             self.frontier   = nil 
         }
-        mutating 
+        public mutating 
         func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type)
         {
             self.stack.append((index, Rule.self, Construction.self))
         }
-        mutating 
+        public mutating 
         func pop()
         {
             self.stack.removeLast()
         }
-        mutating 
+        public mutating 
         func reset(index:inout Source.Index, in source:Source, to _:Void, because error:inout Error)
         {
             defer 
@@ -138,27 +154,29 @@ enum Grammar
         }
     }
 }
+@frozen
+public 
 struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
 {
-    private 
+    public  
     let source:Diagnostics.Source
-    private(set)
+    public 
     var index:Diagnostics.Source.Index 
-    private 
+    public 
     var diagnostics:Diagnostics
-
-    
+    public 
     init(_ source:Diagnostics.Source)
     {
         self.source         = source 
         self.index          = source.startIndex 
         self.diagnostics    = .init()
     }
-    
+    public 
     subscript(_ index:Diagnostics.Source.Index) -> Diagnostics.Source.Element 
     {
         self.source[index]
     }
+    public 
     subscript<Indices>(_ range:Indices) -> Diagnostics.Source.SubSequence 
         where Indices:RangeExpression, Indices.Bound == Diagnostics.Source.Index 
     {
@@ -208,7 +226,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
     }
     
-    mutating 
+    public mutating 
     func parse<Rule>(as _:Rule.Type) throws -> Rule.Construction 
         where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element
     {
@@ -216,7 +234,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     }
     
     @discardableResult 
-    mutating 
+    public mutating 
     func parse<T0, T1>(as _:(T0, T1).Type) throws 
         -> (T0.Construction, T1.Construction) 
         where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
@@ -231,7 +249,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
     }
     @discardableResult 
-    mutating 
+    public mutating 
     func parse<T0, T1, T2>(as _:(T0, T1, T2).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction) 
         where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
@@ -248,7 +266,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
     }
     @discardableResult 
-    mutating 
+    public mutating 
     func parse<T0, T1, T2, T3>(as _:(T0, T1, T2, T3).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction) 
         where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
@@ -267,7 +285,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
     }
     @discardableResult 
-    mutating 
+    public mutating 
     func parse<T0, T1, T2, T3, T4>(as _:(T0, T1, T2, T3, T4).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction) 
         where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
@@ -288,7 +306,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
     }
     @discardableResult 
-    mutating 
+    public mutating 
     func parse<T0, T1, T2, T3, T4, T5>(as _:(T0, T1, T2, T3, T4, T5).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction, T5.Construction) 
         where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
@@ -311,7 +329,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
     }
     @discardableResult 
-    mutating 
+    public mutating 
     func parse<T0, T1, T2, T3, T4, T5, T6>(as _:(T0, T1, T2, T3, T4, T5, T6).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction, T5.Construction, T6.Construction) 
         where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
@@ -339,13 +357,13 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
 extension ParsingInput
 {
     // this overload will be preferred over the `throws` overload
-    mutating 
+    public mutating 
     func parse<Rule>(as _:Rule?.Type) -> Rule.Construction? 
         where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element
     {
         try? self.parse(as: Rule.self)
     }
-    mutating 
+    public mutating 
     func parse<Rule>(as _:Rule.Type, in _:Void.Type) 
         where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element, 
                 Rule.Construction == Void 
@@ -354,7 +372,7 @@ extension ParsingInput
         {
         }
     }
-    mutating 
+    public mutating 
     func parse<Rule, Vector>(as _:Rule.Type, in _:Vector.Type) -> Vector
         where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element, 
                 Rule.Construction == Vector.Element, 
@@ -368,7 +386,7 @@ extension ParsingInput
         return vector
     }
     
-    mutating 
+    public mutating 
     func parse(prefix count:Int) throws -> Diagnostics.Source.SubSequence
     {
         guard let index:Diagnostics.Source.Index = 
@@ -387,10 +405,12 @@ extension ParsingInput
 // otherwise, the overloads in the previous section of code should be preferred
 extension Optional:ParsingRule where Wrapped:ParsingRule 
 {
+    public 
     typealias Location  = Wrapped.Location
+    public 
     typealias Terminal  = Wrapped.Terminal 
     
-    static 
+    public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Wrapped.Construction?
         where   Diagnostics:ParsingDiagnostics,
                 Diagnostics.Source.Index == Location,
@@ -402,10 +422,12 @@ extension Optional:ParsingRule where Wrapped:ParsingRule
 } 
 extension Array:ParsingRule where Element:ParsingRule
 {
+    public
     typealias Location = Element.Location
+    public
     typealias Terminal = Element.Terminal 
     
-    static 
+    public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> [Element.Construction]
         where   Diagnostics:ParsingDiagnostics,
                 Diagnostics.Source.Index == Location,
@@ -417,14 +439,17 @@ extension Array:ParsingRule where Element:ParsingRule
 
 extension Grammar 
 {
+    public
     struct Expected<T, Terminal>:Error, CustomStringConvertible 
     {
+        public
         let encountered:Terminal?
-        
+        public
         init(encountered:Terminal?)
         {
             self.encountered = encountered
         }
+        public
         var description:String 
         {
             if let encountered:Terminal = self.encountered 
@@ -437,17 +462,19 @@ extension Grammar
             } 
         }
     }
+    public
     struct Excluded<T, Exclusion>:Error, CustomStringConvertible 
     {
+        public
         var description:String 
         {
             "value of type '\(T.self)' would also be a valid value of '\(Exclusion.self)'"
         }
     }
-    
+    public
     enum End<Location, Terminal>:ParsingRule 
     {
-        static 
+        public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
             where   Diagnostics:ParsingDiagnostics, 
                     Diagnostics.Source.Index == Location, 
@@ -459,7 +486,7 @@ extension Grammar
             }
         }
     }
-    static 
+    public static 
     func parse<Source, Root>(_ source:Source, as _:Root.Type) throws -> Root.Construction
         where   Source:Collection, Root:ParsingRule, 
                 Root.Location == Source.Index, Root.Terminal == Source.Element
@@ -469,7 +496,7 @@ extension Grammar
         try input.parse(as: End<Root.Location, Root.Terminal>.self)
         return construction
     }
-    static 
+    public static 
     func parse<Source, Rule, Vector>(_ source:Source, as _:Rule.Type, in _:Vector.Type) throws -> Vector
         where   Source:Collection, Rule:ParsingRule, 
                 Rule.Location == Source.Index, Rule.Terminal == Source.Element, 
@@ -483,9 +510,12 @@ extension Grammar
 }
 extension Grammar 
 {
+    public 
     typealias TerminalClass     = _GrammarTerminalClass
+    public 
     typealias TerminalSequence  = _GrammarTerminalSequence
 }
+public
 protocol _GrammarTerminalClass:ParsingRule
 {
     static 
@@ -493,7 +523,7 @@ protocol _GrammarTerminalClass:ParsingRule
 }
 extension Grammar.TerminalClass 
 {
-    static 
+    public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
         where   Diagnostics:ParsingDiagnostics,
                 Diagnostics.Source.Index == Location,
@@ -512,7 +542,7 @@ extension Grammar.TerminalClass
         return value 
     }
 }
-
+public
 protocol _GrammarTerminalSequence:ParsingRule
     where Terminal:Equatable, Construction == Void 
 {
@@ -525,7 +555,7 @@ protocol _GrammarTerminalSequence:ParsingRule
 }
 extension Grammar.TerminalSequence 
 {
-    static 
+    public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws
         where   Diagnostics:ParsingDiagnostics, 
                 Diagnostics.Source.Index == Location,
@@ -546,7 +576,7 @@ extension Grammar.TerminalSequence
         }
     }
 }
-
+public
 protocol _GrammarDigitRule:Grammar.TerminalClass where Construction:BinaryInteger
 {
     static 
@@ -557,23 +587,27 @@ protocol _GrammarDigitRule:Grammar.TerminalClass where Construction:BinaryIntege
 }
 extension Grammar 
 {
+    public 
     typealias DigitRule = _GrammarDigitRule
-    
+    public
     struct IntegerOverflowError<T>:Error, CustomStringConvertible 
     {
+        public
         var description:String 
         {
             "parsed value overflows integer type '\(T.self)'"
         }
     }
-    
+    public
     enum UnsignedIntegerLiteral<Rule>:ParsingRule
         where Rule:DigitRule, Rule.Construction:FixedWidthInteger
     {
+        public
         typealias Location = Rule.Location
+        public
         typealias Terminal = Rule.Terminal
         
-        static 
+        public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
             where   Diagnostics:ParsingDiagnostics,
                     Diagnostics.Source.Index == Location,
@@ -597,24 +631,29 @@ extension Grammar
 
 extension Grammar 
 {
+    public 
     enum Encoding<Location, Terminal> 
     {
     }
+    public 
     enum Digit<Location, Terminal, Construction> where Construction:BinaryInteger 
     {
     }
 }
 extension Grammar 
 {
+    public 
     enum Pad<Rule, Padding>:ParsingRule
         where   Rule:ParsingRule, Padding:ParsingRule, 
                 Rule.Location == Padding.Location,
                 Rule.Terminal == Padding.Terminal, 
                 Padding.Construction == Void
     {
+        public 
         typealias Terminal = Rule.Terminal
+        public 
         typealias Location = Rule.Location
-        static 
+        public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
             where   Diagnostics:ParsingDiagnostics,
                     Diagnostics.Source.Index == Location,
@@ -695,14 +734,16 @@ extension Grammar
 
 extension Grammar 
 {
+    public 
     enum Collect<Rule, Construction>:ParsingRule 
         where   Rule:ParsingRule, Rule.Construction == Construction.Element,
                 Construction:RangeReplaceableCollection
     {
+        public 
         typealias Location = Rule.Location
+        public 
         typealias Terminal = Rule.Terminal 
-        
-        static 
+        public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Construction
             where   Diagnostics:ParsingDiagnostics,
                     Diagnostics.Source.Index == Location,
@@ -711,14 +752,16 @@ extension Grammar
             input.parse(as: Rule.self, in: Construction.self)
         }
     }
+    public 
     enum Reduce<Rule, Construction>:ParsingRule 
         where   Rule:ParsingRule, Rule.Construction == Construction.Element,
                 Construction:RangeReplaceableCollection
     {
+        public 
         typealias Location = Rule.Location
+        public 
         typealias Terminal = Rule.Terminal 
-        
-        static 
+        public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
             where   Diagnostics:ParsingDiagnostics,
                     Diagnostics.Source.Index == Location,
