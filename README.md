@@ -9,11 +9,7 @@ This is a non-resilient Swift submodule. It should be imported as a Git submodul
 * `enum Grammar`
 * `protocol TraceableError`
 * `protocol TraceableErrorRoot`
-
-In addition, it adds symbols to the following standard-library namespaces:
-
-* `extension Swift.Unicode` (adds the `Latin1` namespace)
-* `extension Swift.Unicode.ASCII` (adds various ASCII definitions)
-* `extension Swift.Character` (adds various character definitions)
-
-All declarations are `internal`.
+* `struct ParsingError<Index>`
+* `struct ParsingInput<Diagnostics>`
+* `protocol ParsingRule`
+* `protocol ParsingDiagnostics`

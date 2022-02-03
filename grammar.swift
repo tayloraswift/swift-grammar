@@ -1,6 +1,13 @@
 public 
-struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source:Collection
+struct ParsingError<Index>:TraceableError, CustomStringConvertible 
 {
+    public 
+    struct Frame 
+    {
+        let index:Index 
+        let rule:Any.Type 
+        let construction:Any.Type 
+    }
     public static 
     var namespace:String 
     {
@@ -8,32 +15,27 @@ struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source
     }
     public 
     let problem:Error, 
-        source:Source, 
-        index:Source.Index,
-        trace:[(index:Source.Index, rule:Any.Type, type:Any.Type)]
+        index:Index,
+        trace:[Frame]
     public 
-    init(at index:Source.Index, in source:Source, because problem:Error, 
-        trace:[(index:Source.Index, rule:Any.Type, type:Any.Type)])
+    init(at index:Index, because problem:Error, trace:[Frame])
     {
         self.problem    = problem
-        self.source     = source 
         self.index      = index 
         self.trace      = trace
     }
     public 
     var context:[String] 
     {
-        [ "while parsing input sequence '\(self.source)'" ]
-        +
         trace.map 
         {
-            if $0.type is Void.Type
+            if $0.construction is Void.Type
             {
-                return "while parsing constructionless rule '\($0.rule)'"
+                return "while validating pattern '\($0.rule)'"
             }
             else 
             {
-                return "while parsing value of type '\($0.type)' by rule '\($0.rule)'"
+                return "while parsing value of type '\($0.construction)' by rule '\($0.rule)'"
             }
         }
     } 
@@ -41,6 +43,63 @@ struct ParsingError<Source>:TraceableError, CustomStringConvertible where Source
     var next:Error? 
     {
         self.problem 
+    }
+    
+    static 
+    func annotate<Background>(_ range:Range<Index>, on background:Background, 
+        line render:(Background.SubSequence) -> String, 
+        newline predicate:(Background.Element) -> Bool) 
+        -> String 
+        where Background:BidirectionalCollection, Background.Index == Index
+    {
+        // `..<` means this will print the previous line if the problematic 
+        // index references the newline itself
+        let start:Index         = background[..<range.lowerBound].lastIndex (where: predicate) ?? background.startIndex
+        let   end:Index         = background[range.lowerBound...].firstIndex(where: predicate) ?? background.endIndex
+        let beginning:String    = render(background[start..<range.lowerBound].dropFirst()), 
+            middle:String
+        let line:String
+        if range.upperBound < end 
+        {
+            middle  = render(background[range])
+            line    = beginning + middle + render(background[range.upperBound..<end])
+        }
+        else 
+        {
+            middle  = render(background[range.lowerBound..<end])
+            line    = beginning + middle 
+        }
+        return 
+            """
+            \(line)
+            \(String.init(repeating: " ", count: beginning.count))^\(String.init(repeating: "~", count: middle.count).dropLast())
+            """
+    }
+    public 
+    func annotate<Background>(source background:Background, 
+        line:(Background.SubSequence) -> String, newline:(Background.Element) -> Bool) 
+        -> String 
+        where Background:BidirectionalCollection, Background.Index == Index
+    {
+        """
+        \(String.init(reflecting: type(of: self.problem))): \(self.problem)
+        \(Self.annotate(background.index(before: self.index) ..< self.index, on: background, line: line, newline: newline))
+        \(self.trace.map
+        {
+            (frame:Frame) in
+            
+            let heading:String 
+            if frame.construction is Void.Type
+            {
+                heading = "note: expected pattern '\(String.init(reflecting: frame.rule))'"
+            }
+            else 
+            {
+                heading = "note: while parsing value of type '\(String.init(reflecting: frame.construction))' by rule '\(String.init(reflecting: frame.rule))'"
+            }
+            return "\(heading)\n\(Self.annotate(frame.index ..< self.index, on: background, line: line, newline: newline))"
+        }.reversed().joined(separator: "\n"))
+        """
     }
 }
 public 
@@ -71,7 +130,7 @@ protocol ParsingDiagnostics
     mutating 
     func pop()
     mutating 
-    func reset(index:inout Source.Index, in:Source, to:Breadcrumb, because:inout Error) 
+    func reset(index:inout Source.Index, to:Breadcrumb, because:inout Error) 
 }
 public 
 enum Grammar 
@@ -101,7 +160,7 @@ enum Grammar
         }
         @inlinable @inline(__always)
         public 
-        func reset(index:inout Source.Index, in _:Source, to breadcrumb:Source.Index, because _:inout Error) 
+        func reset(index:inout Source.Index, to breadcrumb:Source.Index, because _:inout Error) 
         {
             index = breadcrumb 
         }
@@ -110,8 +169,8 @@ enum Grammar
     struct DefaultDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     {
         private 
-        var stack:[(index:Source.Index, rule:Any.Type, type:Any.Type)], 
-            frontier:ParsingError<Source>?
+        var stack:[ParsingError<Source.Index>.Frame], 
+            frontier:ParsingError<Source.Index>?
         public 
         init() 
         {
@@ -121,7 +180,7 @@ enum Grammar
         public mutating 
         func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type)
         {
-            self.stack.append((index, Rule.self, Construction.self))
+            self.stack.append(.init(index: index, rule: Rule.self, construction: Construction.self))
         }
         public mutating 
         func pop()
@@ -129,25 +188,25 @@ enum Grammar
             self.stack.removeLast()
         }
         public mutating 
-        func reset(index:inout Source.Index, in source:Source, to _:Void, because error:inout Error)
+        func reset(index:inout Source.Index, to _:Void, because error:inout Error)
         {
             defer 
             {
                 index = self.stack.removeLast().index 
             }
-            if  error is ParsingError<Source> 
+            if  error is ParsingError<Source.Index> 
             {
                 return 
             }
-            if let diagnostic:ParsingError<Source> = self.frontier, index < diagnostic.index
+            if let diagnostic:ParsingError<Source.Index> = self.frontier, index < diagnostic.index
             {
                 // we did not make it as far as the previous most-successful parse 
                 error           = diagnostic 
             }
             else 
             {
-                let diagnostic:ParsingError<Source> = .init(at: index, 
-                    in: source, because: error, trace: self.stack) 
+                let diagnostic:ParsingError<Source.Index> = .init(at: index, 
+                    because: error, trace: self.stack) 
                 self.frontier   = diagnostic 
                 error           = diagnostic
             }
@@ -221,7 +280,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
         catch var error 
         {
-            self.diagnostics.reset(index: &self.index, in: self.source, to: breadcrumb, because: &error)
+            self.diagnostics.reset(index: &self.index, to: breadcrumb, because: &error)
             throw error
         }
     }
@@ -454,11 +513,11 @@ extension Grammar
         {
             if let encountered:Terminal = self.encountered 
             {
-                return "expected construction by rule '\(T.self) (encountered '\(encountered)')"
+                return "expected construction by rule '\(T.self)' (encountered '\(encountered)')"
             }
             else 
             {
-                return "expected construction by rule '\(T.self)"
+                return "expected construction by rule '\(T.self)'"
             } 
         }
     }
@@ -485,6 +544,16 @@ extension Grammar
                 throw Expected<Never, Terminal>.init(encountered: terminal)
             }
         }
+    }
+    public static 
+    func parse<Source, Root>(diagnosing source:Source, as _:Root.Type) throws -> Root.Construction
+        where   Source:Collection, Root:ParsingRule, 
+                Root.Location == Source.Index, Root.Terminal == Source.Element
+    {
+        var input:ParsingInput<DefaultDiagnostics<Source>> = .init(source)
+        let construction:Root.Construction = try input.parse(as: Root.self)
+        try input.parse(as: End<Root.Location, Root.Terminal>.self)
+        return construction
     }
     public static 
     func parse<Source, Root>(_ source:Source, as _:Root.Type) throws -> Root.Construction
