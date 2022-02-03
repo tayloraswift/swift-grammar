@@ -14,7 +14,7 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
     {
         public 
         typealias Terminal = Unicode.Scalar
-        public static 
+        @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
             where   Diagnostics:ParsingDiagnostics,
                     Diagnostics.Source.Index == Location,
@@ -38,7 +38,7 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         {
             public 
             typealias Construction  = Void
-            public static 
+            @inlinable public static 
             func parse(terminal:Unicode.Scalar) -> Void?
             {
                 switch terminal 
@@ -53,138 +53,138 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
     public
     enum AngleLeft:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("<") }
     }
     public
     enum AngleRight:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init(">") }
     }
     
     public
     enum Backslash:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("\\") }
     }
     public
     enum BracketLeft:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("[") }
     }
     public
     enum BracketRight:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("]") }
     }
     
     public
     enum And:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("&") }
     }
     public
     enum BraceLeft:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("{") }
     }
     public
     enum BraceRight:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("}") }
     }
     
     public
     enum Colon:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init(":") }
     }
     public
     enum Comma:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init(",") }
     }
     public
     enum Dollar:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("$") }
     }
     public
     enum Linefeed:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("\n") }
     }
     public
     enum Minus:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("-") }
     }
     
     public
     enum ParenthesisLeft:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("(") }
     }
     public
     enum ParenthesisRight:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init(")") }
     }
     
     public
     enum Percent:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("%") }
     }
     public
     enum Period:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init(".") }
     }
     public
     enum Plus:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("+") }
     }
     public
     enum Quote:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("\"") }
     }
     public
     enum Return:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("\r") }
     }
     public
     enum Slash:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("/") }
     }
     public
     enum Zero:Grammar.TerminalSequence
     {
-        public static 
+        @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("0") }
     }
     public 
@@ -195,7 +195,7 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         public
         enum Lowercase:Grammar.TerminalSequence 
         {
-            public static 
+            @inlinable public static 
             var literal:CollectionOfOne<Unicode.Scalar> { .init("x") }
         }
     }
@@ -205,7 +205,7 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         public
         enum Lowercase:Grammar.TerminalSequence 
         {
-            public static 
+            @inlinable public static 
             var literal:CollectionOfOne<Unicode.Scalar> { .init("u") }
         }
     }
@@ -214,7 +214,7 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
     {
         public 
         typealias Construction  = Void
-        public static 
+        @inlinable public static 
         func parse(terminal:Unicode.Scalar) -> Void?
         {
             terminal.properties.isWhitespace ? () : nil
@@ -226,12 +226,12 @@ extension Grammar.Digit where Terminal == Unicode.Scalar
     public 
     enum Decimal:Grammar.DigitRule, Grammar.TerminalClass 
     {
-        public static 
+        @inlinable public static 
         var radix:Construction 
         {
             10
         }
-        public static 
+        @inlinable public static 
         func parse(terminal:Terminal) -> Construction?
         {
             switch terminal 
@@ -262,12 +262,12 @@ extension Grammar.Digit where Terminal == Unicode.Scalar
         public 
         enum Lowercase:Grammar.DigitRule 
         {
-            public static 
+            @inlinable public static 
             var radix:Construction 
             {
                 16
             }
-            public static 
+            @inlinable public static 
             func parse(terminal:Unicode.Scalar) -> Construction?
             {
                 switch terminal 
@@ -284,12 +284,12 @@ extension Grammar.Digit where Terminal == Unicode.Scalar
         public 
         enum Anycase:Grammar.DigitRule 
         {
-            public static 
+            @inlinable public static 
             var radix:Construction 
             {
                 16
             }
-            public static 
+            @inlinable public static 
             func parse(terminal:Unicode.Scalar) -> Construction?
             {
                 switch terminal 
