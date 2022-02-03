@@ -54,11 +54,20 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
     {
         // `..<` means this will print the previous line if the problematic 
         // index references the newline itself
-        let start:Index         = background[..<range.lowerBound].lastIndex (where: predicate) ?? background.startIndex
-        let   end:Index         = background[range.lowerBound...].firstIndex(where: predicate) ?? background.endIndex
-        let beginning:String    = render(background[start..<range.lowerBound].dropFirst()), 
+        let beginning:String, 
             middle:String
+        if let start:Index  = background[..<range.lowerBound].lastIndex (where: predicate)
+        {
+            // can only remove newline if there is actually a preceeding newline 
+            beginning = render(background[start..<range.lowerBound].dropFirst())
+        }
+        else 
+        {
+            beginning = render(background[..<range.lowerBound])
+        } 
         let line:String
+        let   end:Index     = background[range.lowerBound...].firstIndex(where: predicate) ?? 
+            background.endIndex
         if range.upperBound < end 
         {
             middle  = render(background[range])
@@ -449,7 +458,7 @@ extension ParsingInput
             self.source.index(self.index, offsetBy: count, limitedBy: self.source.endIndex)
         else 
         {
-            throw Grammar.Expected<Any, Diagnostics.Source.Element>.init(encountered: nil)
+            throw Grammar.Expected<Any>.init()
         }
         
         let prefix:Diagnostics.Source.SubSequence = self.source[self.index ..< index]
@@ -496,26 +505,16 @@ extension Array:ParsingRule where Element:ParsingRule
 extension Grammar 
 {
     @frozen public
-    struct Expected<T, Terminal>:Error, CustomStringConvertible 
+    struct Expected<T>:Error, CustomStringConvertible 
     {
         public
-        let encountered:Terminal?
-        public
-        init(encountered:Terminal?)
+        init()
         {
-            self.encountered = encountered
         }
         public
         var description:String 
         {
-            if let encountered:Terminal = self.encountered 
-            {
-                return "expected construction by rule '\(T.self)' (encountered '\(encountered)')"
-            }
-            else 
-            {
-                return "expected construction by rule '\(T.self)'"
-            } 
+            "expected construction by rule '\(T.self)'"
         }
     }
     @frozen public
@@ -536,9 +535,9 @@ extension Grammar
                     Diagnostics.Source.Index == Location, 
                     Diagnostics.Source.Element == Terminal
         {
-            if let terminal:Terminal = input.next() 
+            if let _:Terminal = input.next() 
             {
-                throw Expected<Never, Terminal>.init(encountered: terminal)
+                throw Expected<Never>.init()
             }
         }
     }
@@ -598,12 +597,12 @@ extension Grammar.TerminalClass
         guard let terminal:Terminal     = input.next()
         else 
         {
-            throw Grammar.Expected<Self, Terminal>.init(encountered: nil)
+            throw Grammar.Expected<Self>.init()
         }
         guard let value:Construction    = Self.parse(terminal: terminal)
         else 
         {
-            throw Grammar.Expected<Self, Terminal>.init(encountered: terminal)
+            throw Grammar.Expected<Self>.init()
         }
         return value 
     }
@@ -632,12 +631,12 @@ extension Grammar.TerminalSequence
             guard let element:Terminal = input.next()
             else 
             {
-                throw Grammar.Expected<Self, Terminal>.init(encountered: nil)
+                throw Grammar.Expected<Self>.init()
             }
             guard element == expected 
             else 
             {
-                throw Grammar.Expected<Self, Terminal>.init(encountered: element)
+                throw Grammar.Expected<Self>.init()
             }
         }
     }
