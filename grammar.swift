@@ -712,32 +712,6 @@ extension Grammar
 extension Grammar 
 {
     public 
-    enum Pad<Rule, Padding>:ParsingRule
-        where   Rule:ParsingRule, Padding:ParsingRule, 
-                Rule.Location == Padding.Location,
-                Rule.Terminal == Padding.Terminal, 
-                Padding.Construction == Void
-    {
-        public 
-        typealias Terminal = Rule.Terminal
-        public 
-        typealias Location = Rule.Location
-        @inlinable public static 
-        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
-            where   Diagnostics:ParsingDiagnostics,
-                    Diagnostics.Source.Index == Location,
-                    Diagnostics.Source.Element == Terminal
-        {
-            input.parse(as: Padding.self, in: Void.self)
-            let construction:Rule.Construction = try input.parse(as: Rule.self) 
-            input.parse(as: Padding.self, in: Void.self)
-            return construction
-        }
-    }
-}
-extension Grammar 
-{
-    public 
     enum Collect<Rule, Construction>:ParsingRule 
         where   Rule:ParsingRule, Rule.Construction == Construction.Element,
                 Construction:RangeReplaceableCollection
@@ -777,6 +751,60 @@ extension Grammar
                 vector.append(next)
             }
             return vector
+        }
+    }
+    public 
+    enum Join<Rule, Separator, Construction>:ParsingRule
+        where   Rule:ParsingRule, Separator:ParsingRule,
+                Rule.Location == Separator.Location, 
+                Rule.Terminal == Separator.Terminal, 
+                Separator.Construction == Void, 
+                Rule.Construction == Construction.Element, 
+                Construction:RangeReplaceableCollection
+    {
+        public 
+        typealias Terminal = Rule.Terminal
+        public 
+        typealias Location = Rule.Location
+        @inlinable public static 
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
+            where   Diagnostics:ParsingDiagnostics,
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
+        {
+            var vector:Construction = .init()
+                vector.append(try input.parse(as: Rule.self))
+            while let (_, next):(Void, Rule.Construction)  = try? input.parse(as: (Separator, Rule).self)
+            {
+                vector.append(next)
+            }
+            return vector
+        }
+    }
+}
+extension Grammar 
+{
+    public 
+    enum Pad<Rule, Padding>:ParsingRule
+        where   Rule:ParsingRule, Padding:ParsingRule, 
+                Rule.Location == Padding.Location,
+                Rule.Terminal == Padding.Terminal, 
+                Padding.Construction == Void
+    {
+        public 
+        typealias Terminal = Rule.Terminal
+        public 
+        typealias Location = Rule.Location
+        @inlinable public static 
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
+            where   Diagnostics:ParsingDiagnostics,
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
+        {
+            input.parse(as: Padding.self, in: Void.self)
+            let construction:Rule.Construction = try input.parse(as: Rule.self) 
+            input.parse(as: Padding.self, in: Void.self)
+            return construction
         }
     }
 }
