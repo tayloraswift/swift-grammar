@@ -507,7 +507,7 @@ extension Grammar
     @frozen public
     struct Expected<T>:Error, CustomStringConvertible 
     {
-        public
+        @inlinable public
         init()
         {
         }
@@ -520,6 +520,10 @@ extension Grammar
     @frozen public
     struct ExpectedRegion<Base, Exclusion>:Error, CustomStringConvertible 
     {
+        @inlinable public
+        init()
+        {
+        }
         public
         var description:String 
         {
@@ -657,6 +661,8 @@ extension Grammar
     @frozen public
     struct IntegerOverflowError<T>:Error, CustomStringConvertible 
     {
+        // don’t mark this @inlinable, since we generally don’t expect to 
+        // recover from this
         public 
         init()
         {
