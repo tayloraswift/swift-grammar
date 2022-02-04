@@ -518,12 +518,12 @@ extension Grammar
         }
     }
     @frozen public
-    struct Excluded<T, Exclusion>:Error, CustomStringConvertible 
+    struct ExpectedRegion<Base, Exclusion>:Error, CustomStringConvertible 
     {
         public
         var description:String 
         {
-            "value of type '\(T.self)' would also be a valid value of '\(Exclusion.self)'"
+            "value of type '\(Base.self)' would also be a valid value of '\(Exclusion.self)'"
         }
     }
     public
@@ -711,6 +711,23 @@ extension Grammar
 }
 extension Grammar 
 {
+    public 
+    enum Discard<Rule>:ParsingRule 
+        where   Rule:ParsingRule, Rule.Construction == Void
+    {
+        public 
+        typealias Location = Rule.Location
+        public 
+        typealias Terminal = Rule.Terminal 
+        @inlinable public static 
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) 
+            where   Diagnostics:ParsingDiagnostics,
+                    Diagnostics.Source.Index == Location,
+                    Diagnostics.Source.Element == Terminal
+        {
+            input.parse(as: Rule.self, in: Void.self)
+        }
+    }
     public 
     enum Collect<Rule, Construction>:ParsingRule 
         where   Rule:ParsingRule, Rule.Construction == Construction.Element,
