@@ -120,6 +120,12 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         var literal:CollectionOfOne<Unicode.Scalar> { .init("$") }
     }
     public
+    enum Equals:Grammar.TerminalSequence
+    {
+        @inlinable public static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("=") }
+    }
+    public
     enum Linefeed:Grammar.TerminalSequence
     {
         @inlinable public static 
