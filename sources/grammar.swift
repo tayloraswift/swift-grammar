@@ -10,6 +10,13 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
         let rule:Any.Type 
         public 
         let construction:Any.Type 
+        @inlinable public 
+        init(index:Index, rule:Any.Type, construction:Any.Type)
+        {
+            self.index          = index 
+            self.rule           = rule 
+            self.construction   = construction
+        }
     }
     public static 
     var namespace:String 
