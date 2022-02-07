@@ -1,14 +1,5 @@
 extension Grammar.Encoding where Terminal == Unicode.Scalar
 {
-    /* enum Letter:Grammar.TerminalClass 
-    {
-        typealias Construction  = Unicode.Scalar 
-        static 
-        func parse(terminal:Unicode.Scalar) -> Unicode.Scalar?
-        {
-            terminal.properties.isLetter ? terminal : nil
-        }
-    } */
     public 
     enum Newline:ParsingRule 
     {
@@ -259,12 +250,6 @@ extension Grammar.Digit where Terminal == Unicode.Scalar
     public 
     enum Hex 
     {
-        /* private static 
-        subscript(lowercasing value:Int) -> Unicode.Scalar 
-        {
-            let remainder:UInt8 = .init(value)
-            return Unicode.Scalar.init(Unicode.Scalar.init((remainder < 10 ? 0x30 : 0x57) &+ remainder))
-        } */
         public 
         enum Lowercase:Grammar.DigitRule 
         {

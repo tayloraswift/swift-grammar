@@ -1,11 +1,14 @@
-public 
+@frozen public 
 struct ParsingError<Index>:TraceableError, CustomStringConvertible 
 {
-    public 
+    @frozen public 
     struct Frame 
     {
+        public 
         let index:Index 
+        public 
         let rule:Any.Type 
+        public 
         let construction:Any.Type 
     }
     public static 
@@ -17,7 +20,7 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
     let problem:Error, 
         index:Index,
         trace:[Frame]
-    public 
+    @inlinable public 
     init(at index:Index, because problem:Error, trace:[Frame])
     {
         self.problem    = problem
@@ -172,29 +175,29 @@ enum Grammar
             index = breadcrumb 
         }
     }
-    public 
+    @frozen public 
     struct DefaultDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     {
-        private 
+        public 
         var stack:[ParsingError<Source.Index>.Frame], 
             frontier:ParsingError<Source.Index>?
-        public 
+        @inlinable public 
         init() 
         {
             self.stack      = []
             self.frontier   = nil 
         }
-        public mutating 
+        @inlinable public mutating 
         func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type)
         {
             self.stack.append(.init(index: index, rule: Rule.self, construction: Construction.self))
         }
-        public mutating 
+        @inlinable public mutating 
         func pop()
         {
             self.stack.removeLast()
         }
-        public mutating 
+        @inlinable public mutating 
         func reset(index:inout Source.Index, to _:Void, because error:inout Error)
         {
             defer 
@@ -230,7 +233,7 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     var index:Diagnostics.Source.Index 
     public 
     var diagnostics:Diagnostics
-    public 
+    @inlinable public 
     init(_ source:Diagnostics.Source)
     {
         self.source         = source 
@@ -263,16 +266,6 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         }
         return self.source[self.index]
     }
-    /* private mutating 
-    func group<Parser, T>(parser:Parser.Type, _ body:(inout Self) throws -> T) throws -> T
-    {
-        try self.group(rule: .parser(parser), body)
-    }
-    private mutating 
-    func group<T>(file:StaticString, line:Int, _ body:(inout Self) throws -> T) throws -> T
-    {
-        try self.group(rule: .literal(file: file, line: line), body)
-    } */
     @inlinable public mutating 
     func group<Rule, Construction>(_:Rule.Type, _ body:(inout Self) throws -> Construction) 
         throws -> Construction
@@ -831,295 +824,3 @@ extension Grammar
         }
     }
 }
-
-/* extension ParsingInput where Source.Element:Equatable 
-{
-    mutating 
-    func parse(terminal:Source.Element, file:StaticString = #filePath, line:Int = #line) throws 
-    {
-        try self.parse(terminals: CollectionOfOne<Source.Element>.init(terminal), file: file, line: line)
-    }
-    mutating 
-    func parse<S>(terminals:S, file:StaticString = #filePath, line:Int = #line) throws 
-        where S:Sequence, S.Element == Source.Element
-    {
-        try self.group(file: file, line: line) 
-        {
-            for expected:S.Element in terminals
-            {
-                guard let element:Source.Element = $0.next()
-                else 
-                {
-                    throw Grammar.ExpectedTerminal<S.Element>.init(expected, encountered: nil)
-                }
-                guard element == expected 
-                else 
-                {
-                    throw Grammar.ExpectedTerminal<S.Element>.init(expected, encountered: element)
-                }
-            }
-        }
-    }
-} */
-
-
-
-// serialization // 
-
-
-// extras //
-
-
-
-
-
-
-/* protocol _GrammarBracketedExpression:ParsingRule 
-    where Construction == Expression.Construction
-{
-    associatedtype Start        where      Start:ParsingRule,      Start.Terminal == Terminal,  Start.Construction == Void
-    associatedtype Expression   where Expression:ParsingRule, Expression.Terminal == Terminal
-    associatedtype End          where        End:ParsingRule,        End.Terminal == Terminal,    End.Construction == Void
-    
-    init(production:Construction) 
-}
-extension Grammar.BracketedExpression 
-{
-    init<C>(parsing input:inout ParsingInput<C, Diagnostics>) throws where C:Collection, C.Element == Terminal
-    {
-        try input.parse(as: Start.self)
-        self.init(production: try input.parse(as: Expression.self))
-        try input.parse(as: End.self)
-    }
-}
-extension Grammar 
-{
-    typealias BracketedExpression = _GrammarBracketedExpression
-} */
-
-
-/* protocol _GrammarPower:ParsingRule
-    where Construction:RangeReplaceableCollection
-{
-    associatedtype Rule 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element, 
-                Rule.Terminal == Terminal, Rule.Location == Location
-    static 
-    var exponent:Int 
-    {
-        get 
-    }
-}
-extension Grammar.Power 
-{
-    static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
-        where   Diagnostics:ParsingDiagnostics,
-                Diagnostics.Source.Index == Location,
-                Diagnostics.Source.Element == Terminal
-    {
-        var vector:Construction = .init()
-        for _:Int in 0 ..< Self.exponent
-        {
-            vector.append(try input.parse(as: Rule.self))
-        }
-        return vector 
-    }
-}
-extension Grammar 
-{
-    typealias Power = _GrammarPower
-    
-    enum Reduce2<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            2
-        }
-    }
-    enum Reduce3<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            3
-        }
-    }
-    enum Reduce4<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            4
-        }
-    }
-    enum Reduce5<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            5
-        }
-    }
-    enum Reduce6<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            6
-        }
-    }
-    enum Reduce8<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            8
-        }
-    }
-    enum Reduce16<Rule, Construction>:Power 
-        where   Rule:ParsingRule, Rule.Construction == Construction.Element,
-                Construction:RangeReplaceableCollection
-    {
-        typealias Location = Rule.Location
-        typealias Terminal = Rule.Terminal 
-        static 
-        var exponent:Int 
-        {
-            16
-        }
-    }
-} */
-
-/* extension Grammar 
-{
-    struct BigEndian:RangeReplaceableCollection, RandomAccessCollection
-    {
-        private
-        var digits:[UInt8] 
-        
-        var startIndex:Int 
-        {
-            self.digits.startIndex 
-        }
-        var endIndex:Int 
-        {
-            self.digits.endIndex
-        }
-        subscript(_ index:Int) -> Int 
-        {
-            Int.init(self.digits[index])
-        }
-        
-        init() 
-        {
-            self.digits = []
-        }
-        
-        mutating 
-        func append(_ digit:Int)
-        {
-            self.digits.append(UInt8.init(digit))
-        }
-        mutating 
-        func replaceSubrange<C>(_ range:Range<Int>, with new:C) where C:Collection, C.Element == Int
-        {
-            self.digits.replaceSubrange(range, with: new.map(UInt8.init(_:)))
-        }
-        
-        func `as`<T>(_ type:T.Type, radix:T) throws -> T where T:FixedWidthInteger
-        {
-            guard var value:T = self.digits.first.map(T.init(_:))
-            else 
-            {
-                return T.zero 
-            }
-            for digit:UInt8 in self.digits.dropFirst()
-            {
-                guard   case (let product, false) = value.multipliedReportingOverflow(by: radix), 
-                        case (let next,    false) = product.addingReportingOverflow(T.init(digit))
-                else 
-                {
-                    throw Grammar.IntegerOverflowError<T>.init()
-                }
-                value = next 
-            }
-            return value
-        }
-        
-        func match<T>(exactly value:T, radix:T) -> Bool where T:FixedWidthInteger 
-        {
-            var digits:ReversedCollection<[UInt8]>.Iterator = self.digits.reversed().makeIterator()
-            var value:T = value 
-            repeat 
-            {
-                let next:(quotient:T, remainder:T)  = value.quotientAndRemainder(dividingBy: radix)
-                let remainder:UInt8                 = .init(next.remainder)
-                value                               =       next.quotient 
-                
-                guard   let digit:UInt8 =  digits.next(), 
-                            digit       == remainder 
-                else 
-                {
-                    return false 
-                }
-            }
-            while value     != 0 
-            guard case .none = digits.next()
-            else 
-            {
-                return false 
-            }
-            return true 
-        }
-    }
-}
-extension Grammar.BigEndian:CustomStringConvertible 
-{
-    var description:String 
-    {
-        var string:String = ""
-        for digit:UInt8 in self.digits
-        {
-            // dont use the code from `Character.HexDigit.Anycase`, because 
-            // radices may be greater than 16
-            let character:Character
-            if digit < 10 
-            {
-                character = .init(Unicode.Scalar.init(0x30 + digit))
-            }
-            else 
-            {
-                // lowercase 
-                character = .init(Unicode.Scalar.init(0x57 + digit))
-            }
-            string.append(character)
-        }
-        return string 
-    }
-} */
