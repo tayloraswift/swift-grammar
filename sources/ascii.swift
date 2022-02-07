@@ -57,6 +57,12 @@ extension Grammar.Encoding.ASCII
         var literal:CollectionOfOne<UInt8> { .init(0x2c) }
     }
     public
+    enum Dollar:Grammar.TerminalSequence
+    {
+        @inlinable public static 
+        var literal:CollectionOfOne<UInt8> { .init(0x24) }
+    }
+    public
     enum Equals:Grammar.TerminalSequence
     {
         @inlinable public static 
