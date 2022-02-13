@@ -241,7 +241,7 @@ extension Grammar.Digit.ASCII
                 switch terminal 
                 {
                 case 0x30 ... 0x39: return Construction.init(terminal - 0x30)
-                case 0x61 ... 0x66: return Construction.init(terminal + 0xa0 - 0x61)
+                case 0x61 ... 0x66: return Construction.init(terminal +   10 - 0x61)
                 default:            return nil
                 }
             }
@@ -260,8 +260,8 @@ extension Grammar.Digit.ASCII
                 switch terminal 
                 {
                 case 0x30 ... 0x39: return Construction.init(terminal - 0x30)
-                case 0x61 ... 0x66: return Construction.init(terminal + 0xa0 - 0x61)
-                case 0x41 ... 0x46: return Construction.init(terminal + 0xa0 - 0x41)
+                case 0x61 ... 0x66: return Construction.init(terminal +   10 - 0x61)
+                case 0x41 ... 0x46: return Construction.init(terminal +   10 - 0x41)
                 default:            return nil
                 }
             }
