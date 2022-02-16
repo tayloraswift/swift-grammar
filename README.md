@@ -1,5 +1,5 @@
 <p align="center">
-  <strong><em><code>grammar</code></em></strong><br><small><code>0.1.0</code></small>
+  <strong><em><code>grammar</code></em></strong><br><small><code>0.1.1</code></small>
 </p>
 
 High-performance constructive parsing, in pure Swift. This module powers the [`swift-json`](https://github.com/kelvin13/swift-json) library!
