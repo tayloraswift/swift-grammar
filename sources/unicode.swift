@@ -166,6 +166,11 @@ extension Grammar.Encoding where Terminal == Unicode.Scalar
         @inlinable public static 
         var literal:CollectionOfOne<Unicode.Scalar> { .init("\"") }
     }
+    enum Question:Grammar.TerminalSequence 
+    {
+        static 
+        var literal:CollectionOfOne<Unicode.Scalar> { .init("?") }
+    }
     public
     enum Return:Grammar.TerminalSequence
     {
