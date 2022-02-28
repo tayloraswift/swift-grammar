@@ -24,7 +24,6 @@ jobs:
             matrix:
                 swift:  [5.5.3]
         env: 
-            swiftenv-root:          $GITHUB_WORKSPACE/.swiftenv
             swift-toolchain-file:   $GITHUB_WORKSPACE/swift-${{ matrix.swift }}.tar.gz
         steps:
             -   uses: actions/checkout@v2
@@ -39,32 +38,19 @@ jobs:
                 id:   cache_status
                 uses: andstor/file-existence-action@v1
                 with:
-                    files: swift-${{ matrix.swift }}.tar.gz
+                    files: ${{ env.swift-toolchain-file }}
             
             -   name: download swift toolchain 
                 if: steps.cache_status.outputs.files_exists == 'false'
                 run: curl https://download.swift.org/swift-${{ matrix.swift }}-release/ubuntu2004/swift-${{ matrix.swift }}-RELEASE/swift-${{ matrix.swift }}-RELEASE-ubuntu20.04.tar.gz --output ${{ env.swift-toolchain-file }}
             
-            -   name: set up swiftenv 
-                run: |
-                    git clone https://github.com/kylef/swiftenv.git ${{ env.swiftenv-root }}
-                    echo "${{ env.swiftenv-root }}/bin"   >> $GITHUB_PATH
-                    echo "${{ env.swiftenv-root }}/shims" >> $GITHUB_PATH
             -   name: set up swift
                 run: |
-                    eval "$(swiftenv init -)"
-                    mkdir -p ${{ env.swiftenv-root }}/versions/${{ matrix.swift }}
-                    tar -xzf ${{ env.swift-toolchain-file }} -C ${{ env.swiftenv-root }}/versions/${{ matrix.swift }} --strip 1
-                    swiftenv rehash
-            -   name: select swift
+                    mkdir -p $GITHUB_WORKSPACE/swift-${{ matrix.swift }}
+                    tar -xzf ${{ env.swift-toolchain-file }} -C $GITHUB_WORKSPACE/swift-${{ matrix.swift }} --strip 1
+                    echo "$GITHUB_WORKSPACE/swift-${{ matrix.swift }}/usr/bin" >> $GITHUB_PATH
+
+            -   name: build 
                 run: |
-                    ls ${{ env.swiftenv-root }}/versions/
-                    ls ${{ env.swiftenv-root }}/versions/${{ matrix.swift }}
-                    swiftenv versions
-#            -   name: select swift
-#                run: |
-#                    swiftenv versions
-#                    swiftenv global ${{ matrix.swift }}
-#            
-#            -   name: build 
-#                run: swift build
+                    swift --version
+                    swift build
