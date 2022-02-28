@@ -22,30 +22,44 @@ jobs:
         runs-on: ubuntu-20.04
         strategy:
             matrix:
-                swift:  [5.5.3, 5.4.3, 5.3.3]
+                swift:  [5.5.3]
+        env: 
+            swiftenv-root:          $GITHUB_WORKSPACE/.swiftenv
+            swift-toolchain-file:   $GITHUB_WORKSPACE/swift-${{ matrix.swift }}.tar.gz
         steps:
             -   uses: actions/checkout@v2
             
             -   name: cache swift toolchains
                 uses: actions/cache@v2
                 with:
-                    path: ~/swift-${{ matrix.swift }}.tar.gz
-                    key: swift:${{ runner.os }}:${{ matrix.swift }}
+                    path: ${{ env.swift-toolchain-file }}
+                    key: ${{ runner.os }}:swift:${{ matrix.swift }}
                     
             -   name: cache status
                 id:   cache_status
                 uses: andstor/file-existence-action@v1
                 with:
-                    files: swift-${{ matrix.swift }}.tar.gz
+                    files: ${{ env.swift-toolchain-file }}
             
             -   name: download swift toolchain 
                 if: steps.cache_status.outputs.files_exists == 'false'
-                run: curl https://download.swift.org/swift-${{ matrix.swift }}-release/ubuntu2004/swift-${{ matrix.swift }}-RELEASE/swift-${{ matrix.swift }}-RELEASE-ubuntu20.04.tar.gz --output swift-${{ matrix.swift }}.tar.gz
+                run: curl https://download.swift.org/swift-${{ matrix.swift }}-release/ubuntu2004/swift-${{ matrix.swift }}-RELEASE/swift-${{ matrix.swift }}-RELEASE-ubuntu20.04.tar.gz --output ${{ env.swift-toolchain-file }}
             
-            -   name: set up swift toolchain 
+            -   name: set up swiftenv 
                 run: |
-                    tar xzf swift-${{ matrix.swift }}.tar.gz
-                    echo "$GITHUB_WORKSPACE/swift-${{ matrix.swift }}/usr/bin" >> $GITHUB_PATH
+                    git clone https://github.com/kylef/swiftenv.git ${{ env.swiftenv-root }}
+                    echo "${{ env.swiftenv-root }}/bin"   >> $GITHUB_PATH
+                    echo "${{ env.swiftenv-root }}/shims" >> $GITHUB_PATH
+            -   name: set up swift
+                run: |
+                    cat $GITHUB_PATH
+                    ls ${{ env.swiftenv-root }}/bin
+                    mkdir -p ${{ env.swiftenv-root }}/versions
+                    tar -xzf ${{ env.swift-toolchain-file }} -C ${{ env.swiftenv-root }}/versions
+                    swiftenv rehash
+                    swiftenv global swift-${{ matrix.swift }}
+# tar xzf swift-${{ matrix.swift }}.tar.gz 
+# echo "$GITHUB_WORKSPACE/swift-${{ matrix.swift }}/usr/bin" >> $GITHUB_PATH
             
             -   name: build 
                 run: swift build
