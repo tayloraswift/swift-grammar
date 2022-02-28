@@ -52,14 +52,18 @@ jobs:
                     echo "${{ env.swiftenv-root }}/shims" >> $GITHUB_PATH
             -   name: set up swift
                 run: |
-                    cat $GITHUB_PATH
-                    ls ${{ env.swiftenv-root }}/bin
-                    mkdir -p ${{ env.swiftenv-root }}/versions
-                    tar -xzf ${{ env.swift-toolchain-file }} -C ${{ env.swiftenv-root }}/versions
+                    mkdir -p ${{ env.swiftenv-root }}/versions/${{ matrix.swift }}
+                    tar -xzf ${{ env.swift-toolchain-file }} -C ${{ env.swiftenv-root }}/versions/${{ matrix.swift }} --strip 1
                     swiftenv rehash
-                    swiftenv global swift-${{ matrix.swift }}
-# tar xzf swift-${{ matrix.swift }}.tar.gz 
-# echo "$GITHUB_WORKSPACE/swift-${{ matrix.swift }}/usr/bin" >> $GITHUB_PATH
-            
-            -   name: build 
-                run: swift build
+            -   name: select swift
+                run: |
+                    ls ${{ env.swiftenv-root }}/versions/
+                    ls ${{ env.swiftenv-root }}/versions/${{ matrix.swift }}
+                    swiftenv versions
+#            -   name: select swift
+#                run: |
+#                    swiftenv versions
+#                    swiftenv global ${{ matrix.swift }}
+#            
+#            -   name: build 
+#                run: swift build
