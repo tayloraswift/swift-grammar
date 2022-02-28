@@ -39,7 +39,7 @@ jobs:
                 id:   cache_status
                 uses: andstor/file-existence-action@v1
                 with:
-                    files: ${{ env.swift-toolchain-file }}
+                    files: swift-${{ matrix.swift }}.tar.gz
             
             -   name: download swift toolchain 
                 if: steps.cache_status.outputs.files_exists == 'false'
@@ -52,6 +52,7 @@ jobs:
                     echo "${{ env.swiftenv-root }}/shims" >> $GITHUB_PATH
             -   name: set up swift
                 run: |
+                    eval "$(swiftenv init -)"
                     mkdir -p ${{ env.swiftenv-root }}/versions/${{ matrix.swift }}
                     tar -xzf ${{ env.swift-toolchain-file }} -C ${{ env.swiftenv-root }}/versions/${{ matrix.swift }} --strip 1
                     swiftenv rehash
