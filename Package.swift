@@ -1,21 +1,14 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.3
 import PackageDescription
 
-let package = Package(
+let package:Package = .init(
     name: "swift-grammar",
     products: 
     [
-        .library    (name: "Grammar",       targets: ["Grammar"]),
-    ],
-    dependencies: 
-    [
+        .library(name: "Grammar", targets: ["Grammar"]),
     ],
     targets: 
     [
-        .target(name: "Grammar", 
-            path: "sources/", 
-            exclude: 
-            [
-            ]),
+        .target(name: "Grammar", path: "sources/"),
     ]
 )

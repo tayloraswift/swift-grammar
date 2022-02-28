@@ -44,14 +44,14 @@ extension TraceableError
         var messages:[String]       = self.context 
         
         var current:TraceableError  = self 
-        while let next:Error        = current.next 
+        while let error:Error        = current.next 
         {
-            guard let next:TraceableError = next as? TraceableError 
+            guard let next:TraceableError = error as? TraceableError 
             else 
             {
                 // generic Swift.Error 
-                namespace           = String.init(reflecting: Swift.type(of: next))
-                messages.append(String.init(describing: next))
+                namespace           = String.init(reflecting: Swift.type(of: error))
+                messages.append(String.init(describing: error))
                 break 
             }
             
