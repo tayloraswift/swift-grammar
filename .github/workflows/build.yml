@@ -7,22 +7,23 @@ on:
         branches: [ master ]
 
 jobs:
-#  build-macos:
-#    runs-on: macos-11
-#    steps:
-#    - uses: actions/checkout@v2
-#    # reads .swift-version
-#    - uses: YOCKOW/Action-setup-swift@v1.1.14
-#    - run:  | 
-#        brew install kylef/formulae/swiftenv
-#        echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.bash_profile
-#        swiftenv install 
-#        swift build
-    build-linux:
-        runs-on: ubuntu-20.04
+    build-macos:
+        runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                swift:  [5.5.3]
+                os: [macos-11, macos-10.15]
+        steps:
+            -   uses: actions/checkout@v2
+            -   name: build 
+                run: |
+                    swift --version
+                    swift build
+    build-linux:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-20.04, ubuntu-18.04]
+                swift: [5.5.3, 5.4.3, 5.3.3]
         steps:
             -   uses: actions/checkout@v2
             
@@ -30,12 +31,7 @@ jobs:
                 uses: actions/cache@v2
                 with:
                     path: swift-${{ matrix.swift }}.tar.gz
-                    key: ${{ runner.os }}:swift:${{ matrix.swift }}
-            
-            -   name: _debug_cache 
-                run: | 
-                    ls .
-                    ls swift-${{ matrix.swift }}.tar.gz
+                    key: ${{ matrix.os }}:swift:${{ matrix.swift }}
                     
             -   name: cache status
                 id:   cache_status
@@ -45,7 +41,7 @@ jobs:
             
             -   name: download swift toolchain 
                 if: steps.cache_status.outputs.files_exists == 'false'
-                run: curl https://download.swift.org/swift-${{ matrix.swift }}-release/ubuntu2004/swift-${{ matrix.swift }}-RELEASE/swift-${{ matrix.swift }}-RELEASE-ubuntu20.04.tar.gz --output swift-${{ matrix.swift }}.tar.gz
+                run: curl https://download.swift.org/swift-${{ matrix.swift }}-release/$(echo ${{ matrix.os }} | sed 's/[^a-zA-Z0-9]//g')/swift-${{ matrix.swift }}-RELEASE/swift-${{ matrix.swift }}-RELEASE-$(echo ${{ matrix.os }} | sed 's/[^a-zA-Z0-9\.]//g').tar.gz --output swift-${{ matrix.swift }}.tar.gz
             
             -   name: set up swift
                 run: |
