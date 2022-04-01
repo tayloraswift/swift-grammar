@@ -1,3 +1,5 @@
 .build/
 .swift-version
+catalog.json 
+imports.json 
 Package.resolved
