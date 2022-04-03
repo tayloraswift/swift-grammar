@@ -1,6 +1,14 @@
-<p align="center">
-  <strong><em><code>grammar</code></em></strong><br><small><code>0.1.3</code></small>
-</p>
+<div align="center">
+
+<strong><em><code>grammar</code></em></strong><br><small><code>0.2.0</code></small>
+
+[![ci build status](https://github.com/kelvin13/swift-grammar/actions/workflows/build.yml/badge.svg)](https://github.com/kelvin13/swift-grammar/actions/workflows/build.yml)
+[![ci windows build status](https://github.com/kelvin13/swift-grammar/actions/workflows/build-windows.yml/badge.svg)](https://github.com/kelvin13/swift-grammar/actions/workflows/build-windows.yml)
+
+[![swift package index versions](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fkelvin13%2Fswift-grammar%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/kelvin13/swift-grammar)
+[![swift package index platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fkelvin13%2Fswift-grammar%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/kelvin13/swift-grammar)
+
+</div>
 
 High-performance constructive parsing, in pure Swift. This module powers the [`swift-json`](https://github.com/kelvin13/swift-json) library!
 
