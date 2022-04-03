@@ -19,8 +19,16 @@ High-performance constructive parsing, in pure Swift. This module powers the [`s
 * `protocol TraceableErrorRoot`
 * `struct ParsingError<Index>`
 * `struct ParsingInput<Diagnostics>`
-* `protocol ParsingRule`
 * `protocol ParsingDiagnostics`
+* `protocol ParsingRule`
+* `protocol TerminalRule`
+* `protocol LiteralRule`
+* `protocol DigitRule`
+* `protocol ASCIITerminal`
+* `protocol UTF8Terminal`
+* `protocol UTF16Terminal`
+* `protocol UnicodeTerminal`
+* `protocol CharacterTerminal`
 
 ## adding `swift-grammar` as a dependency 
 
@@ -32,7 +40,7 @@ let package = Package(
     dependencies: 
     [
         // other dependencies
-        .package(url: "https://github.com/kelvin13/swift-grammar", from: "0.1.3"),
+        .package(url: "https://github.com/kelvin13/swift-grammar", from: "0.2.0"),
     ],
     targets: 
     [

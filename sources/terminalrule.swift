@@ -25,13 +25,3 @@ extension TerminalRule
         return value 
     }
 }
-
-public
-protocol DigitRule:TerminalRule where Construction:BinaryInteger
-{
-    static 
-    var radix:Construction 
-    {
-        get 
-    }
-}

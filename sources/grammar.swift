@@ -504,6 +504,13 @@ extension Array:ParsingRule where Element:ParsingRule
 
 extension Grammar 
 {
+    public 
+    enum Encoding<Location, Terminal> 
+    {
+    }
+}
+extension Grammar 
+{
     @frozen public
     struct Expected<T>:Error, CustomStringConvertible 
     {
@@ -588,65 +595,7 @@ extension Grammar
     typealias TerminalClass     = TerminalRule
 }
 
-extension Grammar 
-{
-    @frozen public
-    struct IntegerOverflowError<T>:Error, CustomStringConvertible 
-    {
-        // don’t mark this @inlinable, since we generally don’t expect to 
-        // recover from this
-        public 
-        init()
-        {
-        }
-        public
-        var description:String 
-        {
-            "parsed value overflows integer type '\(T.self)'"
-        }
-    }
-    public
-    enum UnsignedIntegerLiteral<Rule>:ParsingRule
-        where Rule:DigitRule, Rule.Construction:FixedWidthInteger
-    {
-        public
-        typealias Location = Rule.Location
-        public
-        typealias Terminal = Rule.Terminal
-        
-        @inlinable public static 
-        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
-            where   Diagnostics:ParsingDiagnostics,
-                    Diagnostics.Source.Index == Location,
-                    Diagnostics.Source.Element == Terminal
-        {
-            var value:Rule.Construction            = try input.parse(as: Rule.self)
-            while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
-            {
-                guard   case (let shifted, false) = value.multipliedReportingOverflow(by: Rule.radix), 
-                        case (let refined, false) = shifted.addingReportingOverflow(remainder)
-                else 
-                {
-                    throw IntegerOverflowError<Rule.Construction>.init()
-                }
-                value = refined
-            }
-            return value
-        }
-    }
-}
 
-extension Grammar 
-{
-    public 
-    enum Encoding<Location, Terminal> 
-    {
-    }
-    public 
-    enum Digit<Location, Terminal, Construction> where Construction:BinaryInteger 
-    {
-    }
-}
 extension Grammar 
 {
     public 
