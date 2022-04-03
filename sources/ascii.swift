@@ -8,86 +8,86 @@ extension Grammar.Encoding where Terminal == UInt8
 extension Grammar.Encoding.ASCII 
 {
     public
-    enum StartOfHeader:Grammar.TerminalSequence
+    enum StartOfHeader:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x01) }
     }
     
     public
-    enum Backslash:Grammar.TerminalSequence
+    enum Backslash:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x5c) }
     }
     public
-    enum BraceLeft:Grammar.TerminalSequence
+    enum BraceLeft:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x7b) }
     }
     public 
-    enum BraceRight:Grammar.TerminalSequence
+    enum BraceRight:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x7d) }
     }
     public
-    enum BracketLeft:Grammar.TerminalSequence
+    enum BracketLeft:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x5b) }
     }
     public 
-    enum BracketRight:Grammar.TerminalSequence
+    enum BracketRight:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x5d) }
     }
     public
-    enum Colon:Grammar.TerminalSequence
+    enum Colon:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x3a) }
     }
     public
-    enum Comma:Grammar.TerminalSequence
+    enum Comma:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x2c) }
     }
     public
-    enum Dollar:Grammar.TerminalSequence
+    enum Dollar:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x24) }
     }
     public
-    enum Equals:Grammar.TerminalSequence
+    enum Equals:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x3d) }
     }
     public
-    enum Minus:Grammar.TerminalSequence
+    enum Minus:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x2d) }
     }
     public
-    enum Period:Grammar.TerminalSequence
+    enum Period:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x2e) }
     }
     public
-    enum Quote:Grammar.TerminalSequence
+    enum Quote:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x22) }
     }
     public
-    enum Space:Grammar.TerminalSequence
+    enum Space:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x20) }
@@ -97,7 +97,7 @@ extension Grammar.Encoding.ASCII
     enum E 
     {
         public 
-        enum Anycase:Grammar.TerminalClass 
+        enum Anycase:TerminalRule 
         {
             public 
             typealias Construction  = Void
@@ -116,7 +116,7 @@ extension Grammar.Encoding.ASCII
     enum X
     {
         public
-        enum Lowercase:Grammar.TerminalSequence 
+        enum Lowercase:LiteralRule 
         {
             @inlinable public static 
             var literal:CollectionOfOne<UInt8> { .init(0x78) }
@@ -126,7 +126,7 @@ extension Grammar.Encoding.ASCII
     enum U
     {
         public
-        enum Lowercase:Grammar.TerminalSequence 
+        enum Lowercase:LiteralRule 
         {
             @inlinable public static 
             var literal:CollectionOfOne<UInt8> { .init(0x75) }
@@ -134,61 +134,61 @@ extension Grammar.Encoding.ASCII
     }
     
     public
-    enum Zero:Grammar.TerminalSequence
+    enum Zero:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x30) }
     }
     public
-    enum One:Grammar.TerminalSequence
+    enum One:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x31) }
     }
     public
-    enum Two:Grammar.TerminalSequence
+    enum Two:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x32) }
     }
     public
-    enum Three:Grammar.TerminalSequence
+    enum Three:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x33) }
     }
     public
-    enum Four:Grammar.TerminalSequence
+    enum Four:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x34) }
     }
     public
-    enum Five:Grammar.TerminalSequence
+    enum Five:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x35) }
     }
     public
-    enum Six:Grammar.TerminalSequence
+    enum Six:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x36) }
     }
     public
-    enum Seven:Grammar.TerminalSequence
+    enum Seven:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x37) }
     }
     public
-    enum Eight:Grammar.TerminalSequence
+    enum Eight:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x38) }
     }
     public
-    enum Nine:Grammar.TerminalSequence
+    enum Nine:LiteralRule
     {
         @inlinable public static 
         var literal:CollectionOfOne<UInt8> { .init(0x39) }
@@ -206,7 +206,7 @@ extension Grammar.Digit where Terminal == UInt8
 extension Grammar.Digit.ASCII
 {
     public 
-    enum Decimal:Grammar.DigitRule 
+    enum Decimal:DigitRule 
     {
         @inlinable public static 
         var radix:Construction 
@@ -228,7 +228,7 @@ extension Grammar.Digit.ASCII
     enum Hex 
     {
         public 
-        enum Lowercase:Grammar.DigitRule 
+        enum Lowercase:DigitRule 
         {
             @inlinable public static 
             var radix:Construction 
@@ -247,7 +247,7 @@ extension Grammar.Digit.ASCII
             }
         }
         public 
-        enum Anycase:Grammar.DigitRule 
+        enum Anycase:DigitRule 
         {
             @inlinable public static 
             var radix:Construction 
