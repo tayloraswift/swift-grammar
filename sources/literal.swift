@@ -30,9 +30,9 @@ extension UInt8:UTF8Terminal
 extension UInt16:UTF16Terminal 
 {
 }
-extension UInt32:UnicodeTerminal 
+/* extension UInt32:UnicodeTerminal 
 {
-}
+} */
 extension Unicode.Scalar:UnicodeTerminal 
 {
 }
