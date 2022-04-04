@@ -4,7 +4,7 @@ import PackageDescription
 #if swift(>=5.6)
 let future:[Package.Dependency] = 
 [
-    .package(url: "https://github.com/swift-biome/swift-documentation-extract", from: "0.1.0")
+    .package(url: "https://github.com/swift-biome/swift-documentation-extract", from: "0.1.1")
 ]
 #else 
 let future:[Package.Dependency] = []
