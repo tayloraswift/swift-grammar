@@ -1,7 +1,9 @@
 // swift-tools-version:5.3
 import PackageDescription
 
-#if swift(>=5.6)
+// cannot build the documentation plugin on windows since apparently 
+// the PackagePlugin module is not available
+#if swift(>=5.6) && !os(Windows)
 let future:[Package.Dependency] = 
 [
     .package(url: "https://github.com/swift-biome/swift-documentation-extract", from: "0.1.1")
