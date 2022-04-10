@@ -75,7 +75,7 @@ extension Grammar
 extension Grammar
 {
     public 
-    enum DecimalDigitScalar<Location, Construction> where Construction:BinaryInteger 
+    enum DecimalDigitScalar<Location, Construction>:DigitRule where Construction:BinaryInteger 
     {
         public 
         typealias Terminal = Unicode.Scalar 
@@ -105,7 +105,7 @@ extension Grammar
         }
     }
     public 
-    enum HexDigitScalar<Location, Construction> where Construction:BinaryInteger 
+    enum HexDigitScalar<Location, Construction>:DigitRule where Construction:BinaryInteger 
     {
         public 
         typealias Terminal = Unicode.Scalar 
@@ -187,9 +187,9 @@ extension Grammar
         
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
-            where   Diagnostics:ParsingDiagnostics,
-                    Diagnostics.Source.Index == Location,
-                    Diagnostics.Source.Element == Terminal
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             var value:Rule.Construction            = try input.parse(as: Rule.self)
             while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
