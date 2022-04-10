@@ -8,7 +8,9 @@ extension TerminalRule
 {
     @inlinable public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
-        where Grammar.Parsable<Location, Terminal, Diagnostics>:Any
+    where   Diagnostics:ParsingDiagnostics, 
+            Diagnostics.Source.Index == Location, 
+            Diagnostics.Source.Element == Terminal
     {
         guard let terminal:Terminal     = input.next()
         else 

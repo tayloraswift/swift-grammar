@@ -41,11 +41,10 @@ protocol ParsingRule
     ///     store an ``ParsingInput/.index`` and dereference it later, as long 
     ///     as you do not overwrite the [`inout`]() binding elsewhere.
     static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) 
-        throws -> Construction
-        where   Diagnostics:ParsingDiagnostics, 
-                Diagnostics.Source.Index == Location, 
-                Diagnostics.Source.Element == Terminal
+    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
+    where   Diagnostics:ParsingDiagnostics, 
+            Diagnostics.Source.Index == Location, 
+            Diagnostics.Source.Element == Terminal
 }
 // these extensions are mainly useful when defined as part of a tuple rule.
 // otherwise, the overloads in the previous section of code should be preferred
@@ -58,9 +57,9 @@ extension Optional:ParsingRule where Wrapped:ParsingRule
     
     @inlinable public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Wrapped.Construction?
-        where   Diagnostics:ParsingDiagnostics,
-                Diagnostics.Source.Index == Location,
-                Diagnostics.Source.Element == Terminal
+    where   Diagnostics:ParsingDiagnostics,
+            Diagnostics.Source.Index == Location,
+            Diagnostics.Source.Element == Terminal
     {
         // will choose non-throwing overload, so no infinite recursion will occur
         input.parse(as: Wrapped?.self)
@@ -75,9 +74,9 @@ extension Array:ParsingRule where Element:ParsingRule
     
     @inlinable public static 
     func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> [Element.Construction]
-        where   Diagnostics:ParsingDiagnostics,
-                Diagnostics.Source.Index == Location,
-                Diagnostics.Source.Element == Terminal
+    where   Diagnostics:ParsingDiagnostics,
+            Diagnostics.Source.Index == Location,
+            Diagnostics.Source.Element == Terminal
     {
         input.parse(as: Element.self, in: [Element.Construction].self)
     }
@@ -90,7 +89,9 @@ extension Grammar
     {
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             if let _:Terminal = input.next() 
             {
@@ -108,7 +109,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) 
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             input.parse(as: Rule.self, in: Void.self)
         }
@@ -124,7 +127,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Construction
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             input.parse(as: Rule.self, in: Construction.self)
         }
@@ -140,7 +145,9 @@ extension Grammar
         typealias Terminal = Rule.Terminal 
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             var vector:Construction = .init()
                 vector.append(try input.parse(as: Rule.self))
@@ -166,7 +173,9 @@ extension Grammar
         typealias Location = Rule.Location
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             var vector:Construction = .init()
                 vector.append(try input.parse(as: Rule.self))
@@ -190,7 +199,9 @@ extension Grammar
         typealias Location = Rule.Location
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             input.parse(as: Padding.self, in: Void.self)
             let construction:Rule.Construction = try input.parse(as: Rule.self) 

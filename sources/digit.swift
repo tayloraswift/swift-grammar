@@ -187,7 +187,9 @@ extension Grammar
         
         @inlinable public static 
         func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
-            where Parsable<Location, Terminal, Diagnostics>:Any
+        where   Diagnostics:ParsingDiagnostics, 
+                Diagnostics.Source.Index == Location, 
+                Diagnostics.Source.Element == Terminal
         {
             var value:Rule.Construction            = try input.parse(as: Rule.self)
             while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)

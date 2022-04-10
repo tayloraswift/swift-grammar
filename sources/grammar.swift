@@ -2,6 +2,7 @@
 public 
 enum Grammar 
 {
+    // note: this only works on swift >= 5.7
     /// A shortcut for expressing the type constraints on ``ParsingRule.parse(_:)``.
     /// 
     /// To use this compile-time abstraction, fill in its generic parameters and 
