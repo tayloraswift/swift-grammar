@@ -245,4 +245,22 @@ extension ParsingInput
         self.index = index 
         return prefix
     }
+    /// Discards and returns all remaining input.
+    /// >   Complexity: O(1)
+    @inlinable public mutating 
+    func parse(as _:Diagnostics.Source.Element.Type, in _:Diagnostics.Source.SubSequence.Type) -> Diagnostics.Source.SubSequence
+    {
+        defer 
+        {
+            self.index = self.source.endIndex
+        }
+        return self.source[self.index...]
+    }
+    /// Discards all remaining input.
+    /// >   Complexity: O(1)
+    @inlinable public mutating 
+    func parse(as _:Diagnostics.Source.Element.Type, in _:Void.Type)
+    {
+        self.index = self.source.endIndex
+    }
 }
