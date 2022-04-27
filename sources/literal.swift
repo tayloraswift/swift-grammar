@@ -213,6 +213,16 @@ extension Grammar.Encoding where Terminal:ASCIITerminal
         }
     }
     public 
+    enum S
+    {
+        public
+        enum Lowercase:LiteralRule 
+        {
+            @inlinable public static 
+            var literal:CollectionOfOne<Terminal> { .init(.init(0x73)) }
+        }
+    }
+    public 
     enum X
     {
         public
