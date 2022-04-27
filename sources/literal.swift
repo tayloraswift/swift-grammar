@@ -198,6 +198,13 @@ extension Grammar.Encoding where Terminal:ASCIITerminal
     public 
     enum E:TerminalRule
     {
+        public
+        enum Uppercase:LiteralRule 
+        {
+            @inlinable public static 
+            var literal:CollectionOfOne<Terminal> { .init(.init(0x45)) }
+        }
+        
         public 
         typealias Construction  = Void
         @inlinable public static 
@@ -210,6 +217,16 @@ extension Grammar.Encoding where Terminal:ASCIITerminal
             default:
                 return nil
             }
+        }
+    }
+    public 
+    enum P
+    {
+        public
+        enum Uppercase:LiteralRule 
+        {
+            @inlinable public static 
+            var literal:CollectionOfOne<Terminal> { .init(.init(0x50)) }
         }
     }
     public 
