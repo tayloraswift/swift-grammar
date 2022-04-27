@@ -11,6 +11,21 @@ protocol DigitRule:TerminalRule where Construction:BinaryInteger
 extension Grammar 
 {
     public 
+    enum NaturalDecimalDigit<Location, Terminal, Construction>
+        where Terminal:BinaryInteger, Construction:BinaryInteger
+    {
+        @inlinable public static 
+        func parse(terminal:Terminal) -> Construction? 
+        {
+            guard 0x31 ... 0x39 ~= terminal 
+            else 
+            {
+                return nil 
+            }
+            return .init(terminal - 0x30)
+        }
+    }
+    public 
     enum DecimalDigit<Location, Terminal, Construction>:DigitRule 
         where Terminal:BinaryInteger, Construction:BinaryInteger
     {
@@ -75,6 +90,19 @@ extension Grammar
 extension Grammar
 {
     public 
+    enum NaturalDecimalDigitScalar<Location, Construction> where Construction:BinaryInteger 
+    {
+        public 
+        typealias Terminal = Unicode.Scalar 
+        
+        @inlinable public static 
+        func parse(terminal:Unicode.Scalar) -> Construction?
+        {
+            "1" ... "9" ~= terminal ? 
+                Construction.init(terminal.value - ("0" as Unicode.Scalar).value) : nil
+        }
+    }
+    public 
     enum DecimalDigitScalar<Location, Construction>:DigitRule where Construction:BinaryInteger 
     {
         public 
@@ -88,20 +116,8 @@ extension Grammar
         @inlinable public static 
         func parse(terminal:Unicode.Scalar) -> Construction?
         {
-            switch terminal 
-            {
-            case "0":   return 0
-            case "1":   return 1
-            case "2":   return 2
-            case "3":   return 3
-            case "4":   return 4
-            case "5":   return 5
-            case "6":   return 6
-            case "7":   return 7
-            case "8":   return 8
-            case "9":   return 9
-            default:    return nil
-            }
+            "0" ... "9" ~= terminal ? 
+                Construction.init(terminal.value - ("0" as Unicode.Scalar).value) : nil
         }
     }
     public 
@@ -176,29 +192,37 @@ extension Grammar
             "parsed value overflows integer type '\(T.self)'"
         }
     }
+    
     public
-    enum UnsignedIntegerLiteral<Rule>:ParsingRule
-        where Rule:DigitRule, Rule.Construction:FixedWidthInteger
+    typealias UnsignedIntegerLiteral<Digit> = UnsignedNormalizedIntegerLiteral<Digit, Digit>
+    where Digit:DigitRule, Digit.Construction:FixedWidthInteger
+    
+    public
+    enum UnsignedNormalizedIntegerLiteral<First, Next>:ParsingRule
+    where   First:ParsingRule, Next:DigitRule, Next.Construction:FixedWidthInteger, 
+            First.Construction == Next.Construction, 
+            First.Location == Next.Location, 
+            First.Terminal == Next.Terminal
     {
         public
-        typealias Location = Rule.Location
+        typealias Location = First.Location
         public
-        typealias Terminal = Rule.Terminal
+        typealias Terminal = First.Terminal
         
         @inlinable public static 
-        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Rule.Construction
+        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Next.Construction
         where   Diagnostics:ParsingDiagnostics, 
                 Diagnostics.Source.Index == Location, 
                 Diagnostics.Source.Element == Terminal
         {
-            var value:Rule.Construction            = try input.parse(as: Rule.self)
-            while let remainder:Rule.Construction  =     input.parse(as: Rule?.self)
+            var value:Next.Construction = try input.parse(as: First.self)
+            while let remainder:Next.Construction = input.parse(as: Next?.self)
             {
-                guard   case (let shifted, false) = value.multipliedReportingOverflow(by: Rule.radix), 
+                guard   case (let shifted, false) = value.multipliedReportingOverflow(by: Next.radix), 
                         case (let refined, false) = shifted.addingReportingOverflow(remainder)
                 else 
                 {
-                    throw IntegerOverflowError<Rule.Construction>.init()
+                    throw IntegerOverflowError<Next.Construction>.init()
                 }
                 value = refined
             }
