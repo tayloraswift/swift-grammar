@@ -11,7 +11,7 @@ protocol DigitRule:TerminalRule where Construction:BinaryInteger
 extension Grammar 
 {
     public 
-    enum NaturalDecimalDigit<Location, Terminal, Construction>
+    enum NaturalDecimalDigit<Location, Terminal, Construction>:TerminalRule
         where Terminal:BinaryInteger, Construction:BinaryInteger
     {
         @inlinable public static 
@@ -90,7 +90,7 @@ extension Grammar
 extension Grammar
 {
     public 
-    enum NaturalDecimalDigitScalar<Location, Construction> where Construction:BinaryInteger 
+    enum NaturalDecimalDigitScalar<Location, Construction>:TerminalRule where Construction:BinaryInteger 
     {
         public 
         typealias Terminal = Unicode.Scalar 
