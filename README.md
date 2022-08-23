@@ -15,12 +15,19 @@ High-performance constructive parsing, in pure Swift. This module powers the [`s
 
 **Importing this module will expose the following top-level symbols**:
 
-* `enum Grammar`
+* `enum Pattern`
+* `enum UnicodeDigit`
+* `enum UnicodeEncoding`
+
 * `protocol TraceableError`
 * `protocol TraceableErrorRoot`
 * `struct ParsingError<Index>`
+
 * `struct ParsingInput<Diagnostics>`
+* `struct NoDiagnostics<Source>`
+* `struct DefaultDiagnostics<Source>`
 * `protocol ParsingDiagnostics`
+
 * `protocol ParsingRule`
 * `protocol TerminalRule`
 * `protocol LiteralRule`
