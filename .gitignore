@@ -1,5 +1,7 @@
 .build/
+.vscode/
+.devcontainer/
 .swift-version
-catalog.json 
-imports.json 
+
+Package.catalog 
 Package.resolved
