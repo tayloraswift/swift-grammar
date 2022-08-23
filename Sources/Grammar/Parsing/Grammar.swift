@@ -193,9 +193,9 @@ extension Grammar
     public
     typealias IntegerOverflowError<T> = Pattern.IntegerOverflowError<T> where T:FixedWidthInteger
     
-    @available(*, deprecated, renamed: "Pattern.UnsignedNormalizedInteger")
+    @available(*, deprecated, renamed: "Pattern.UnsignedInteger")
     public
-    typealias UnsignedIntegerLiteral<Digit> = Pattern.UnsignedNormalizedInteger<Digit, Digit>
+    typealias UnsignedIntegerLiteral<Digit> = Pattern.UnsignedInteger<Digit>
         where Digit:DigitRule, Digit.Construction:FixedWidthInteger
     
     @available(*, deprecated, renamed: "Pattern.UnsignedNormalizedInteger")
