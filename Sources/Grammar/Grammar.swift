@@ -41,10 +41,9 @@ enum Grammar
                 Diagnostics.Source.Element == Terminal
 
     /// A generic context for unicode definitions.
+    @available(*, deprecated, renamed: "UnicodeEncoding")
     public 
-    enum Encoding<Location, Terminal> 
-    {
-    }
+    typealias Encoding = UnicodeEncoding
     
     @frozen public
     struct Expected<T>:Error, CustomStringConvertible 

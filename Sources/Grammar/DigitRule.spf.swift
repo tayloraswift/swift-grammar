@@ -1,7 +1,7 @@
 
 #if swift(>=5.7)
 public
-protocol DigitRule<Terminal>:TerminalRule where Construction:BinaryInteger
+protocol DigitRule<Terminal, Construction>:TerminalRule where Construction:BinaryInteger
 {    
     static 
     var radix:Construction 

@@ -1,7 +1,7 @@
 
 #if swift(>=5.7)
 public
-protocol TerminalRule<Terminal>:ParsingRule
+protocol TerminalRule<Terminal, Construction>:ParsingRule
 {
     static 
     func parse(terminal:Terminal) -> Construction?
