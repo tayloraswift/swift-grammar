@@ -1,4 +1,12 @@
+@available(*, deprecated, renamed: "NoDiagnostics")
+public 
+typealias _NoDiagnostics = NoDiagnostics
+@available(*, deprecated, renamed: "DefaultDiagnostics")
+public 
+typealias _DefaultDiagnostics = DefaultDiagnostics
+
 /// A namespace for structured parsing utilities.
+@available(*, deprecated)
 public 
 enum Grammar 
 {
@@ -80,9 +88,7 @@ enum Grammar
     {
         try Rule.parse(source, into: Vector.self)
     }
-}
-extension Grammar 
-{
+    
     @available(*, deprecated, renamed: "LiteralRule")
     public 
     typealias TerminalSequence  = LiteralRule
@@ -90,27 +96,14 @@ extension Grammar
     @available(*, deprecated, renamed: "TerminalRule")
     public 
     typealias TerminalClass     = TerminalRule
-}
 
-@available(*, deprecated, renamed: "NoDiagnostics")
-public 
-typealias _NoDiagnostics = NoDiagnostics
-@available(*, deprecated, renamed: "DefaultDiagnostics")
-public 
-typealias _DefaultDiagnostics = DefaultDiagnostics
-
-extension Grammar 
-{
     @available(*, deprecated, renamed: "NoDiagnostics")
     public 
     typealias NoDiagnostics = _NoDiagnostics 
     @available(*, deprecated, renamed: "DefaultDiagnostics")
     public 
     typealias DefaultDiagnostics = _DefaultDiagnostics
-}
 
-extension Grammar 
-{
     @available(*, deprecated, renamed: "Pattern.End")
     public
     typealias End<Location, Terminal> = Pattern.End<Location, Terminal>
@@ -150,10 +143,6 @@ extension Grammar
                 Rule.Terminal == Padding.Terminal, 
                 Padding.Construction == Void
 
-}
-
-extension Grammar 
-{
     @available(*, deprecated, renamed: "UnicodeDigit.Natural")
     public 
     typealias   NaturalDecimalDigit<Location, Terminal, Construction> = 
@@ -185,10 +174,7 @@ extension Grammar
     typealias   HexDigitScalar<Location, Construction> = 
                 UnicodeDigit<Location, Unicode.Scalar, Construction>.HexScalar
         where Construction:BinaryInteger
-}
 
-extension Grammar 
-{
     @available(*, deprecated, renamed: "Pattern.IntegerOverflowError")
     public
     typealias IntegerOverflowError<T> = Pattern.IntegerOverflowError<T> where T:FixedWidthInteger
