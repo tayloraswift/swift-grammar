@@ -1,3 +1,4 @@
+/// A namespace for structured parsing utilities.
 public 
 enum Pattern 
 {
@@ -191,6 +192,10 @@ enum Pattern
         }
     }
 
+    public
+    typealias UnsignedInteger<Digit> = UnsignedNormalizedInteger<Digit, Digit>
+        where Digit:DigitRule, Digit.Construction:FixedWidthInteger
+    
     public
     enum UnsignedNormalizedInteger<First, Next>:ParsingRule
     where   First:ParsingRule, Next:DigitRule, Next.Construction:FixedWidthInteger, 
