@@ -32,6 +32,6 @@ let package:Package = .init(
     dependencies: plugins,
     targets: 
     [
-        .target(name: "Grammar", path: "sources/"),
+        .target(name: "Grammar"),
     ]
 )
