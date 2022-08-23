@@ -238,7 +238,7 @@ extension ParsingInput
             self.source.index(self.index, offsetBy: count, limitedBy: self.source.endIndex)
         else 
         {
-            throw Grammar.Expected<Any>.init()
+            throw Pattern.UnexpectedEndOfInputError.init()
         }
         
         let prefix:Diagnostics.Source.SubSequence = self.source[self.index ..< index]

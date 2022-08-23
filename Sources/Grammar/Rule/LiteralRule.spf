@@ -22,12 +22,12 @@ extension LiteralRule
             guard let element:Terminal = input.next()
             else 
             {
-                throw Grammar.Expected<Self>.init()
+                throw Pattern.ApplicationError<Self>.init()
             }
             guard element == expected 
             else 
             {
-                throw Grammar.Expected<Self>.init()
+                throw Pattern.ApplicationError<Self>.init()
             }
         }
     }
