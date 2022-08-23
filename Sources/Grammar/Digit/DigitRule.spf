@@ -1,0 +1,9 @@
+@retro public
+protocol DigitRule<Terminal, Construction>:TerminalRule where Construction:BinaryInteger
+{    
+    static 
+    var radix:Construction 
+    {
+        get 
+    }
+}

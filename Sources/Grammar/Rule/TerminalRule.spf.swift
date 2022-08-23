@@ -25,12 +25,12 @@ extension TerminalRule
         guard let terminal:Terminal     = input.next()
         else 
         {
-            throw Grammar.Expected<Self>.init()
+            throw Pattern.ApplicationError<Self>.init()
         }
         guard let value:Construction    = Self.parse(terminal: terminal)
         else 
         {
-            throw Grammar.Expected<Self>.init()
+            throw Pattern.ApplicationError<Self>.init()
         }
         return value 
     }
