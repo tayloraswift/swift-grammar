@@ -1,5 +1,5 @@
-public
-protocol ParsingDiagnostics 
+@retro public
+protocol ParsingDiagnostics<Source> 
 {
     associatedtype Source where Source:Collection 
     associatedtype Breadcrumb 

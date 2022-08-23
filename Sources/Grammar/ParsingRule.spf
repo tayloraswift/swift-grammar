@@ -1,6 +1,6 @@
 /// A structured parsing rule.
-public 
-protocol ParsingRule 
+@retro public 
+protocol ParsingRule<Terminal> 
 {
     /// The index type of the ``ParsingInput.source`` this rule expects.
     /// 

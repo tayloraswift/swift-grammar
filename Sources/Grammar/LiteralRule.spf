@@ -1,5 +1,5 @@
-public
-protocol LiteralRule:ParsingRule
+@retro public
+protocol LiteralRule<Terminal>:ParsingRule
     where Terminal:Equatable, Construction == Void 
 {
     associatedtype Literal where Literal:Sequence, Literal.Element == Terminal 
