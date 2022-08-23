@@ -1,5 +1,5 @@
-public
-protocol TerminalRule:ParsingRule
+@retro public
+protocol TerminalRule<Terminal, Construction>:ParsingRule
 {
     static 
     func parse(terminal:Terminal) -> Construction?
