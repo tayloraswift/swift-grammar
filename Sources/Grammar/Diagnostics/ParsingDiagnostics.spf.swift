@@ -1,5 +1,7 @@
 
 #if swift(>=5.7)
+/// An abstract interface used by ``ParsingInput`` to emit (or not emit) debugging 
+/// information to.
 public
 protocol ParsingDiagnostics<Source> 
 {
@@ -17,6 +19,8 @@ protocol ParsingDiagnostics<Source>
     func reset(index:inout Source.Index, to:Breadcrumb, because:inout Error) 
 }
 #else 
+/// An abstract interface used by ``ParsingInput`` to emit (or not emit) debugging 
+/// information to.
 public
 protocol ParsingDiagnostics
 {

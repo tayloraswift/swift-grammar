@@ -1,5 +1,6 @@
 
 #if swift(>=5.7)
+/// A parsing rule that is applied to a single terminal at a time.
 public
 protocol TerminalRule<Terminal, Construction>:ParsingRule
 {
@@ -7,6 +8,7 @@ protocol TerminalRule<Terminal, Construction>:ParsingRule
     func parse(terminal:Terminal) -> Construction?
 }
 #else 
+/// A parsing rule that is applied to a single terminal at a time.
 public
 protocol TerminalRule:ParsingRule
 {
@@ -22,16 +24,14 @@ extension TerminalRule
             Diagnostics.Source.Index == Location, 
             Diagnostics.Source.Element == Terminal
     {
-        guard let terminal:Terminal     = input.next()
+        if  let terminal:Terminal = input.next(),
+            let value:Construction = Self.parse(terminal: terminal)
+        {
+            return value 
+        }
         else 
         {
             throw Pattern.ApplicationError<Self>.init()
         }
-        guard let value:Construction    = Self.parse(terminal: terminal)
-        else 
-        {
-            throw Pattern.ApplicationError<Self>.init()
-        }
-        return value 
     }
 }

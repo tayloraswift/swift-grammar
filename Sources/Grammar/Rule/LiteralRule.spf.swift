@@ -1,5 +1,6 @@
 
 #if swift(>=5.7)
+/// A parsing rule that matches terminals against a constant ``Sequence``.
 public
 protocol LiteralRule<Terminal>:ParsingRule
     where Terminal:Equatable, Construction == Void 
@@ -12,6 +13,7 @@ protocol LiteralRule<Terminal>:ParsingRule
     }
 }
 #else 
+/// A parsing rule that matches terminals against a constant ``Sequence``.
 public
 protocol LiteralRule:ParsingRule
     where Terminal:Equatable, Construction == Void 

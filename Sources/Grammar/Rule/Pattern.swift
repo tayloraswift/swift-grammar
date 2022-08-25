@@ -18,7 +18,8 @@ enum Pattern
         {
         }
     }
-
+    /// An integer overflow error occurred while applying one of the 
+    /// built-in integer parsing rules.
     @frozen public
     struct IntegerOverflowError<Integer>:Error, CustomStringConvertible 
         where Integer:FixedWidthInteger
@@ -35,7 +36,7 @@ enum Pattern
             "parsed value overflows integer type '\(Integer.self)'"
         }
     }
-
+    /// An error occured while applying a parsing rule.
     @frozen public
     struct ApplicationError<Rule>:Error, CustomStringConvertible 
         where Rule:ParsingRule 
@@ -50,22 +51,11 @@ enum Pattern
             "expected construction by rule '\(Rule.self)'"
         }
     }
-    @frozen public
-    struct AmbiguityError<Base, Exclusion>:Error, CustomStringConvertible 
-        where Base:ParsingRule, Exclusion:ParsingRule
-    {
-        @inlinable public
-        init()
-        {
-        }
-        public
-        var description:String 
-        {
-            "value of type '\(Base.self)' would also be a valid value of '\(Exclusion.self)'"
-        }
-    }
 
-
+    /// A rule that expects the end of the input. 
+    /// 
+    /// >   Throws: ``ExpectedEndOfInputError`` if there is any 
+    ///     input remaining.
     public
     enum End<Location, Terminal>:ParsingRule 
     {
@@ -81,6 +71,9 @@ enum Pattern
             }
         }
     }
+    /// A rule that unconditionally ignores all remaining input.
+    /// 
+    /// This rule never throws an error.
     public 
     enum Discard<Rule>:ParsingRule 
         where   Rule:ParsingRule, Rule.Construction == Void

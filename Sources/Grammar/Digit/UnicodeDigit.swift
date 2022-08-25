@@ -5,6 +5,8 @@ enum UnicodeDigit<Location, Terminal, Construction> where Construction:BinaryInt
 }
 extension UnicodeDigit where Terminal:BinaryInteger 
 {
+    /// Matches a natural digit, `'1'` through `'9'` ([`0x31 ... 0x39`]()),
+    /// and returns its numeric value.
     public 
     enum Natural:TerminalRule where Construction:BinaryInteger
     {
@@ -19,6 +21,8 @@ extension UnicodeDigit where Terminal:BinaryInteger
             return .init(terminal - 0x30)
         }
     }
+    /// Matches a decimal digit, `'0'` through `'9'` ([`0x30 ... 0x39`]()),
+    /// and returns its numeric value.
     public 
     enum Decimal:DigitRule where Construction:BinaryInteger
     {
@@ -38,6 +42,8 @@ extension UnicodeDigit where Terminal:BinaryInteger
             return .init(terminal - 0x30)
         }
     }
+    /// Matches a hexadecimal digit, without case-sensitivity, 
+    /// and returns its numeric value.
     public 
     enum Hex:DigitRule where Construction:BinaryInteger 
     {
@@ -58,6 +64,7 @@ extension UnicodeDigit where Terminal:BinaryInteger
             }
         }
         
+        /// Matches a lowercase hexadecimal digit, and returns its numeric value.
         public 
         enum Lowercase:DigitRule
         {
@@ -81,6 +88,7 @@ extension UnicodeDigit where Terminal:BinaryInteger
 }
 extension UnicodeDigit where Terminal == Unicode.Scalar 
 {
+    /// Matches a natural digit, [`"1" ... "9"`](), and returns its numeric value.
     public 
     enum NaturalScalar:TerminalRule 
     {
@@ -94,6 +102,7 @@ extension UnicodeDigit where Terminal == Unicode.Scalar
                 Construction.init(terminal.value - ("0" as Unicode.Scalar).value) : nil
         }
     }
+    /// Matches a decimal digit, [`"0" ... "9"`](), and returns its numeric value.
     public 
     enum DecimalScalar:DigitRule 
     {
@@ -112,6 +121,7 @@ extension UnicodeDigit where Terminal == Unicode.Scalar
                 Construction.init(terminal.value - ("0" as Unicode.Scalar).value) : nil
         }
     }
+    /// Matches a hexdecimal digit, without case-sensitivity, and returns its numeric value.
     public 
     enum HexScalar:DigitRule 
     {
@@ -139,6 +149,7 @@ extension UnicodeDigit where Terminal == Unicode.Scalar
             }
         }
         
+        /// Matches a lowercase hexdecimal digit and returns its numeric value.
         public 
         enum Lowercase:DigitRule
         {

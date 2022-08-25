@@ -49,6 +49,13 @@ protocol ParsingRule<Terminal>
 
 extension ParsingRule 
 {
+    /// Attempts to parse the given input completely, emitting diagnostics 
+    /// if parsing failed.
+    ///
+    /// 
+    /// >   Throws: 
+    ///     A ``Pattern/ExpectedEndOfInputError`` if there remained any 
+    ///     unparsed input after applying this rule to its furthest extent.
     @inlinable public static 
     func parse<Source>(diagnosing source:Source) throws -> Construction
         where   Source:Collection, Source.Index == Location, Source.Element == Terminal
@@ -58,6 +65,16 @@ extension ParsingRule
         try input.parse(as: Pattern.End<Location, Terminal>.self)
         return construction
     }
+    /// Attempts to parse the given input completely.
+    /// 
+    /// This method is *not* a default implementation for 
+    /// ``parse(_:)?overload=s7Grammar11ParsingRuleP5parsey12ConstructionQzAA0B5InputVyqd__GzKAA0B11DiagnosticsRd__6Source_5IndexQYd__8LocationRtzAK_7ElementQYd__8TerminalRtzlFZ``; 
+    /// that is a SymbolGraphGen classifier bug.
+    /// 
+    /// To parse with diagnostics, use ``parse(diagnosing:)``.
+    /// >   Throws: 
+    ///     A ``Pattern/ExpectedEndOfInputError`` if there remained any 
+    ///     unparsed input after applying this rule to its furthest extent.
     @inlinable public static 
     func parse<Source>(_ source:Source) throws -> Construction
         where   Source:Collection, Source.Index == Location, Source.Element == Terminal
@@ -67,6 +84,12 @@ extension ParsingRule
         try input.parse(as: Pattern.End<Location, Terminal>.self)
         return construction
     }
+    /// Attempts to parse the given input completely by applying this rule repeatedly.
+    /// 
+    /// This function does not parse with diagnostics.
+    /// >   Throws: 
+    ///     A ``Pattern/ExpectedEndOfInputError`` if there remained any 
+    ///     unparsed input after applying this rule to its furthest extent.
     @inlinable public static 
     func parse<Source, Vector>(_ source:Source, into _:Vector.Type = Vector.self) 
         throws -> Vector
