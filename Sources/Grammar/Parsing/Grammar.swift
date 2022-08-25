@@ -57,10 +57,10 @@ enum Grammar
     public
     typealias Expected<T> = Pattern.ApplicationError<T> 
         where T:ParsingRule
-    @available(*, deprecated, renamed: "Pattern.AmbiguityError")
+    @available(*, deprecated, renamed: "Pattern.ApplicationError")
     public
-    typealias ExpectedRegion<Base, Exclusion> = Pattern.AmbiguityError<Base, Exclusion> 
-        where Base:ParsingRule, Exclusion:ParsingRule
+    typealias ExpectedRegion<Base, Exclusion> = Pattern.ApplicationError<Base> 
+        where Base:ParsingRule
 
     @available(*, deprecated, renamed: "ParsingRule.parse(diagnosing:)")
     @inlinable public static 
@@ -97,9 +97,14 @@ enum Grammar
     public 
     typealias TerminalClass     = TerminalRule
 
+    /// ``Grammar//NoDiagnostics`` was moved to the top-level 
+    /// namespace of this module.
     @available(*, deprecated, renamed: "NoDiagnostics")
     public 
     typealias NoDiagnostics = _NoDiagnostics 
+
+    /// ``Grammar//DefaultDiagnostics`` was moved to the top-level 
+    /// namespace of this module.
     @available(*, deprecated, renamed: "DefaultDiagnostics")
     public 
     typealias DefaultDiagnostics = _DefaultDiagnostics

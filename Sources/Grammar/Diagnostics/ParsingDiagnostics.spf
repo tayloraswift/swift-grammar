@@ -1,3 +1,5 @@
+/// An abstract interface used by ``ParsingInput`` to emit (or not emit) debugging 
+/// information to.
 @retro public
 protocol ParsingDiagnostics<Source> 
 {

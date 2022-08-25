@@ -1,3 +1,4 @@
+/// A parsing rule that is applied to a single terminal at a time.
 @retro public
 protocol TerminalRule<Terminal, Construction>:ParsingRule
 {
@@ -12,16 +13,14 @@ extension TerminalRule
             Diagnostics.Source.Index == Location, 
             Diagnostics.Source.Element == Terminal
     {
-        guard let terminal:Terminal     = input.next()
+        if  let terminal:Terminal = input.next(),
+            let value:Construction = Self.parse(terminal: terminal)
+        {
+            return value 
+        }
         else 
         {
             throw Pattern.ApplicationError<Self>.init()
         }
-        guard let value:Construction    = Self.parse(terminal: terminal)
-        else 
-        {
-            throw Pattern.ApplicationError<Self>.init()
-        }
-        return value 
     }
 }

@@ -69,6 +69,9 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     public 
     typealias __Name__ = __Target__ 
 
+    /// Matches the ASCII/Unicode codepoint [`\(__codepoint__)`]().
+    /// 
+    /// All ``ASCIITerminal`` types can match a(n) `\(__Name__)` character.
     @matrix(
         __Name__: 
         [
@@ -175,10 +178,23 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
         var literal:CollectionOfOne<Terminal> { .init(.init(__codepoint__)) }
     }
 
+    /// Matches the letter `'\(__Letter__)'`, without case-sensitivity.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'\(__Letter__)'`.
+    /// The two valid codepoint values are [`\(__uppercase__)`]() (`'\(__Letter__)'`) 
+    /// and [`\(__lowercase__)`]() (`'\(__letter__)'`).
+    /// 
+    /// To match `'\(__Letter__)'` or `'\(__letter__)'` exactly, use the 
+    /// ``UnicodeEncoding//\(__Letter__)/Uppercase`` or 
+    /// ``UnicodeEncoding//\(__Letter__)/Lowercase`` rules.
     @matrix(
     __Letter__: 
     [
         A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+    ], 
+    __letter__: 
+    [
+        a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z,
     ], 
     __uppercase__:
     [
@@ -193,12 +209,20 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     public 
     enum __Letter__:TerminalRule
     {
+        /// Matches the lowercase letter `'\(__letter__)'`.
+        /// 
+        /// All ``ASCIITerminal`` types can match the letter `'\(__letter__)'` 
+        /// ([`\(__lowercase__)`]()).
         public
         enum Lowercase:LiteralRule 
         {
             @inlinable public static 
             var literal:CollectionOfOne<Terminal> { .init(.init(__lowercase__)) }
         }
+        /// Matches the uppercase letter `'\(__Letter__)'`.
+        /// 
+        /// All ``ASCIITerminal`` types can match the letter `'\(__Letter__)'` 
+        /// ([`\(__uppercase__)`]()).
         public
         enum Uppercase:LiteralRule 
         {

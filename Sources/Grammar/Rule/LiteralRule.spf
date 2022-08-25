@@ -1,3 +1,4 @@
+/// A parsing rule that matches terminals against a constant ``Sequence``.
 @retro public
 protocol LiteralRule<Terminal>:ParsingRule
     where Terminal:Equatable, Construction == Void 

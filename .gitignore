@@ -3,4 +3,7 @@
 .devcontainer/
 .swift-version
 
+/swift-biome/
+/*.ss
+
 Package.catalog 

@@ -1,3 +1,4 @@
+/// A link in a propogated error.
 public 
 protocol TraceableError:Error, CustomStringConvertible 
 {
@@ -15,6 +16,7 @@ protocol TraceableError:Error, CustomStringConvertible
         get 
     }
 }
+/// The root of a propogated error.
 public 
 protocol TraceableErrorRoot:TraceableError 
 {

@@ -2,7 +2,7 @@
 /// stack trace detailing how the parser got there.
 /// 
 /// None of the structured parsers defined in ``/swift-grammar`` throw this error 
-/// directly. Instead, the ``Grammar/DefaultDiagnostics`` engine computes it
+/// directly. Instead, the ``DefaultDiagnostics`` engine computes it
 /// based on the diagnostic engine’s internal state when encountering 
 /// invalid input.
 /// 
@@ -12,7 +12,7 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
 {
     /// A diagnostic stack frame, corresponding to a structured ``ParsingRule`` invocation.
     /// 
-    /// Only the ``Grammar/DefaultDiagnostics`` engine tracks call stack state.
+    /// Only the ``DefaultDiagnostics`` engine tracks call stack state.
     @frozen public 
     struct Frame 
     {
