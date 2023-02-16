@@ -8,38 +8,45 @@ on:
 
 jobs:
     macos-nightly:
-        runs-on: ${{ matrix.os }}
-        name: ${{ matrix.os }} (${{ matrix.swift }})
+        runs-on: ${{ matrix.os.runner }}
+        name: ${{ matrix.os.runner }} (${{ matrix.swift.toolchain }})
         env: 
-            SWIFT_TOOLCHAIN_DIRECTORY: /Library/Developer/Toolchains/swift-${{ matrix.swift }}.xctoolchain
+            SWIFT_TOOLCHAIN_DIRECTORY: /Library/Developer/Toolchains/swift-${{ matrix.swift.toolchain }}.xctoolchain
         strategy:
             matrix:
                 os: 
-                    -   macos-12
+                    -   runner: macos-12
+                        prefix: xcode
                 swift: 
-                    -   DEVELOPMENT-SNAPSHOT-2022-08-18-a
-                    -   DEVELOPMENT-SNAPSHOT-2022-08-15-a
+                    -   toolchain:  5.8-DEVELOPMENT-SNAPSHOT-2023-02-09-a
+                        branch:     swift-5.8-branch
         steps:
             -   uses: actions/checkout@v2
 
             -   name: cache swift toolchains
                 uses: actions/cache@v2
                 with:
-                    path: swift-${{ matrix.swift }}.pkg
-                    key: ${{ matrix.os }}:swift:${{ matrix.swift }}
+                    path: swift-${{ matrix.swift.toolchain }}.pkg
+                    key: ${{ matrix.os.runner }}:swift:${{ matrix.swift.toolchain }}
             
             -   name: cache status
                 id:   cache_status
                 uses: andstor/file-existence-action@v1
                 with:
-                    files: swift-${{ matrix.swift }}.pkg
+                    files: swift-${{ matrix.swift.toolchain }}.pkg
             
             -   name: download swift toolchain 
                 if: steps.cache_status.outputs.files_exists == 'false'
-                run:   "curl https://download.swift.org/development/xcode/\
-                        swift-${{ matrix.swift }}/\
-                        swift-${{ matrix.swift }}-osx.pkg \
-                        --output swift-${{ matrix.swift }}.pkg"
+                run:   "curl https://download.swift.org/\
+                        ${{ matrix.swift.branch }}/\
+                        ${{ matrix.os.prefix }}/\
+                        swift-${{ matrix.swift.toolchain }}/\
+                        swift-${{ matrix.swift.toolchain }}-osx.pkg \
+                        --output swift-${{ matrix.swift.toolchain }}.pkg"
+            
+            -   name: set up swift
+                run: |
+                    sudo installer -pkg swift-${{ matrix.swift.toolchain }}.pkg -target /
             
             -   name: set up swift
                 run: |
@@ -79,39 +86,10 @@ jobs:
                         prefix: ubuntu2004
                         suffix: ubuntu20.04
                 swift: 
-                    -   toolchain:  DEVELOPMENT-SNAPSHOT-2022-08-18-a
-                        branch:     development
-                    -   toolchain:  DEVELOPMENT-SNAPSHOT-2022-08-15-a
-                        branch:     development
-                include:
-                    -   os: 
-                            runner: ubuntu-20.04
-                            prefix: ubuntu2004
-                            suffix: ubuntu20.04
-                        swift: 
-                            toolchain:  5.6.2-RELEASE
-                            branch:     swift-5.6.2-release
-                    -   os: 
-                            runner: ubuntu-20.04
-                            prefix: ubuntu2004
-                            suffix: ubuntu20.04
-                        swift: 
-                            toolchain:  5.5.3-RELEASE
-                            branch:     swift-5.5.3-release
-                    -   os: 
-                            runner: ubuntu-20.04
-                            prefix: ubuntu2004
-                            suffix: ubuntu20.04
-                        swift: 
-                            toolchain:  5.4.3-RELEASE
-                            branch:     swift-5.4.3-release
-                    -   os: 
-                            runner: ubuntu-20.04
-                            prefix: ubuntu2004
-                            suffix: ubuntu20.04
-                        swift: 
-                            toolchain:  5.3.3-RELEASE
-                            branch:     swift-5.3.3-release
+                    -   toolchain:  5.8-DEVELOPMENT-SNAPSHOT-2023-02-09-a
+                        branch:     swift-5.8-branch
+                    -   toolchain:  5.7.3-RELEASE
+                        branch:     swift-5.7.3-release
         steps:
             -   uses: actions/checkout@v2
             
@@ -141,6 +119,7 @@ jobs:
                     mkdir -p $GITHUB_WORKSPACE/swift-${{ matrix.swift.toolchain }}
                     tar -xzf swift-${{ matrix.swift.toolchain }}.tar.gz -C $GITHUB_WORKSPACE/swift-${{ matrix.swift.toolchain }} --strip 1
                     echo "$GITHUB_WORKSPACE/swift-${{ matrix.swift.toolchain }}/usr/bin" >> $GITHUB_PATH
+            
             -   name: build
                 run: |
                     swift --version
