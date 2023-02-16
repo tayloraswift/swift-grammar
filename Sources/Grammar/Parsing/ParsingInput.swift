@@ -26,8 +26,8 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
         self.source[index]
     }
     @inlinable public 
-    subscript<Indices>(_ range:Indices) -> Diagnostics.Source.SubSequence 
-        where Indices:RangeExpression, Indices.Bound == Diagnostics.Source.Index 
+    subscript(_ range:some RangeExpression<Diagnostics.Source.Index>)
+        -> Diagnostics.Source.SubSequence 
     {
         self.source[range.relative(to: self.source)]
     }
@@ -74,7 +74,8 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     
     @inlinable public mutating 
     func parse<Rule>(as _:Rule.Type) throws -> Rule.Construction 
-        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element
+        where   Rule:ParsingRule<Diagnostics.Source.Element>,
+                Rule.Location == Diagnostics.Source.Index
     {
         try self.group(Rule.self){ try Rule.parse(&$0) }
     }
@@ -83,8 +84,8 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     @inlinable public mutating 
     func parse<T0, T1>(as _:(T0, T1).Type) throws 
         -> (T0.Construction, T1.Construction) 
-        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
-                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element 
+        where   T0:ParsingRule<Diagnostics.Source.Element>, T0.Location == Diagnostics.Source.Index,
+                T1:ParsingRule<Diagnostics.Source.Element>, T1.Location == Diagnostics.Source.Index
     {
         try self.group((T0, T1).self)
         {
@@ -98,9 +99,9 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     @inlinable public mutating 
     func parse<T0, T1, T2>(as _:(T0, T1, T2).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction) 
-        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
-                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
-                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element 
+        where   T0:ParsingRule<Diagnostics.Source.Element>, T0.Location == Diagnostics.Source.Index, 
+                T1:ParsingRule<Diagnostics.Source.Element>, T1.Location == Diagnostics.Source.Index,
+                T2:ParsingRule<Diagnostics.Source.Element>, T2.Location == Diagnostics.Source.Index 
     {
         try self.group((T0, T1, T2).self)
         {
@@ -115,10 +116,10 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     @inlinable public mutating 
     func parse<T0, T1, T2, T3>(as _:(T0, T1, T2, T3).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction) 
-        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
-                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
-                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
-                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element 
+        where   T0:ParsingRule<Diagnostics.Source.Element>, T0.Location == Diagnostics.Source.Index, 
+                T1:ParsingRule<Diagnostics.Source.Element>, T1.Location == Diagnostics.Source.Index,
+                T2:ParsingRule<Diagnostics.Source.Element>, T2.Location == Diagnostics.Source.Index,
+                T3:ParsingRule<Diagnostics.Source.Element>, T3.Location == Diagnostics.Source.Index 
     {
         try self.group((T0, T1, T2, T3).self)
         {
@@ -134,11 +135,11 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     @inlinable public mutating 
     func parse<T0, T1, T2, T3, T4>(as _:(T0, T1, T2, T3, T4).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction) 
-        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
-                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
-                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
-                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element,
-                T4:ParsingRule, T4.Location == Diagnostics.Source.Index, T4.Terminal == Diagnostics.Source.Element 
+        where   T0:ParsingRule<Diagnostics.Source.Element>, T0.Location == Diagnostics.Source.Index, 
+                T1:ParsingRule<Diagnostics.Source.Element>, T1.Location == Diagnostics.Source.Index,
+                T2:ParsingRule<Diagnostics.Source.Element>, T2.Location == Diagnostics.Source.Index,
+                T3:ParsingRule<Diagnostics.Source.Element>, T3.Location == Diagnostics.Source.Index,
+                T4:ParsingRule<Diagnostics.Source.Element>, T4.Location == Diagnostics.Source.Index 
     {
         try self.group((T0, T1, T2, T3, T4).self)
         {
@@ -155,12 +156,12 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     @inlinable public mutating 
     func parse<T0, T1, T2, T3, T4, T5>(as _:(T0, T1, T2, T3, T4, T5).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction, T5.Construction) 
-        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
-                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
-                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
-                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element,
-                T4:ParsingRule, T4.Location == Diagnostics.Source.Index, T4.Terminal == Diagnostics.Source.Element,
-                T5:ParsingRule, T5.Location == Diagnostics.Source.Index, T5.Terminal == Diagnostics.Source.Element 
+        where   T0:ParsingRule<Diagnostics.Source.Element>, T0.Location == Diagnostics.Source.Index, 
+                T1:ParsingRule<Diagnostics.Source.Element>, T1.Location == Diagnostics.Source.Index,
+                T2:ParsingRule<Diagnostics.Source.Element>, T2.Location == Diagnostics.Source.Index,
+                T3:ParsingRule<Diagnostics.Source.Element>, T3.Location == Diagnostics.Source.Index,
+                T4:ParsingRule<Diagnostics.Source.Element>, T4.Location == Diagnostics.Source.Index,
+                T5:ParsingRule<Diagnostics.Source.Element>, T5.Location == Diagnostics.Source.Index 
     {
         try self.group((T0, T1, T2, T3, T4, T5).self)
         {
@@ -178,13 +179,13 @@ struct ParsingInput<Diagnostics> where Diagnostics:ParsingDiagnostics
     @inlinable public mutating 
     func parse<T0, T1, T2, T3, T4, T5, T6>(as _:(T0, T1, T2, T3, T4, T5, T6).Type) throws 
         -> (T0.Construction, T1.Construction, T2.Construction, T3.Construction, T4.Construction, T5.Construction, T6.Construction) 
-        where   T0:ParsingRule, T0.Location == Diagnostics.Source.Index, T0.Terminal == Diagnostics.Source.Element, 
-                T1:ParsingRule, T1.Location == Diagnostics.Source.Index, T1.Terminal == Diagnostics.Source.Element,
-                T2:ParsingRule, T2.Location == Diagnostics.Source.Index, T2.Terminal == Diagnostics.Source.Element,
-                T3:ParsingRule, T3.Location == Diagnostics.Source.Index, T3.Terminal == Diagnostics.Source.Element,
-                T4:ParsingRule, T4.Location == Diagnostics.Source.Index, T4.Terminal == Diagnostics.Source.Element,
-                T5:ParsingRule, T5.Location == Diagnostics.Source.Index, T5.Terminal == Diagnostics.Source.Element,
-                T6:ParsingRule, T6.Location == Diagnostics.Source.Index, T6.Terminal == Diagnostics.Source.Element 
+        where   T0:ParsingRule<Diagnostics.Source.Element>, T0.Location == Diagnostics.Source.Index, 
+                T1:ParsingRule<Diagnostics.Source.Element>, T1.Location == Diagnostics.Source.Index,
+                T2:ParsingRule<Diagnostics.Source.Element>, T2.Location == Diagnostics.Source.Index,
+                T3:ParsingRule<Diagnostics.Source.Element>, T3.Location == Diagnostics.Source.Index,
+                T4:ParsingRule<Diagnostics.Source.Element>, T4.Location == Diagnostics.Source.Index,
+                T5:ParsingRule<Diagnostics.Source.Element>, T5.Location == Diagnostics.Source.Index,
+                T6:ParsingRule<Diagnostics.Source.Element>, T6.Location == Diagnostics.Source.Index 
     {
         try self.group((T0, T1, T2, T3, T4, T5, T6).self)
         {
@@ -205,13 +206,13 @@ extension ParsingInput
     // this overload will be preferred over the `throws` overload
     @inlinable public mutating 
     func parse<Rule>(as _:Rule?.Type) -> Rule.Construction? 
-        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element
+        where   Rule:ParsingRule<Diagnostics.Source.Element>, Rule.Location == Diagnostics.Source.Index
     {
         try? self.parse(as: Rule.self)
     }
     @inlinable public mutating 
     func parse<Rule>(as _:Rule.Type, in _:Void.Type) 
-        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element, 
+        where   Rule:ParsingRule<Diagnostics.Source.Element>, Rule.Location == Diagnostics.Source.Index, 
                 Rule.Construction == Void 
     {
         while let _:Void = self.parse(as: Rule?.self)
@@ -220,7 +221,7 @@ extension ParsingInput
     }
     @inlinable public mutating 
     func parse<Rule, Vector>(as _:Rule.Type, in _:Vector.Type) -> Vector
-        where   Rule:ParsingRule, Rule.Location == Diagnostics.Source.Index, Rule.Terminal == Diagnostics.Source.Element, 
+        where   Rule:ParsingRule<Diagnostics.Source.Element>, Rule.Location == Diagnostics.Source.Index, 
                 Rule.Construction == Vector.Element, 
                 Vector:RangeReplaceableCollection
     {

@@ -17,8 +17,7 @@ struct NoDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     // don’t contain many instructions (if any)
     @inline(__always)
     @inlinable public 
-    func push<Rule, Construction>(index:Source.Index, for _:Construction.Type, by _:Rule.Type) 
-        -> Source.Index
+    func push(index:Source.Index, for _:(some Any).Type, by _:(some Any).Type) -> Source.Index
     {
         index
     }
@@ -29,7 +28,7 @@ struct NoDiagnostics<Source>:ParsingDiagnostics where Source:Collection
     }
     @inline(__always)
     @inlinable public 
-    func reset(index:inout Source.Index, to breadcrumb:Source.Index, because _:inout Error) 
+    func reset(index:inout Source.Index, to breadcrumb:Source.Index, because _:inout any Error) 
     {
         index = breadcrumb 
     }

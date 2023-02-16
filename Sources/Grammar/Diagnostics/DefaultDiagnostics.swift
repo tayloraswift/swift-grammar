@@ -27,7 +27,7 @@ struct DefaultDiagnostics<Source>:ParsingDiagnostics where Source:Collection
         self.stack.removeLast()
     }
     @inlinable public mutating 
-    func reset(index:inout Source.Index, to _:Void, because error:inout Error)
+    func reset(index:inout Source.Index, to _:Void, because error:inout any Error)
     {
         defer 
         {

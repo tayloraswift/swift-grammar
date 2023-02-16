@@ -5,830 +5,812 @@ enum UnicodeEncoding<Location, Terminal>
 }
 extension UnicodeEncoding where Terminal:ASCIITerminal 
 {
-    /// Parses a newline; either a ``Linefeed`` or a ``CarriageReturn`` followed by a 
-    /// ``Linefeed``.
+    @available(*, unavailable, renamed: "StartOfHeading")
     public 
-    enum Newline:ParsingRule 
-    {
-        @inlinable public static 
-        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
-            where   Diagnostics:ParsingDiagnostics,
-                    Diagnostics.Source.Index == Location,
-                    Diagnostics.Source.Element == Terminal
-        {
-            if case nil = input.parse(as: Linefeed?.self) 
-            {
-                try input.parse(as: (CarriageReturn, Linefeed).self)
-            }
-        }
-    }
+    typealias StartOfHeader = StartOfHeading
 
-    @available(*, deprecated)
+    @available(*, unavailable, renamed: "DoubleQuote")
     public 
-    typealias StartOfHeader = StartOfHeading 
+    typealias Quote = DoubleQuote
 
-    @available(*, deprecated)
+    @available(*, unavailable, renamed: "Ampersand")
     public 
-    typealias Quote = DoubleQuote 
+    typealias And = Ampersand
 
-    @available(*, deprecated)
+    @available(*, unavailable, renamed: "Hyphen")
     public 
-    typealias And = Ampersand 
+    typealias Minus = Hyphen
 
-    @available(*, deprecated)
+    @available(*, unavailable, renamed: "Hashtag")
     public 
-    typealias Minus = Hyphen 
+    typealias Pound = Hashtag
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "SingleQuote")
     public 
-    typealias Pound = Hashtag 
+    typealias Apostrophe = SingleQuote
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "Hyphen")
     public 
-    typealias Apostrophe = SingleQuote 
+    typealias HyphenMinus = Hyphen
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "Period")
     public 
-    typealias HyphenMinus = Hyphen 
+    typealias FullStop = Period
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "Slash")
     public 
-    typealias FullStop = Period 
+    typealias Solidus = Slash
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "AngleLeft")
     public 
-    typealias Solidus = Slash 
+    typealias LessThan = AngleLeft
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "AngleRight")
     public 
-    typealias LessThan = AngleLeft 
+    typealias GreaterThan = AngleRight
 
-    @available(*, unavailable)
+    @available(*, unavailable, renamed: "Pipe")
     public 
-    typealias GreaterThan = AngleRight 
-
-    @available(*, unavailable)
-    public 
-    typealias VerticalBar = Pipe 
+    typealias VerticalBar = Pipe
 
     /// Matches the ASCII/Unicode codepoint [`0x00`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Null` character.
     public
-    enum Null:LiteralRule
+    enum Null:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x00)) }
+        var terminal:Terminal { .init(0x00) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x01`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `StartOfHeading` character.
     public
-    enum StartOfHeading:LiteralRule
+    enum StartOfHeading:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x01)) }
+        var terminal:Terminal { .init(0x01) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x02`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `StartOfText` character.
     public
-    enum StartOfText:LiteralRule
+    enum StartOfText:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x02)) }
+        var terminal:Terminal { .init(0x02) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x03`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `EndOfText` character.
     public
-    enum EndOfText:LiteralRule
+    enum EndOfText:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x03)) }
+        var terminal:Terminal { .init(0x03) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x04`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `EndOfTransmission` character.
     public
-    enum EndOfTransmission:LiteralRule
+    enum EndOfTransmission:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x04)) }
+        var terminal:Terminal { .init(0x04) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x05`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Enquiry` character.
     public
-    enum Enquiry:LiteralRule
+    enum Enquiry:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x05)) }
+        var terminal:Terminal { .init(0x05) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x06`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Acknowledgement` character.
     public
-    enum Acknowledgement:LiteralRule
+    enum Acknowledgement:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x06)) }
+        var terminal:Terminal { .init(0x06) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x07`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Bell` character.
     public
-    enum Bell:LiteralRule
+    enum Bell:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x07)) }
+        var terminal:Terminal { .init(0x07) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x08`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Backspace` character.
     public
-    enum Backspace:LiteralRule
+    enum Backspace:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x08)) }
+        var terminal:Terminal { .init(0x08) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x09`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `HorizontalTab` character.
     public
-    enum HorizontalTab:LiteralRule
+    enum HorizontalTab:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x09)) }
+        var terminal:Terminal { .init(0x09) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x0a`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Linefeed` character.
     public
-    enum Linefeed:LiteralRule
+    enum Linefeed:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x0a)) }
+        var terminal:Terminal { .init(0x0a) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x0b`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `VerticalTab` character.
     public
-    enum VerticalTab:LiteralRule
+    enum VerticalTab:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x0b)) }
+        var terminal:Terminal { .init(0x0b) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x0c`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Formfeed` character.
     public
-    enum Formfeed:LiteralRule
+    enum Formfeed:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x0c)) }
+        var terminal:Terminal { .init(0x0c) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x0d`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `CarriageReturn` character.
     public
-    enum CarriageReturn:LiteralRule
+    enum CarriageReturn:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x0d)) }
+        var terminal:Terminal { .init(0x0d) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x0e`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `ShiftOut` character.
     public
-    enum ShiftOut:LiteralRule
+    enum ShiftOut:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x0e)) }
+        var terminal:Terminal { .init(0x0e) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x0f`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `ShiftIn` character.
     public
-    enum ShiftIn:LiteralRule
+    enum ShiftIn:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x0f)) }
+        var terminal:Terminal { .init(0x0f) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x10`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `DataLinkEscape` character.
     public
-    enum DataLinkEscape:LiteralRule
+    enum DataLinkEscape:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x10)) }
+        var terminal:Terminal { .init(0x10) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x11`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `DeviceControl1` character.
     public
-    enum DeviceControl1:LiteralRule
+    enum DeviceControl1:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x11)) }
+        var terminal:Terminal { .init(0x11) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x12`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `DeviceControl2` character.
     public
-    enum DeviceControl2:LiteralRule
+    enum DeviceControl2:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x12)) }
+        var terminal:Terminal { .init(0x12) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x13`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `DeviceControl3` character.
     public
-    enum DeviceControl3:LiteralRule
+    enum DeviceControl3:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x13)) }
+        var terminal:Terminal { .init(0x13) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x14`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `DeviceControl4` character.
     public
-    enum DeviceControl4:LiteralRule
+    enum DeviceControl4:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x14)) }
+        var terminal:Terminal { .init(0x14) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x15`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `NegativeAcknowledgement` character.
     public
-    enum NegativeAcknowledgement:LiteralRule
+    enum NegativeAcknowledgement:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x15)) }
+        var terminal:Terminal { .init(0x15) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x16`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `SynchronousIdle` character.
     public
-    enum SynchronousIdle:LiteralRule
+    enum SynchronousIdle:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x16)) }
+        var terminal:Terminal { .init(0x16) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x17`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `EndOfTransmissionBlock` character.
     public
-    enum EndOfTransmissionBlock:LiteralRule
+    enum EndOfTransmissionBlock:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x17)) }
+        var terminal:Terminal { .init(0x17) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x18`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Cancel` character.
     public
-    enum Cancel:LiteralRule
+    enum Cancel:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x18)) }
+        var terminal:Terminal { .init(0x18) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x19`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `EndOfMedium` character.
     public
-    enum EndOfMedium:LiteralRule
+    enum EndOfMedium:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x19)) }
+        var terminal:Terminal { .init(0x19) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x1a`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Substitute` character.
     public
-    enum Substitute:LiteralRule
+    enum Substitute:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x1a)) }
+        var terminal:Terminal { .init(0x1a) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x1b`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Escape` character.
     public
-    enum Escape:LiteralRule
+    enum Escape:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x1b)) }
+        var terminal:Terminal { .init(0x1b) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x1c`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `FileSeparator` character.
     public
-    enum FileSeparator:LiteralRule
+    enum FileSeparator:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x1c)) }
+        var terminal:Terminal { .init(0x1c) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x1d`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `GroupSeparator` character.
     public
-    enum GroupSeparator:LiteralRule
+    enum GroupSeparator:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x1d)) }
+        var terminal:Terminal { .init(0x1d) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x1e`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `RecordSeparator` character.
     public
-    enum RecordSeparator:LiteralRule
+    enum RecordSeparator:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x1e)) }
+        var terminal:Terminal { .init(0x1e) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x1f`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `UnitSeparator` character.
     public
-    enum UnitSeparator:LiteralRule
+    enum UnitSeparator:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x1f)) }
+        var terminal:Terminal { .init(0x1f) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x20`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Space` character.
     public
-    enum Space:LiteralRule
+    enum Space:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x20)) }
+        var terminal:Terminal { .init(0x20) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x21`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Exclamation` character.
     public
-    enum Exclamation:LiteralRule
+    enum Exclamation:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x21)) }
+        var terminal:Terminal { .init(0x21) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x22`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `DoubleQuote` character.
     public
-    enum DoubleQuote:LiteralRule
+    enum DoubleQuote:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x22)) }
+        var terminal:Terminal { .init(0x22) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x23`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Hashtag` character.
     public
-    enum Hashtag:LiteralRule
+    enum Hashtag:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x23)) }
+        var terminal:Terminal { .init(0x23) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x24`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Dollar` character.
     public
-    enum Dollar:LiteralRule
+    enum Dollar:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x24)) }
+        var terminal:Terminal { .init(0x24) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x25`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Percent` character.
     public
-    enum Percent:LiteralRule
+    enum Percent:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x25)) }
+        var terminal:Terminal { .init(0x25) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x26`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Ampersand` character.
     public
-    enum Ampersand:LiteralRule
+    enum Ampersand:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x26)) }
+        var terminal:Terminal { .init(0x26) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x27`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `SingleQuote` character.
     public
-    enum SingleQuote:LiteralRule
+    enum SingleQuote:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x27)) }
+        var terminal:Terminal { .init(0x27) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x28`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `ParenthesisLeft` character.
     public
-    enum ParenthesisLeft:LiteralRule
+    enum ParenthesisLeft:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x28)) }
+        var terminal:Terminal { .init(0x28) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x29`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `ParenthesisRight` character.
     public
-    enum ParenthesisRight:LiteralRule
+    enum ParenthesisRight:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x29)) }
+        var terminal:Terminal { .init(0x29) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x2a`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Asterisk` character.
     public
-    enum Asterisk:LiteralRule
+    enum Asterisk:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x2a)) }
+        var terminal:Terminal { .init(0x2a) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x2b`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Plus` character.
     public
-    enum Plus:LiteralRule
+    enum Plus:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x2b)) }
+        var terminal:Terminal { .init(0x2b) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x2c`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Comma` character.
     public
-    enum Comma:LiteralRule
+    enum Comma:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x2c)) }
+        var terminal:Terminal { .init(0x2c) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x2d`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Hyphen` character.
     public
-    enum Hyphen:LiteralRule
+    enum Hyphen:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x2d)) }
+        var terminal:Terminal { .init(0x2d) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x2e`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Period` character.
     public
-    enum Period:LiteralRule
+    enum Period:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x2e)) }
+        var terminal:Terminal { .init(0x2e) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x2f`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Slash` character.
     public
-    enum Slash:LiteralRule
+    enum Slash:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x2f)) }
+        var terminal:Terminal { .init(0x2f) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x30`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Zero` character.
     public
-    enum Zero:LiteralRule
+    enum Zero:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x30)) }
+        var terminal:Terminal { .init(0x30) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x31`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `One` character.
     public
-    enum One:LiteralRule
+    enum One:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x31)) }
+        var terminal:Terminal { .init(0x31) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x32`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Two` character.
     public
-    enum Two:LiteralRule
+    enum Two:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x32)) }
+        var terminal:Terminal { .init(0x32) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x33`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Three` character.
     public
-    enum Three:LiteralRule
+    enum Three:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x33)) }
+        var terminal:Terminal { .init(0x33) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x34`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Four` character.
     public
-    enum Four:LiteralRule
+    enum Four:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x34)) }
+        var terminal:Terminal { .init(0x34) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x35`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Five` character.
     public
-    enum Five:LiteralRule
+    enum Five:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x35)) }
+        var terminal:Terminal { .init(0x35) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x36`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Six` character.
     public
-    enum Six:LiteralRule
+    enum Six:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x36)) }
+        var terminal:Terminal { .init(0x36) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x37`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Seven` character.
     public
-    enum Seven:LiteralRule
+    enum Seven:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x37)) }
+        var terminal:Terminal { .init(0x37) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x38`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Eight` character.
     public
-    enum Eight:LiteralRule
+    enum Eight:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x38)) }
+        var terminal:Terminal { .init(0x38) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x39`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Nine` character.
     public
-    enum Nine:LiteralRule
+    enum Nine:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x39)) }
+        var terminal:Terminal { .init(0x39) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x3a`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Colon` character.
     public
-    enum Colon:LiteralRule
+    enum Colon:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x3a)) }
+        var terminal:Terminal { .init(0x3a) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x3b`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Semicolon` character.
     public
-    enum Semicolon:LiteralRule
+    enum Semicolon:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x3b)) }
+        var terminal:Terminal { .init(0x3b) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x3c`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `AngleLeft` character.
     public
-    enum AngleLeft:LiteralRule
+    enum AngleLeft:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x3c)) }
+        var terminal:Terminal { .init(0x3c) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x3d`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Equals` character.
     public
-    enum Equals:LiteralRule
+    enum Equals:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x3d)) }
+        var terminal:Terminal { .init(0x3d) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x3e`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `AngleRight` character.
     public
-    enum AngleRight:LiteralRule
+    enum AngleRight:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x3e)) }
+        var terminal:Terminal { .init(0x3e) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x3f`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Question` character.
     public
-    enum Question:LiteralRule
+    enum Question:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x3f)) }
+        var terminal:Terminal { .init(0x3f) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x40`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `At` character.
     public
-    enum At:LiteralRule
+    enum At:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x40)) }
+        var terminal:Terminal { .init(0x40) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x5b`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `BracketLeft` character.
     public
-    enum BracketLeft:LiteralRule
+    enum BracketLeft:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x5b)) }
+        var terminal:Terminal { .init(0x5b) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x5c`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Backslash` character.
     public
-    enum Backslash:LiteralRule
+    enum Backslash:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x5c)) }
+        var terminal:Terminal { .init(0x5c) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x5d`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `BracketRight` character.
     public
-    enum BracketRight:LiteralRule
+    enum BracketRight:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x5d)) }
+        var terminal:Terminal { .init(0x5d) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x5e`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Caret` character.
     public
-    enum Caret:LiteralRule
+    enum Caret:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x5e)) }
+        var terminal:Terminal { .init(0x5e) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x5f`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Underscore` character.
     public
-    enum Underscore:LiteralRule
+    enum Underscore:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x5f)) }
+        var terminal:Terminal { .init(0x5f) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x60`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Backtick` character.
     public
-    enum Backtick:LiteralRule
+    enum Backtick:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x60)) }
+        var terminal:Terminal { .init(0x60) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x7b`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `BraceLeft` character.
     public
-    enum BraceLeft:LiteralRule
+    enum BraceLeft:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x7b)) }
+        var terminal:Terminal { .init(0x7b) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x7c`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Pipe` character.
     public
-    enum Pipe:LiteralRule
+    enum Pipe:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x7c)) }
+        var terminal:Terminal { .init(0x7c) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x7d`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `BraceRight` character.
     public
-    enum BraceRight:LiteralRule
+    enum BraceRight:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x7d)) }
+        var terminal:Terminal { .init(0x7d) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x7e`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Tilde` character.
     public
-    enum Tilde:LiteralRule
+    enum Tilde:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x7e)) }
+        var terminal:Terminal { .init(0x7e) }
     }
 
     /// Matches the ASCII/Unicode codepoint [`0x7f`]().
     /// 
     /// All ``ASCIITerminal`` types can match a(n) `Delete` character.
     public
-    enum Delete:LiteralRule
+    enum Delete:AtomicRule
     {
         @inlinable public static 
-        var literal:CollectionOfOne<Terminal> { .init(.init(0x7f)) }
+        var terminal:Terminal { .init(0x7f) }
     }
 
     /// Matches the letter `'A'`, without case-sensitivity.
@@ -838,32 +820,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x61`]() (`'a'`).
     /// 
     /// To match `'A'` or `'a'` exactly, use the 
-    /// ``UnicodeEncoding//A/Uppercase`` or 
-    /// ``UnicodeEncoding//A/Lowercase`` rules.
+    /// ``UnicodeEncoding A.Uppercase`` or 
+    /// ``UnicodeEncoding A.Lowercase`` rules.
     public 
     enum A:TerminalRule
     {
-        /// Matches the lowercase letter `'a'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'a'` 
-        /// ([`0x61`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x61)) }
-        }
-        /// Matches the uppercase letter `'A'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'A'` 
-        /// ([`0x41`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x41)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -879,6 +840,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'a'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'a'` 
+    /// ([`0x61`]()).
+    public
+    enum LowercaseA:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x61) }
+    }
+    /// Matches the uppercase letter `'A'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'A'` 
+    /// ([`0x41`]()).
+    public
+    enum UppercaseA:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x41) }
+    }
 
     /// Matches the letter `'B'`, without case-sensitivity.
     /// 
@@ -887,32 +868,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x62`]() (`'b'`).
     /// 
     /// To match `'B'` or `'b'` exactly, use the 
-    /// ``UnicodeEncoding//B/Uppercase`` or 
-    /// ``UnicodeEncoding//B/Lowercase`` rules.
+    /// ``UnicodeEncoding B.Uppercase`` or 
+    /// ``UnicodeEncoding B.Lowercase`` rules.
     public 
     enum B:TerminalRule
     {
-        /// Matches the lowercase letter `'b'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'b'` 
-        /// ([`0x62`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x62)) }
-        }
-        /// Matches the uppercase letter `'B'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'B'` 
-        /// ([`0x42`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x42)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -928,6 +888,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'b'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'b'` 
+    /// ([`0x62`]()).
+    public
+    enum LowercaseB:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x62) }
+    }
+    /// Matches the uppercase letter `'B'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'B'` 
+    /// ([`0x42`]()).
+    public
+    enum UppercaseB:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x42) }
+    }
 
     /// Matches the letter `'C'`, without case-sensitivity.
     /// 
@@ -936,32 +916,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x63`]() (`'c'`).
     /// 
     /// To match `'C'` or `'c'` exactly, use the 
-    /// ``UnicodeEncoding//C/Uppercase`` or 
-    /// ``UnicodeEncoding//C/Lowercase`` rules.
+    /// ``UnicodeEncoding C.Uppercase`` or 
+    /// ``UnicodeEncoding C.Lowercase`` rules.
     public 
     enum C:TerminalRule
     {
-        /// Matches the lowercase letter `'c'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'c'` 
-        /// ([`0x63`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x63)) }
-        }
-        /// Matches the uppercase letter `'C'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'C'` 
-        /// ([`0x43`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x43)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -977,6 +936,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'c'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'c'` 
+    /// ([`0x63`]()).
+    public
+    enum LowercaseC:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x63) }
+    }
+    /// Matches the uppercase letter `'C'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'C'` 
+    /// ([`0x43`]()).
+    public
+    enum UppercaseC:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x43) }
+    }
 
     /// Matches the letter `'D'`, without case-sensitivity.
     /// 
@@ -985,32 +964,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x64`]() (`'d'`).
     /// 
     /// To match `'D'` or `'d'` exactly, use the 
-    /// ``UnicodeEncoding//D/Uppercase`` or 
-    /// ``UnicodeEncoding//D/Lowercase`` rules.
+    /// ``UnicodeEncoding D.Uppercase`` or 
+    /// ``UnicodeEncoding D.Lowercase`` rules.
     public 
     enum D:TerminalRule
     {
-        /// Matches the lowercase letter `'d'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'d'` 
-        /// ([`0x64`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x64)) }
-        }
-        /// Matches the uppercase letter `'D'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'D'` 
-        /// ([`0x44`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x44)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1026,6 +984,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'d'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'d'` 
+    /// ([`0x64`]()).
+    public
+    enum LowercaseD:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x64) }
+    }
+    /// Matches the uppercase letter `'D'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'D'` 
+    /// ([`0x44`]()).
+    public
+    enum UppercaseD:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x44) }
+    }
 
     /// Matches the letter `'E'`, without case-sensitivity.
     /// 
@@ -1034,32 +1012,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x65`]() (`'e'`).
     /// 
     /// To match `'E'` or `'e'` exactly, use the 
-    /// ``UnicodeEncoding//E/Uppercase`` or 
-    /// ``UnicodeEncoding//E/Lowercase`` rules.
+    /// ``UnicodeEncoding E.Uppercase`` or 
+    /// ``UnicodeEncoding E.Lowercase`` rules.
     public 
     enum E:TerminalRule
     {
-        /// Matches the lowercase letter `'e'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'e'` 
-        /// ([`0x65`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x65)) }
-        }
-        /// Matches the uppercase letter `'E'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'E'` 
-        /// ([`0x45`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x45)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1075,6 +1032,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'e'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'e'` 
+    /// ([`0x65`]()).
+    public
+    enum LowercaseE:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x65) }
+    }
+    /// Matches the uppercase letter `'E'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'E'` 
+    /// ([`0x45`]()).
+    public
+    enum UppercaseE:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x45) }
+    }
 
     /// Matches the letter `'F'`, without case-sensitivity.
     /// 
@@ -1083,32 +1060,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x66`]() (`'f'`).
     /// 
     /// To match `'F'` or `'f'` exactly, use the 
-    /// ``UnicodeEncoding//F/Uppercase`` or 
-    /// ``UnicodeEncoding//F/Lowercase`` rules.
+    /// ``UnicodeEncoding F.Uppercase`` or 
+    /// ``UnicodeEncoding F.Lowercase`` rules.
     public 
     enum F:TerminalRule
     {
-        /// Matches the lowercase letter `'f'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'f'` 
-        /// ([`0x66`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x66)) }
-        }
-        /// Matches the uppercase letter `'F'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'F'` 
-        /// ([`0x46`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x46)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1124,6 +1080,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'f'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'f'` 
+    /// ([`0x66`]()).
+    public
+    enum LowercaseF:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x66) }
+    }
+    /// Matches the uppercase letter `'F'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'F'` 
+    /// ([`0x46`]()).
+    public
+    enum UppercaseF:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x46) }
+    }
 
     /// Matches the letter `'G'`, without case-sensitivity.
     /// 
@@ -1132,32 +1108,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x67`]() (`'g'`).
     /// 
     /// To match `'G'` or `'g'` exactly, use the 
-    /// ``UnicodeEncoding//G/Uppercase`` or 
-    /// ``UnicodeEncoding//G/Lowercase`` rules.
+    /// ``UnicodeEncoding G.Uppercase`` or 
+    /// ``UnicodeEncoding G.Lowercase`` rules.
     public 
     enum G:TerminalRule
     {
-        /// Matches the lowercase letter `'g'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'g'` 
-        /// ([`0x67`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x67)) }
-        }
-        /// Matches the uppercase letter `'G'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'G'` 
-        /// ([`0x47`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x47)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1173,6 +1128,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'g'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'g'` 
+    /// ([`0x67`]()).
+    public
+    enum LowercaseG:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x67) }
+    }
+    /// Matches the uppercase letter `'G'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'G'` 
+    /// ([`0x47`]()).
+    public
+    enum UppercaseG:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x47) }
+    }
 
     /// Matches the letter `'H'`, without case-sensitivity.
     /// 
@@ -1181,32 +1156,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x68`]() (`'h'`).
     /// 
     /// To match `'H'` or `'h'` exactly, use the 
-    /// ``UnicodeEncoding//H/Uppercase`` or 
-    /// ``UnicodeEncoding//H/Lowercase`` rules.
+    /// ``UnicodeEncoding H.Uppercase`` or 
+    /// ``UnicodeEncoding H.Lowercase`` rules.
     public 
     enum H:TerminalRule
     {
-        /// Matches the lowercase letter `'h'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'h'` 
-        /// ([`0x68`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x68)) }
-        }
-        /// Matches the uppercase letter `'H'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'H'` 
-        /// ([`0x48`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x48)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1222,6 +1176,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'h'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'h'` 
+    /// ([`0x68`]()).
+    public
+    enum LowercaseH:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x68) }
+    }
+    /// Matches the uppercase letter `'H'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'H'` 
+    /// ([`0x48`]()).
+    public
+    enum UppercaseH:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x48) }
+    }
 
     /// Matches the letter `'I'`, without case-sensitivity.
     /// 
@@ -1230,32 +1204,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x69`]() (`'i'`).
     /// 
     /// To match `'I'` or `'i'` exactly, use the 
-    /// ``UnicodeEncoding//I/Uppercase`` or 
-    /// ``UnicodeEncoding//I/Lowercase`` rules.
+    /// ``UnicodeEncoding I.Uppercase`` or 
+    /// ``UnicodeEncoding I.Lowercase`` rules.
     public 
     enum I:TerminalRule
     {
-        /// Matches the lowercase letter `'i'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'i'` 
-        /// ([`0x69`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x69)) }
-        }
-        /// Matches the uppercase letter `'I'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'I'` 
-        /// ([`0x49`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x49)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1271,6 +1224,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'i'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'i'` 
+    /// ([`0x69`]()).
+    public
+    enum LowercaseI:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x69) }
+    }
+    /// Matches the uppercase letter `'I'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'I'` 
+    /// ([`0x49`]()).
+    public
+    enum UppercaseI:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x49) }
+    }
 
     /// Matches the letter `'J'`, without case-sensitivity.
     /// 
@@ -1279,32 +1252,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x6a`]() (`'j'`).
     /// 
     /// To match `'J'` or `'j'` exactly, use the 
-    /// ``UnicodeEncoding//J/Uppercase`` or 
-    /// ``UnicodeEncoding//J/Lowercase`` rules.
+    /// ``UnicodeEncoding J.Uppercase`` or 
+    /// ``UnicodeEncoding J.Lowercase`` rules.
     public 
     enum J:TerminalRule
     {
-        /// Matches the lowercase letter `'j'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'j'` 
-        /// ([`0x6a`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x6a)) }
-        }
-        /// Matches the uppercase letter `'J'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'J'` 
-        /// ([`0x4a`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x4a)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1320,6 +1272,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'j'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'j'` 
+    /// ([`0x6a`]()).
+    public
+    enum LowercaseJ:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x6a) }
+    }
+    /// Matches the uppercase letter `'J'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'J'` 
+    /// ([`0x4a`]()).
+    public
+    enum UppercaseJ:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x4a) }
+    }
 
     /// Matches the letter `'K'`, without case-sensitivity.
     /// 
@@ -1328,32 +1300,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x6b`]() (`'k'`).
     /// 
     /// To match `'K'` or `'k'` exactly, use the 
-    /// ``UnicodeEncoding//K/Uppercase`` or 
-    /// ``UnicodeEncoding//K/Lowercase`` rules.
+    /// ``UnicodeEncoding K.Uppercase`` or 
+    /// ``UnicodeEncoding K.Lowercase`` rules.
     public 
     enum K:TerminalRule
     {
-        /// Matches the lowercase letter `'k'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'k'` 
-        /// ([`0x6b`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x6b)) }
-        }
-        /// Matches the uppercase letter `'K'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'K'` 
-        /// ([`0x4b`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x4b)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1369,6 +1320,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'k'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'k'` 
+    /// ([`0x6b`]()).
+    public
+    enum LowercaseK:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x6b) }
+    }
+    /// Matches the uppercase letter `'K'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'K'` 
+    /// ([`0x4b`]()).
+    public
+    enum UppercaseK:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x4b) }
+    }
 
     /// Matches the letter `'L'`, without case-sensitivity.
     /// 
@@ -1377,32 +1348,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x6c`]() (`'l'`).
     /// 
     /// To match `'L'` or `'l'` exactly, use the 
-    /// ``UnicodeEncoding//L/Uppercase`` or 
-    /// ``UnicodeEncoding//L/Lowercase`` rules.
+    /// ``UnicodeEncoding L.Uppercase`` or 
+    /// ``UnicodeEncoding L.Lowercase`` rules.
     public 
     enum L:TerminalRule
     {
-        /// Matches the lowercase letter `'l'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'l'` 
-        /// ([`0x6c`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x6c)) }
-        }
-        /// Matches the uppercase letter `'L'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'L'` 
-        /// ([`0x4c`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x4c)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1418,6 +1368,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'l'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'l'` 
+    /// ([`0x6c`]()).
+    public
+    enum LowercaseL:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x6c) }
+    }
+    /// Matches the uppercase letter `'L'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'L'` 
+    /// ([`0x4c`]()).
+    public
+    enum UppercaseL:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x4c) }
+    }
 
     /// Matches the letter `'M'`, without case-sensitivity.
     /// 
@@ -1426,32 +1396,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x6d`]() (`'m'`).
     /// 
     /// To match `'M'` or `'m'` exactly, use the 
-    /// ``UnicodeEncoding//M/Uppercase`` or 
-    /// ``UnicodeEncoding//M/Lowercase`` rules.
+    /// ``UnicodeEncoding M.Uppercase`` or 
+    /// ``UnicodeEncoding M.Lowercase`` rules.
     public 
     enum M:TerminalRule
     {
-        /// Matches the lowercase letter `'m'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'m'` 
-        /// ([`0x6d`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x6d)) }
-        }
-        /// Matches the uppercase letter `'M'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'M'` 
-        /// ([`0x4d`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x4d)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1467,6 +1416,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'m'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'m'` 
+    /// ([`0x6d`]()).
+    public
+    enum LowercaseM:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x6d) }
+    }
+    /// Matches the uppercase letter `'M'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'M'` 
+    /// ([`0x4d`]()).
+    public
+    enum UppercaseM:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x4d) }
+    }
 
     /// Matches the letter `'N'`, without case-sensitivity.
     /// 
@@ -1475,32 +1444,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x6e`]() (`'n'`).
     /// 
     /// To match `'N'` or `'n'` exactly, use the 
-    /// ``UnicodeEncoding//N/Uppercase`` or 
-    /// ``UnicodeEncoding//N/Lowercase`` rules.
+    /// ``UnicodeEncoding N.Uppercase`` or 
+    /// ``UnicodeEncoding N.Lowercase`` rules.
     public 
     enum N:TerminalRule
     {
-        /// Matches the lowercase letter `'n'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'n'` 
-        /// ([`0x6e`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x6e)) }
-        }
-        /// Matches the uppercase letter `'N'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'N'` 
-        /// ([`0x4e`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x4e)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1516,6 +1464,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'n'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'n'` 
+    /// ([`0x6e`]()).
+    public
+    enum LowercaseN:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x6e) }
+    }
+    /// Matches the uppercase letter `'N'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'N'` 
+    /// ([`0x4e`]()).
+    public
+    enum UppercaseN:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x4e) }
+    }
 
     /// Matches the letter `'O'`, without case-sensitivity.
     /// 
@@ -1524,32 +1492,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x6f`]() (`'o'`).
     /// 
     /// To match `'O'` or `'o'` exactly, use the 
-    /// ``UnicodeEncoding//O/Uppercase`` or 
-    /// ``UnicodeEncoding//O/Lowercase`` rules.
+    /// ``UnicodeEncoding O.Uppercase`` or 
+    /// ``UnicodeEncoding O.Lowercase`` rules.
     public 
     enum O:TerminalRule
     {
-        /// Matches the lowercase letter `'o'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'o'` 
-        /// ([`0x6f`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x6f)) }
-        }
-        /// Matches the uppercase letter `'O'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'O'` 
-        /// ([`0x4f`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x4f)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1565,6 +1512,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'o'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'o'` 
+    /// ([`0x6f`]()).
+    public
+    enum LowercaseO:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x6f) }
+    }
+    /// Matches the uppercase letter `'O'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'O'` 
+    /// ([`0x4f`]()).
+    public
+    enum UppercaseO:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x4f) }
+    }
 
     /// Matches the letter `'P'`, without case-sensitivity.
     /// 
@@ -1573,32 +1540,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x70`]() (`'p'`).
     /// 
     /// To match `'P'` or `'p'` exactly, use the 
-    /// ``UnicodeEncoding//P/Uppercase`` or 
-    /// ``UnicodeEncoding//P/Lowercase`` rules.
+    /// ``UnicodeEncoding P.Uppercase`` or 
+    /// ``UnicodeEncoding P.Lowercase`` rules.
     public 
     enum P:TerminalRule
     {
-        /// Matches the lowercase letter `'p'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'p'` 
-        /// ([`0x70`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x70)) }
-        }
-        /// Matches the uppercase letter `'P'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'P'` 
-        /// ([`0x50`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x50)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1614,6 +1560,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'p'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'p'` 
+    /// ([`0x70`]()).
+    public
+    enum LowercaseP:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x70) }
+    }
+    /// Matches the uppercase letter `'P'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'P'` 
+    /// ([`0x50`]()).
+    public
+    enum UppercaseP:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x50) }
+    }
 
     /// Matches the letter `'Q'`, without case-sensitivity.
     /// 
@@ -1622,32 +1588,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x71`]() (`'q'`).
     /// 
     /// To match `'Q'` or `'q'` exactly, use the 
-    /// ``UnicodeEncoding//Q/Uppercase`` or 
-    /// ``UnicodeEncoding//Q/Lowercase`` rules.
+    /// ``UnicodeEncoding Q.Uppercase`` or 
+    /// ``UnicodeEncoding Q.Lowercase`` rules.
     public 
     enum Q:TerminalRule
     {
-        /// Matches the lowercase letter `'q'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'q'` 
-        /// ([`0x71`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x71)) }
-        }
-        /// Matches the uppercase letter `'Q'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'Q'` 
-        /// ([`0x51`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x51)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1663,6 +1608,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'q'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'q'` 
+    /// ([`0x71`]()).
+    public
+    enum LowercaseQ:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x71) }
+    }
+    /// Matches the uppercase letter `'Q'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'Q'` 
+    /// ([`0x51`]()).
+    public
+    enum UppercaseQ:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x51) }
+    }
 
     /// Matches the letter `'R'`, without case-sensitivity.
     /// 
@@ -1671,32 +1636,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x72`]() (`'r'`).
     /// 
     /// To match `'R'` or `'r'` exactly, use the 
-    /// ``UnicodeEncoding//R/Uppercase`` or 
-    /// ``UnicodeEncoding//R/Lowercase`` rules.
+    /// ``UnicodeEncoding R.Uppercase`` or 
+    /// ``UnicodeEncoding R.Lowercase`` rules.
     public 
     enum R:TerminalRule
     {
-        /// Matches the lowercase letter `'r'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'r'` 
-        /// ([`0x72`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x72)) }
-        }
-        /// Matches the uppercase letter `'R'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'R'` 
-        /// ([`0x52`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x52)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1712,6 +1656,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'r'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'r'` 
+    /// ([`0x72`]()).
+    public
+    enum LowercaseR:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x72) }
+    }
+    /// Matches the uppercase letter `'R'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'R'` 
+    /// ([`0x52`]()).
+    public
+    enum UppercaseR:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x52) }
+    }
 
     /// Matches the letter `'S'`, without case-sensitivity.
     /// 
@@ -1720,32 +1684,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x73`]() (`'s'`).
     /// 
     /// To match `'S'` or `'s'` exactly, use the 
-    /// ``UnicodeEncoding//S/Uppercase`` or 
-    /// ``UnicodeEncoding//S/Lowercase`` rules.
+    /// ``UnicodeEncoding S.Uppercase`` or 
+    /// ``UnicodeEncoding S.Lowercase`` rules.
     public 
     enum S:TerminalRule
     {
-        /// Matches the lowercase letter `'s'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'s'` 
-        /// ([`0x73`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x73)) }
-        }
-        /// Matches the uppercase letter `'S'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'S'` 
-        /// ([`0x53`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x53)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1761,6 +1704,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'s'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'s'` 
+    /// ([`0x73`]()).
+    public
+    enum LowercaseS:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x73) }
+    }
+    /// Matches the uppercase letter `'S'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'S'` 
+    /// ([`0x53`]()).
+    public
+    enum UppercaseS:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x53) }
+    }
 
     /// Matches the letter `'T'`, without case-sensitivity.
     /// 
@@ -1769,32 +1732,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x74`]() (`'t'`).
     /// 
     /// To match `'T'` or `'t'` exactly, use the 
-    /// ``UnicodeEncoding//T/Uppercase`` or 
-    /// ``UnicodeEncoding//T/Lowercase`` rules.
+    /// ``UnicodeEncoding T.Uppercase`` or 
+    /// ``UnicodeEncoding T.Lowercase`` rules.
     public 
     enum T:TerminalRule
     {
-        /// Matches the lowercase letter `'t'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'t'` 
-        /// ([`0x74`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x74)) }
-        }
-        /// Matches the uppercase letter `'T'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'T'` 
-        /// ([`0x54`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x54)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1810,6 +1752,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'t'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'t'` 
+    /// ([`0x74`]()).
+    public
+    enum LowercaseT:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x74) }
+    }
+    /// Matches the uppercase letter `'T'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'T'` 
+    /// ([`0x54`]()).
+    public
+    enum UppercaseT:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x54) }
+    }
 
     /// Matches the letter `'U'`, without case-sensitivity.
     /// 
@@ -1818,32 +1780,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x75`]() (`'u'`).
     /// 
     /// To match `'U'` or `'u'` exactly, use the 
-    /// ``UnicodeEncoding//U/Uppercase`` or 
-    /// ``UnicodeEncoding//U/Lowercase`` rules.
+    /// ``UnicodeEncoding U.Uppercase`` or 
+    /// ``UnicodeEncoding U.Lowercase`` rules.
     public 
     enum U:TerminalRule
     {
-        /// Matches the lowercase letter `'u'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'u'` 
-        /// ([`0x75`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x75)) }
-        }
-        /// Matches the uppercase letter `'U'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'U'` 
-        /// ([`0x55`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x55)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1859,6 +1800,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'u'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'u'` 
+    /// ([`0x75`]()).
+    public
+    enum LowercaseU:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x75) }
+    }
+    /// Matches the uppercase letter `'U'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'U'` 
+    /// ([`0x55`]()).
+    public
+    enum UppercaseU:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x55) }
+    }
 
     /// Matches the letter `'V'`, without case-sensitivity.
     /// 
@@ -1867,32 +1828,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x76`]() (`'v'`).
     /// 
     /// To match `'V'` or `'v'` exactly, use the 
-    /// ``UnicodeEncoding//V/Uppercase`` or 
-    /// ``UnicodeEncoding//V/Lowercase`` rules.
+    /// ``UnicodeEncoding V.Uppercase`` or 
+    /// ``UnicodeEncoding V.Lowercase`` rules.
     public 
     enum V:TerminalRule
     {
-        /// Matches the lowercase letter `'v'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'v'` 
-        /// ([`0x76`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x76)) }
-        }
-        /// Matches the uppercase letter `'V'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'V'` 
-        /// ([`0x56`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x56)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1908,6 +1848,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'v'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'v'` 
+    /// ([`0x76`]()).
+    public
+    enum LowercaseV:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x76) }
+    }
+    /// Matches the uppercase letter `'V'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'V'` 
+    /// ([`0x56`]()).
+    public
+    enum UppercaseV:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x56) }
+    }
 
     /// Matches the letter `'W'`, without case-sensitivity.
     /// 
@@ -1916,32 +1876,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x77`]() (`'w'`).
     /// 
     /// To match `'W'` or `'w'` exactly, use the 
-    /// ``UnicodeEncoding//W/Uppercase`` or 
-    /// ``UnicodeEncoding//W/Lowercase`` rules.
+    /// ``UnicodeEncoding W.Uppercase`` or 
+    /// ``UnicodeEncoding W.Lowercase`` rules.
     public 
     enum W:TerminalRule
     {
-        /// Matches the lowercase letter `'w'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'w'` 
-        /// ([`0x77`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x77)) }
-        }
-        /// Matches the uppercase letter `'W'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'W'` 
-        /// ([`0x57`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x57)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -1957,6 +1896,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'w'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'w'` 
+    /// ([`0x77`]()).
+    public
+    enum LowercaseW:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x77) }
+    }
+    /// Matches the uppercase letter `'W'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'W'` 
+    /// ([`0x57`]()).
+    public
+    enum UppercaseW:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x57) }
+    }
 
     /// Matches the letter `'X'`, without case-sensitivity.
     /// 
@@ -1965,32 +1924,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x78`]() (`'x'`).
     /// 
     /// To match `'X'` or `'x'` exactly, use the 
-    /// ``UnicodeEncoding//X/Uppercase`` or 
-    /// ``UnicodeEncoding//X/Lowercase`` rules.
+    /// ``UnicodeEncoding X.Uppercase`` or 
+    /// ``UnicodeEncoding X.Lowercase`` rules.
     public 
     enum X:TerminalRule
     {
-        /// Matches the lowercase letter `'x'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'x'` 
-        /// ([`0x78`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x78)) }
-        }
-        /// Matches the uppercase letter `'X'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'X'` 
-        /// ([`0x58`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x58)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -2006,6 +1944,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'x'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'x'` 
+    /// ([`0x78`]()).
+    public
+    enum LowercaseX:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x78) }
+    }
+    /// Matches the uppercase letter `'X'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'X'` 
+    /// ([`0x58`]()).
+    public
+    enum UppercaseX:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x58) }
+    }
 
     /// Matches the letter `'Y'`, without case-sensitivity.
     /// 
@@ -2014,32 +1972,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x79`]() (`'y'`).
     /// 
     /// To match `'Y'` or `'y'` exactly, use the 
-    /// ``UnicodeEncoding//Y/Uppercase`` or 
-    /// ``UnicodeEncoding//Y/Lowercase`` rules.
+    /// ``UnicodeEncoding Y.Uppercase`` or 
+    /// ``UnicodeEncoding Y.Lowercase`` rules.
     public 
     enum Y:TerminalRule
     {
-        /// Matches the lowercase letter `'y'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'y'` 
-        /// ([`0x79`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x79)) }
-        }
-        /// Matches the uppercase letter `'Y'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'Y'` 
-        /// ([`0x59`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x59)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -2055,6 +1992,26 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
             }
         }
     }
+    /// Matches the lowercase letter `'y'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'y'` 
+    /// ([`0x79`]()).
+    public
+    enum LowercaseY:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x79) }
+    }
+    /// Matches the uppercase letter `'Y'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'Y'` 
+    /// ([`0x59`]()).
+    public
+    enum UppercaseY:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x59) }
+    }
 
     /// Matches the letter `'Z'`, without case-sensitivity.
     /// 
@@ -2063,32 +2020,11 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and [`0x7a`]() (`'z'`).
     /// 
     /// To match `'Z'` or `'z'` exactly, use the 
-    /// ``UnicodeEncoding//Z/Uppercase`` or 
-    /// ``UnicodeEncoding//Z/Lowercase`` rules.
+    /// ``UnicodeEncoding Z.Uppercase`` or 
+    /// ``UnicodeEncoding Z.Lowercase`` rules.
     public 
     enum Z:TerminalRule
     {
-        /// Matches the lowercase letter `'z'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'z'` 
-        /// ([`0x7a`]()).
-        public
-        enum Lowercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x7a)) }
-        }
-        /// Matches the uppercase letter `'Z'`.
-        /// 
-        /// All ``ASCIITerminal`` types can match the letter `'Z'` 
-        /// ([`0x5a`]()).
-        public
-        enum Uppercase:LiteralRule 
-        {
-            @inlinable public static 
-            var literal:CollectionOfOne<Terminal> { .init(.init(0x5a)) }
-        }
-        
         public 
         typealias Construction  = Void
 
@@ -2103,5 +2039,25 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
                 return nil
             }
         }
+    }
+    /// Matches the lowercase letter `'z'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'z'` 
+    /// ([`0x7a`]()).
+    public
+    enum LowercaseZ:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x7a) }
+    }
+    /// Matches the uppercase letter `'Z'`.
+    /// 
+    /// All ``ASCIITerminal`` types can match the letter `'Z'` 
+    /// ([`0x5a`]()).
+    public
+    enum UppercaseZ:AtomicRule 
+    {
+        @inlinable public static 
+        var terminal:Terminal { .init(0x5a) }
     }
 }

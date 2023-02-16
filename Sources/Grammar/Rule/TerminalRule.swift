@@ -1,5 +1,4 @@
 
-#if swift(>=5.7)
 /// A parsing rule that is applied to a single terminal at a time.
 public
 protocol TerminalRule<Terminal, Construction>:ParsingRule
@@ -7,15 +6,7 @@ protocol TerminalRule<Terminal, Construction>:ParsingRule
     static 
     func parse(terminal:Terminal) -> Construction?
 }
-#else 
-/// A parsing rule that is applied to a single terminal at a time.
-public
-protocol TerminalRule:ParsingRule
-{
-    static 
-    func parse(terminal:Terminal) -> Construction?
-}
-#endif 
+
 extension TerminalRule
 {
     @inlinable public static 
@@ -24,14 +15,17 @@ extension TerminalRule
             Diagnostics.Source.Index == Location, 
             Diagnostics.Source.Element == Terminal
     {
-        if  let terminal:Terminal = input.next(),
-            let value:Construction = Self.parse(terminal: terminal)
+        guard let terminal:Terminal = input.next()
+        else
         {
-            return value 
+            throw Pattern.UnexpectedEndOfInputError.init()
         }
+        guard let value:Construction = Self.parse(terminal: terminal)
         else 
         {
-            throw Pattern.ApplicationError<Self>.init()
+            throw Pattern.UnexpectedValueError.init()
         }
+
+        return value 
     }
 }

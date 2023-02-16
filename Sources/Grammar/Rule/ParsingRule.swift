@@ -1,5 +1,5 @@
 /// A structured parsing rule.
-@retro public 
+public 
 protocol ParsingRule<Terminal> 
 {
     /// The index type of the ``ParsingInput.source`` this rule expects.
@@ -41,10 +41,9 @@ protocol ParsingRule<Terminal>
     ///     store an ``ParsingInput/.index`` and dereference it later, as long 
     ///     as you do not overwrite the [`inout`]() binding elsewhere.
     static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws -> Construction
-    where   Diagnostics:ParsingDiagnostics, 
-            Diagnostics.Source.Index == Location, 
-            Diagnostics.Source.Element == Terminal
+    func parse<Source>(
+        _ input:inout ParsingInput<some ParsingDiagnostics<Source>>) throws -> Construction
+        where Source:Collection<Terminal>, Source.Index == Location
 }
 
 extension ParsingRule 
@@ -54,11 +53,11 @@ extension ParsingRule
     ///
     /// 
     /// >   Throws: 
-    ///     A ``Pattern/ExpectedEndOfInputError`` if there remained any 
+    ///     A ``Pattern.UnexpectedValueError`` if there remained any 
     ///     unparsed input after applying this rule to its furthest extent.
     @inlinable public static 
     func parse<Source>(diagnosing source:Source) throws -> Construction
-        where   Source:Collection, Source.Index == Location, Source.Element == Terminal
+        where Source:Collection<Terminal>, Source.Index == Location
     {
         var input:ParsingInput<DefaultDiagnostics<Source>> = .init(source)
         let construction:Construction = try input.parse(as: Self.self)
@@ -73,11 +72,11 @@ extension ParsingRule
     /// 
     /// To parse with diagnostics, use ``parse(diagnosing:)``.
     /// >   Throws: 
-    ///     A ``Pattern/ExpectedEndOfInputError`` if there remained any 
+    ///     A ``Pattern.UnexpectedValueError`` if there remained any 
     ///     unparsed input after applying this rule to its furthest extent.
     @inlinable public static 
     func parse<Source>(_ source:Source) throws -> Construction
-        where   Source:Collection, Source.Index == Location, Source.Element == Terminal
+        where Source:Collection<Terminal>, Source.Index == Location
     {
         var input:ParsingInput<NoDiagnostics<Source>> = .init(source)
         let construction:Construction = try input.parse(as: Self.self)
@@ -88,13 +87,13 @@ extension ParsingRule
     /// 
     /// This function does not parse with diagnostics.
     /// >   Throws: 
-    ///     A ``Pattern/ExpectedEndOfInputError`` if there remained any 
+    ///     A ``Pattern.UnexpectedValueError`` if there remained any 
     ///     unparsed input after applying this rule to its furthest extent.
     @inlinable public static 
     func parse<Source, Vector>(_ source:Source, into _:Vector.Type = Vector.self) 
         throws -> Vector
-        where   Source:Collection, Source.Index == Location, Source.Element == Terminal, 
-                Vector:RangeReplaceableCollection, Vector.Element == Construction
+        where   Source:Collection<Terminal>, Source.Index == Location,
+                Vector:RangeReplaceableCollection<Construction>
     {
         var input:ParsingInput<NoDiagnostics<Source>> = .init(source)
         let construction:Vector = input.parse(as: Self.self, in: Vector.self)
@@ -113,10 +112,9 @@ extension Optional:ParsingRule where Wrapped:ParsingRule
     typealias Terminal  = Wrapped.Terminal 
     
     @inlinable public static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> Wrapped.Construction?
-    where   Diagnostics:ParsingDiagnostics,
-            Diagnostics.Source.Index == Location,
-            Diagnostics.Source.Element == Terminal
+    func parse<Source>(
+        _ input:inout ParsingInput<some ParsingDiagnostics<Source>>) -> Wrapped.Construction?
+        where Source:Collection<Terminal>, Source.Index == Location
     {
         // will choose non-throwing overload, so no infinite recursion will occur
         input.parse(as: Wrapped?.self)
@@ -130,10 +128,9 @@ extension Array:ParsingRule where Element:ParsingRule
     typealias Terminal = Element.Terminal 
     
     @inlinable public static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) -> [Element.Construction]
-    where   Diagnostics:ParsingDiagnostics,
-            Diagnostics.Source.Index == Location,
-            Diagnostics.Source.Element == Terminal
+    func parse<Source>(
+        _ input:inout ParsingInput<some ParsingDiagnostics<Source>>) -> [Element.Construction]
+        where Source:Collection<Terminal>, Source.Index == Location
     {
         input.parse(as: Element.self, in: [Element.Construction].self)
     }
