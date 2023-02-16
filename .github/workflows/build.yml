@@ -48,10 +48,6 @@ jobs:
                 run: |
                     sudo installer -pkg swift-${{ matrix.swift.toolchain }}.pkg -target /
             
-            -   name: set up swift
-                run: |
-                    sudo installer -pkg swift-${{ matrix.swift }}.pkg -target /
-            
             -   name: build 
                 run: |
                     $SWIFT_TOOLCHAIN_DIRECTORY/usr/bin/swift --version
