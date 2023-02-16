@@ -1,5 +1,6 @@
+#if swift(>=5.7)
 /// A parsing rule that matches terminals against a constant ``Sequence``.
-@retro public
+public
 protocol LiteralRule<Terminal>:ParsingRule
     where Terminal:Equatable, Construction == Void 
 {
@@ -10,6 +11,20 @@ protocol LiteralRule<Terminal>:ParsingRule
         get 
     }
 }
+#else 
+/// A parsing rule that matches terminals against a constant ``Sequence``.
+public
+protocol LiteralRule:ParsingRule
+    where Terminal:Equatable, Construction == Void 
+{
+    associatedtype Literal where Literal:Sequence, Literal.Element == Terminal 
+    static 
+    var literal:Literal
+    {
+        get 
+    }
+}
+#endif 
 extension LiteralRule
 {
     @inlinable public static 
@@ -20,15 +35,16 @@ extension LiteralRule
     {
         for expected:Terminal in Self.literal
         {
-            guard let element:Terminal = input.next()
-            else 
+            switch input.next()
             {
-                throw Pattern.ApplicationError<Self>.init()
-            }
-            guard element == expected 
-            else 
-            {
-                throw Pattern.ApplicationError<Self>.init()
+            case expected?:
+                continue
+            
+            case _?:
+                throw Pattern.UnexpectedValueError.init()
+            
+            case nil:
+                throw Pattern.UnexpectedEndOfInputError.init()
             }
         }
     }

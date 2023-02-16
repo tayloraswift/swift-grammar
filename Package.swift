@@ -18,20 +18,22 @@ var plugins:[Package.Dependency] = []
         from: "0.4.0"))
 #endif
 
-#if swift(>=5.8) && (os(Linux) || os(macOS))
-    plugins.append(.package(url: "https://github.com/kelvin13/swift-package-factory", 
-        branch: "swift-DEVELOPMENT-SNAPSHOT-2022-08-18-a"))
-#endif 
-
 let package:Package = .init(
     name: "swift-grammar",
     products: 
     [
         .library(name: "Grammar", targets: ["Grammar"]),
+        .library(name: "TraceableErrors", targets: ["TraceableErrors"]),
     ],
     dependencies: plugins,
     targets: 
     [
-        .target(name: "Grammar"),
+        .target(name: "Grammar",
+            dependencies:
+            [
+                .target(name: "TraceableErrors"),
+            ]),
+        
+        .target(name: "TraceableErrors"),
     ]
 )

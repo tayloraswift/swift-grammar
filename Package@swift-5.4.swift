@@ -7,10 +7,17 @@ let package:Package = .init(
     products: 
     [
         .library(name: "Grammar", targets: ["Grammar"]),
+        .library(name: "TraceableErrors", targets: ["TraceableErrors"]),
     ],
     dependencies: plugins,
     targets: 
     [
-        .target(name: "Grammar"),
+        .target(name: "Grammar",
+            dependencies:
+            [
+                .target(name: "TraceableErrors"),
+            ]),
+        
+        .target(name: "TraceableErrors"),
     ]
 )

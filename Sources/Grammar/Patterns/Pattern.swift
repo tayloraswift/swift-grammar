@@ -2,59 +2,9 @@
 public 
 enum Pattern 
 {
-    @frozen public
-    struct ExpectedEndOfInputError:Error 
-    {
-        @inlinable public 
-        init() 
-        {
-        }
-    }
-    @frozen public
-    struct UnexpectedEndOfInputError:Error 
-    {
-        @inlinable public 
-        init() 
-        {
-        }
-    }
-    /// An integer overflow error occurred while applying one of the 
-    /// built-in integer parsing rules.
-    @frozen public
-    struct IntegerOverflowError<Integer>:Error, CustomStringConvertible 
-        where Integer:FixedWidthInteger
-    {
-        // don’t mark this @inlinable, since we generally don’t expect to 
-        // recover from this
-        public 
-        init()
-        {
-        }
-        public
-        var description:String 
-        {
-            "parsed value overflows integer type '\(Integer.self)'"
-        }
-    }
-    /// An error occured while applying a parsing rule.
-    @frozen public
-    struct ApplicationError<Rule>:Error, CustomStringConvertible 
-        where Rule:ParsingRule 
-    {
-        @inlinable public
-        init()
-        {
-        }
-        public
-        var description:String 
-        {
-            "expected construction by rule '\(Rule.self)'"
-        }
-    }
-
     /// A rule that expects the end of the input. 
     /// 
-    /// >   Throws: ``ExpectedEndOfInputError`` if there is any 
+    /// >   Throws: ``UnexpectedValueError`` if there is any 
     ///     input remaining.
     public
     enum End<Location, Terminal>:ParsingRule 
@@ -67,7 +17,7 @@ enum Pattern
         {
             if let _:Terminal = input.next() 
             {
-                throw ExpectedEndOfInputError.init()
+                throw UnexpectedValueError.init()
             }
         }
     }

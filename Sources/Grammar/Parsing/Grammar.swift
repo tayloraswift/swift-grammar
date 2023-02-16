@@ -52,15 +52,6 @@ enum Grammar
     @available(*, deprecated, renamed: "UnicodeEncoding")
     public 
     typealias Encoding = UnicodeEncoding
-    
-    @available(*, deprecated, renamed: "Pattern.ApplicationError")
-    public
-    typealias Expected<T> = Pattern.ApplicationError<T> 
-        where T:ParsingRule
-    @available(*, deprecated, renamed: "Pattern.ApplicationError")
-    public
-    typealias ExpectedRegion<Base, Exclusion> = Pattern.ApplicationError<Base> 
-        where Base:ParsingRule
 
     @available(*, deprecated, renamed: "ParsingRule.parse(diagnosing:)")
     @inlinable public static 

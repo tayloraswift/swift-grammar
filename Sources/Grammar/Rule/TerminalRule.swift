@@ -24,14 +24,17 @@ extension TerminalRule
             Diagnostics.Source.Index == Location, 
             Diagnostics.Source.Element == Terminal
     {
-        if  let terminal:Terminal = input.next(),
-            let value:Construction = Self.parse(terminal: terminal)
+        guard let terminal:Terminal = input.next()
+        else
         {
-            return value 
+            throw Pattern.UnexpectedEndOfInputError.init()
         }
+        guard let value:Construction = Self.parse(terminal: terminal)
         else 
         {
-            throw Pattern.ApplicationError<Self>.init()
+            throw Pattern.UnexpectedValueError.init()
         }
+
+        return value 
     }
 }

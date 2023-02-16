@@ -1,4 +1,3 @@
-
 #if swift(>=5.7)
 /// A parsing rule that is applied to a single terminal at a time, and produces 
 /// some ``BinaryInteger`` as its output.
