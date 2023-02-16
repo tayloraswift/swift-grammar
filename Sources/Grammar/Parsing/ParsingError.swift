@@ -32,7 +32,7 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
         self.index      = index 
         self.trace      = trace
     }
-    
+
     public 
     var notes:[String] 
     {
@@ -97,11 +97,12 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
     {
         var annotation:String = self.underlying.headline()
 
+        annotation.append("\n")
         annotation += Self.annotate(background.index(before: self.index) ..< self.index,
             background: background,
             renderer: renderer,
             newline: newline)
-        for frame:Frame in self.trace
+        for frame:Frame in self.trace.reversed()
         {
             annotation +=
             """
