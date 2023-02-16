@@ -1,4 +1,3 @@
-#if swift(>=5.7)
 extension Error where Self:Equatable
 {
     private
@@ -99,4 +98,3 @@ extension TraceableError
         }
     }
 }
-#endif

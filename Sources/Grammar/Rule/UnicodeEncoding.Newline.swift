@@ -6,10 +6,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     enum Newline:ParsingRule 
     {
         @inlinable public static 
-        func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws 
-            where   Diagnostics:ParsingDiagnostics,
-                    Diagnostics.Source.Index == Location,
-                    Diagnostics.Source.Element == Terminal
+        func parse<Source>(_ input:inout ParsingInput<some ParsingDiagnostics<Source>>) throws
+            where Source:Collection<Terminal>, Source.Index == Location
         {
             if case nil = input.parse(as: Linefeed?.self) 
             {

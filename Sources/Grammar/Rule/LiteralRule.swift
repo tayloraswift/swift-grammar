@@ -1,37 +1,22 @@
-#if swift(>=5.7)
 /// A parsing rule that matches terminals against a constant ``Sequence``.
 public
 protocol LiteralRule<Terminal>:ParsingRule
     where Terminal:Equatable, Construction == Void 
 {
-    associatedtype Literal where Literal:Sequence, Literal.Element == Terminal 
+    associatedtype Literal:Sequence<Terminal>
+    
     static 
     var literal:Literal
     {
         get 
     }
 }
-#else 
-/// A parsing rule that matches terminals against a constant ``Sequence``.
-public
-protocol LiteralRule:ParsingRule
-    where Terminal:Equatable, Construction == Void 
-{
-    associatedtype Literal where Literal:Sequence, Literal.Element == Terminal 
-    static 
-    var literal:Literal
-    {
-        get 
-    }
-}
-#endif 
+
 extension LiteralRule
 {
     @inlinable public static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws
-        where   Diagnostics:ParsingDiagnostics, 
-                Diagnostics.Source.Index == Location,
-                Diagnostics.Source.Element == Terminal
+    func parse<Source>(_ input:inout ParsingInput<some ParsingDiagnostics<Source>>) throws
+        where Source:Collection<Terminal>, Source.Index == Location
     {
         for expected:Terminal in Self.literal
         {

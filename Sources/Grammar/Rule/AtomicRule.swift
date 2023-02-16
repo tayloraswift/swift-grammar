@@ -1,4 +1,3 @@
-#if swift(>=5.7)
 /// A parsing rule that matches terminals against a constant value.
 public
 protocol AtomicRule<Terminal>:TerminalRule
@@ -7,16 +6,7 @@ protocol AtomicRule<Terminal>:TerminalRule
     static 
     var terminal:Terminal { get }
 }
-#else 
-/// A parsing rule that matches terminals against a constant value.
-public
-protocol AtomicRule:TerminalRule
-    where Terminal:Equatable, Construction == Void 
-{
-    static 
-    var terminal:Terminal { get }
-}
-#endif 
+
 extension AtomicRule
 {
     @inlinable public static 
@@ -28,10 +18,8 @@ extension AtomicRule
 extension AtomicRule
 {
     @inlinable public static 
-    func parse<Diagnostics>(_ input:inout ParsingInput<Diagnostics>) throws
-        where   Diagnostics:ParsingDiagnostics, 
-                Diagnostics.Source.Index == Location,
-                Diagnostics.Source.Element == Terminal
+    func parse<Source>(_ input:inout ParsingInput<some ParsingDiagnostics<Source>>) throws
+        where Source:Collection<Terminal>, Source.Index == Location
     {
         switch input.next()
         {

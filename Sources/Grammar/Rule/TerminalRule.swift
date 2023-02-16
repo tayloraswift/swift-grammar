@@ -1,5 +1,4 @@
 
-#if swift(>=5.7)
 /// A parsing rule that is applied to a single terminal at a time.
 public
 protocol TerminalRule<Terminal, Construction>:ParsingRule
@@ -7,15 +6,7 @@ protocol TerminalRule<Terminal, Construction>:ParsingRule
     static 
     func parse(terminal:Terminal) -> Construction?
 }
-#else 
-/// A parsing rule that is applied to a single terminal at a time.
-public
-protocol TerminalRule:ParsingRule
-{
-    static 
-    func parse(terminal:Terminal) -> Construction?
-}
-#endif 
+
 extension TerminalRule
 {
     @inlinable public static 

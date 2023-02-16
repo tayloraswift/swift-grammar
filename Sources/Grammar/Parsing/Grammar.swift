@@ -56,8 +56,8 @@ enum Grammar
     @available(*, deprecated, renamed: "ParsingRule.parse(diagnosing:)")
     @inlinable public static 
     func parse<Source, Root>(diagnosing source:Source, as _:Root.Type) throws -> Root.Construction
-        where   Source:Collection, Root:ParsingRule, 
-                Root.Location == Source.Index, Root.Terminal == Source.Element
+        where   Source:Collection, Root:ParsingRule<Source.Element>, 
+                Root.Location == Source.Index
     {
         try Root.parse(diagnosing: source)
     }
@@ -65,17 +65,17 @@ enum Grammar
     @available(*, deprecated, renamed: "ParsingRule.parse(_:)")
     @inlinable public static 
     func parse<Source, Root>(_ source:Source, as _:Root.Type) throws -> Root.Construction
-        where   Source:Collection, Root:ParsingRule, 
-                Root.Location == Source.Index, Root.Terminal == Source.Element
+        where   Source:Collection, Root:ParsingRule<Source.Element>, 
+                Root.Location == Source.Index
     {
         try Root.parse(source)
     }
     @available(*, deprecated, renamed: "ParsingRule.parse(_:into:)")
     @inlinable public static 
     func parse<Source, Rule, Vector>(_ source:Source, as _:Rule.Type, in _:Vector.Type) throws -> Vector
-        where   Source:Collection, Rule:ParsingRule, 
-                Rule.Location == Source.Index, Rule.Terminal == Source.Element, 
-                Vector:RangeReplaceableCollection, Vector.Element == Rule.Construction
+        where   Source:Collection,
+                Rule:ParsingRule<Source.Element>, Rule.Location == Source.Index, 
+                Vector:RangeReplaceableCollection<Rule.Construction>
     {
         try Rule.parse(source, into: Vector.self)
     }
