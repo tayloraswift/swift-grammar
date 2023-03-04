@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "swift-package-catalog",
-        "repositoryURL": "https://github.com/kelvin13/swift-package-catalog",
-        "state": {
-          "branch": null,
-          "revision": "6e71dba093cf72a8a697309401ef5be52d42ddf3",
-          "version": "0.4.0"
-        }
+  "pins" : [
+    {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "revision" : "ff3d2212b6b093db7f177d0855adbc4ef9c5f036",
+        "version" : "1.0.3"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }
