@@ -1,8 +1,12 @@
 public
 enum TestFilter
 {
-    @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
+    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+    case regex(Any)
+    #else
     case regex([Regex<Substring>])
+    #endif
+
     case path([String])
 }
 extension TestFilter
@@ -11,7 +15,11 @@ extension TestFilter
     {
         if #available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
         {
-            self = .regex(try arguments.map { try .init($0, as: Substring.self) })
+            let regex:[Regex<Substring>] = try arguments.map
+            {
+                try .init($0, as: Substring.self)
+            }
+            self = .regex(regex)
         }
         else
         {
@@ -34,11 +42,17 @@ extension TestFilter
             }
         
         case .regex(let filter):
-            for (filter, component):(Regex<Substring>, String) in zip(filter, path)
+            if #available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
             {
-                if  case nil = try? filter.wholeMatch(in: component)
+                #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+                let filter:[Regex<Substring>] = filter as! [Regex<Substring>]
+                #endif
+                for (filter, component):(Regex<Substring>, String) in zip(filter, path)
                 {
-                    return false
+                    if  case nil = try? filter.wholeMatch(in: component)
+                    {
+                        return false
+                    }
                 }
             }
         }
