@@ -16,6 +16,8 @@ class Tests:@unchecked Sendable
 
     public
     let usesTerminalColors:Bool
+
+    @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
     public
     let filter:[Regex<Substring>]
 
@@ -28,9 +30,17 @@ class Tests:@unchecked Sendable
         self.failedAssertions = .create(0)
 
         self.usesTerminalColors = useTerminalColors
-        self.filter = try CommandLine.arguments.dropFirst().map
+
+        if #available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
         {
-            try .init($0, as: Substring.self)
+            self.filter = try CommandLine.arguments.dropFirst().map
+            {
+                try .init($0, as: Substring.self)
+            }
+        }
+        else
+        {
+            self.filter = []
         }
     }
 
@@ -48,12 +58,15 @@ extension Tests
     public
     func context(_ path:[String]) -> TestContext?
     {
-        for (filter, component):(Regex<Substring>, String) in zip(self.filter, path)
+        if #available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
         {
-            guard case _? = try? filter.wholeMatch(in: component)
-            else
+            for (filter, component):(Regex<Substring>, String) in zip(self.filter, path)
             {
-                return nil
+                guard case _? = try? filter.wholeMatch(in: component)
+                else
+                {
+                    return nil
+                }
             }
         }
         return .init(tests: self, path: path)
