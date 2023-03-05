@@ -1,6 +1,6 @@
 <div align="center">
 
-<strong><em><code>grammar</code></em></strong><br><small><code>0.3.0</code></small>
+<strong><em><code>grammar</code></em></strong><br><small><code>0.3.1</code></small>
 
 [![ci build status](https://github.com/kelvin13/swift-grammar/actions/workflows/build.yml/badge.svg)](https://github.com/kelvin13/swift-grammar/actions/workflows/build.yml)
 [![ci devices build status](https://github.com/kelvin13/swift-grammar/actions/workflows/build-devices.yml/badge.svg)](https://github.com/kelvin13/swift-grammar/actions/workflows/build-devices.yml)
@@ -48,7 +48,7 @@ let package = Package(
     dependencies: 
     [
         // other dependencies
-        .package(url: "https://github.com/kelvin13/swift-grammar", from: "0.3.0"),
+        .package(url: "https://github.com/kelvin13/swift-grammar", from: "0.3.1"),
     ],
     targets: 
     [
