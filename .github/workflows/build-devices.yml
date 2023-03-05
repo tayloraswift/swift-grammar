@@ -19,4 +19,5 @@ jobs:
                 run: |
                     swift --version
                     xcrun xcodebuild build -scheme "Grammar" -destination "generic/platform=${{ matrix.device }}"
+                    xcrun xcodebuild build -scheme "Testing" -destination "generic/platform=${{ matrix.device }}"
                     xcrun xcodebuild build -scheme "TraceableErrors" -destination "generic/platform=${{ matrix.device }}"

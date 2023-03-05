@@ -25,4 +25,5 @@ jobs:
             -   name: build 
                 run: | 
                     swift --version
-                    swift build
+                    swift build --target Grammar
+                    swift build --target TraceableErrors
