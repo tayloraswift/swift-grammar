@@ -307,15 +307,17 @@ extension TestGroup
 
 extension TestGroup
 {
+    @discardableResult
     public 
     func expect(true bool:Bool,
         function:String = #function,
         file:String = #fileID,
-        line:Int = #line)  
+        line:Int = #line) -> Bool
     {
         if  bool
         {
             self.passed += 1
+            return true
         }
         else
         {
@@ -325,13 +327,15 @@ extension TestGroup
                     path: self.context.path,
                     file: file,
                     line: line)))
+            return false
         }
     }
+    @discardableResult
     public 
     func expect(false bool:Bool,
         function:String = #function,
         file:String = #fileID,
-        line:Int = #line)  
+        line:Int = #line) -> Bool
     {
         if  bool
         {
@@ -341,18 +345,21 @@ extension TestGroup
                     path: self.context.path,
                     file: file,
                     line: line)))
+            return false
         }
         else
         {
             self.passed += 1
+            return true
         }
     }
 
+    @discardableResult
     public 
     func expect<Expectation>(_ failure:Expectation?,
         function:String = #function, 
         file:String = #fileID, 
-        line:Int = #line) 
+        line:Int = #line) -> Bool
         where Expectation:AssertionFailure
     {
         if let failure:Expectation = failure
@@ -363,10 +370,12 @@ extension TestGroup
                     path: self.context.path,
                     file: file,
                     line: line)))
+            return false
         }
         else 
         {
             self.passed += 1
+            return true
         }
     }
     @discardableResult
@@ -392,11 +401,12 @@ extension TestGroup
             return nil
         }
     }
+    @discardableResult
     public
     func expect<Wrapped>(nil optional:Wrapped?,
         function:String = #function, 
         file:String = #fileID, 
-        line:Int = #line)
+        line:Int = #line) -> Bool
     {
         if  let value:Wrapped = optional
         {
@@ -407,10 +417,12 @@ extension TestGroup
                     path: self.context.path,
                     file: file,
                     line: line)))
+            return false
         }
         else 
         {
             self.passed += 1
+            return true
         }
     }
 }
