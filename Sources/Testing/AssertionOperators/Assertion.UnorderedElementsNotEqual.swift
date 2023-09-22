@@ -1,7 +1,7 @@
 infix operator !*? :ComparisonPrecedence
 
-/// Compares the elements of two sequences, enforcing ordering.
-/// Perfer this operator over ``==?(_:_:)`` for improved diagnostics.
+/// Compares the elements of two sequences, without regards to element order.
+/// Perfer this operator over ``!=?(_:_:)`` for improved diagnostics.
 @inlinable public
 func !*? <T>(
     lhs:some Sequence<T>,
@@ -12,9 +12,9 @@ func !*? <T>(
     let rhs:[T] = .init(rhs)
     if  Set<T>.init(lhs) != Set<T>.init(rhs)
     {
-        return nil 
+        return nil
     }
-    else 
+    else
     {
         return .init(lhs, rhs)
     }
