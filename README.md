@@ -1,6 +1,6 @@
 <div align="center">
 
-<strong><em><code>grammar</code></em></strong><br><small><code>0.3.1</code></small>
+<strong><em><code>grammar</code></em></strong><br><small><code>0.3.3</code></small>
 
 [![ci build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build.yml)
 [![ci devices build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-devices.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-devices.yml)
