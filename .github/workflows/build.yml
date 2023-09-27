@@ -15,7 +15,7 @@ jobs:
         strategy:
             matrix:
                 os:
-                    -   runner: macos-12
+                    -   runner: macos-13
                         prefix: xcode
                 swift:
                     -   toolchain:  5.10-DEVELOPMENT-SNAPSHOT-2023-09-09-a
