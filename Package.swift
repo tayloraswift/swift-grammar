@@ -2,8 +2,8 @@
 import PackageDescription
 
 let package:Package = .init(
-    name: "swift-grammar",
-    products: 
+    name: "Swift Grammar",
+    products:
     [
         .library(name: "Grammar", targets: ["Grammar"]),
         .library(name: "Testing", targets: ["Testing"]),
@@ -14,18 +14,18 @@ let package:Package = .init(
         //  This dependency only used for the Testing module’s concurrency support.
         .package(url: "https://github.com/apple/swift-atomics.git", from: "1.0.3"),
     ],
-    targets: 
+    targets:
     [
         .target(name: "Grammar", dependencies:
             [
                 .target(name: "TraceableErrors"),
             ]),
-        
+
         .target(name: "Testing", dependencies:
             [
                 .product(name: "Atomics", package: "swift-atomics"),
             ]),
-        
+
         .target(name: "TraceableErrors"),
     ]
 )
