@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.8
 import PackageDescription
 
 let package:Package = .init(
@@ -12,7 +12,7 @@ let package:Package = .init(
     dependencies:
     [
         //  This dependency only used for the Testing module’s concurrency support.
-        .package(url: "https://github.com/apple/swift-atomics.git", from: "1.0.3"),
+        .package(url: "https://github.com/apple/swift-atomics.git", from: "1.2.0"),
     ],
     targets:
     [
