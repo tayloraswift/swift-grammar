@@ -11,6 +11,11 @@ protocol TestMain
     static
     var all:[TestBattery.Type] { get }
 }
+extension TestMain where Self:TestBattery
+{
+    public static
+    var all:[TestBattery.Type] { [Self.self] }
+}
 extension TestMain
 {
     public static
