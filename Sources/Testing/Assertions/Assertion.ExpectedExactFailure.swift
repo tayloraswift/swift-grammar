@@ -6,20 +6,6 @@ extension Assertion
         public
         let expected:Failure
 
-        #if swift(<5.7)
-
-        public
-        let caught:Error?
-
-        public
-        init(caught:Error?, expected:Failure)
-        {
-            self.caught = caught
-            self.expected = expected
-        }
-
-        #else
-
         public
         let caught:(any Error)?
 
@@ -29,65 +15,32 @@ extension Assertion
             self.caught = caught
             self.expected = expected
         }
-
-        #endif
     }
 }
 extension Assertion.ExpectedExactFailure:AssertionFailure
 {
-    #if swift(<5.7)
     public
     var description:String
     {
-        if let caught:Error = self.caught
+        if  let caught:any Error = self.caught
         {
-            return 
-                """
-                Expected error with exact value:
-                ---------------------
-                \(self.expected)
-                ---------------------
-                But caught:
-                ---------------------
-                \(caught)
-                """
+            return """
+            Expected error with exact value:
+            ---------------------
+            \(self.expected)
+            ---------------------
+            But caught:
+            ---------------------
+            \(caught)
+            """
         }
         else
         {
-            return
-                """
-                Expected error with exact value:
-                ---------------------
-                \(self.expected)
-                """
+            return """
+            Expected error with exact value:
+            ---------------------
+            \(self.expected)
+            """
         }
     }
-    #else
-    public
-    var description:String
-    {
-        if let caught:any Error = self.caught
-        {
-            return 
-                """
-                Expected error with exact value:
-                ---------------------
-                \(self.expected)
-                ---------------------
-                But caught:
-                ---------------------
-                \(caught)
-                """
-        }
-        else
-        {
-            return
-                """
-                Expected error with exact value:
-                ---------------------
-                \(self.expected)
-                """
-        }
-    }
-    #endif
 }

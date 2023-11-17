@@ -31,11 +31,11 @@ class TestGroup
             ordering: .relaxed)
         self.context.tests.failedAssertions.wrappingIncrement(by: self.failed.count,
             ordering: .relaxed)
-        
+
         self.failed.isEmpty ?
             self.context.tests.passed.wrappingIncrement(ordering: .relaxed) :
             self.context.tests.failed.wrappingIncrement(ordering: .relaxed)
-        
+
         print(self.description)
     }
 }
@@ -124,7 +124,7 @@ extension TestGroup:CustomStringConvertible
 extension TestGroup
 {
     @discardableResult
-    public 
+    public
     func `do`<Success>(
         function:String = #function,
         file:String = #fileID,
@@ -148,7 +148,7 @@ extension TestGroup
             return nil
         }
     }
-    public 
+    public
     func `do`<Failure>(catching expected:Failure.Type,
         function:String = #function,
         file:String = #fileID,
@@ -179,7 +179,7 @@ extension TestGroup
                 file: file,
                 line: line)))
     }
-    public 
+    public
     func `do`<Failure>(catching exact:Failure,
         function:String = #function,
         file:String = #fileID,
@@ -211,12 +211,11 @@ extension TestGroup
                 line: line)))
     }
 }
-#if swift(>=5.5)
-@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+
 extension TestGroup
 {
     @discardableResult
-    public 
+    public
     func `do`<Success>(
         function:String = #function,
         file:String = #fileID,
@@ -240,7 +239,7 @@ extension TestGroup
             return nil
         }
     }
-    public 
+    public
     func `do`<Failure>(catching expected:Failure.Type,
         function:String = #function,
         file:String = #fileID,
@@ -271,7 +270,7 @@ extension TestGroup
                 file: file,
                 line: line)))
     }
-    public 
+    public
     func `do`<Failure>(catching exact:Failure,
         function:String = #function,
         file:String = #fileID,
@@ -303,12 +302,11 @@ extension TestGroup
                 line: line)))
     }
 }
-#endif
 
 extension TestGroup
 {
     @discardableResult
-    public 
+    public
     func expect(true bool:Bool,
         function:String = #function,
         file:String = #fileID,
@@ -331,7 +329,7 @@ extension TestGroup
         }
     }
     @discardableResult
-    public 
+    public
     func expect(false bool:Bool,
         function:String = #function,
         file:String = #fileID,
@@ -355,10 +353,10 @@ extension TestGroup
     }
 
     @discardableResult
-    public 
+    public
     func expect<Expectation>(_ failure:Expectation?,
-        function:String = #function, 
-        file:String = #fileID, 
+        function:String = #function,
+        file:String = #fileID,
         line:Int = #line) -> Bool
         where Expectation:AssertionFailure
     {
@@ -372,7 +370,7 @@ extension TestGroup
                     line: line)))
             return false
         }
-        else 
+        else
         {
             self.passed += 1
             return true
@@ -381,16 +379,16 @@ extension TestGroup
     @discardableResult
     public
     func expect<Wrapped>(value optional:Wrapped?,
-        function:String = #function, 
-        file:String = #fileID, 
+        function:String = #function,
+        file:String = #fileID,
         line:Int = #line) -> Wrapped?
     {
         if  let value:Wrapped = optional
         {
             self.passed += 1
-            return value 
+            return value
         }
-        else 
+        else
         {
             self.failed.append(.init(Assertion.ExpectedValue<Wrapped>.init(),
                 location: .init(
@@ -404,8 +402,8 @@ extension TestGroup
     @discardableResult
     public
     func expect<Wrapped>(nil optional:Wrapped?,
-        function:String = #function, 
-        file:String = #fileID, 
+        function:String = #function,
+        file:String = #fileID,
         line:Int = #line) -> Bool
     {
         if  let value:Wrapped = optional
@@ -419,7 +417,7 @@ extension TestGroup
                     line: line)))
             return false
         }
-        else 
+        else
         {
             self.passed += 1
             return true

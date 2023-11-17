@@ -1,6 +1,6 @@
 <div align="center">
 
-<strong><em><code>grammar</code></em></strong><br><small><code>0.3.3</code></small>
+<strong><em><code>grammar</code></em></strong><br><small><code>0.3</code></small>
 
 [![ci build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build.yml)
 [![ci devices build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-devices.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-devices.yml)
@@ -48,7 +48,7 @@ let package = Package(
     dependencies:
     [
         // other dependencies
-        .package(url: "https://github.com/tayloraswift/swift-grammar", from: "0.3.1"),
+        .package(url: "https://github.com/tayloraswift/swift-grammar", from: "0.3.3"),
     ],
     targets:
     [
@@ -65,4 +65,4 @@ let package = Package(
 
 ## toolchain requirement
 
-`swift-grammar` requires Swift 5.7 or newer.
+`swift-grammar` requires Swift 5.8 or newer.
