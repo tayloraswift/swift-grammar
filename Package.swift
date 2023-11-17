@@ -3,6 +3,7 @@ import PackageDescription
 
 let package:Package = .init(
     name: "Swift Grammar",
+    platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
     products:
     [
         .library(name: "Grammar", targets: ["Grammar"]),

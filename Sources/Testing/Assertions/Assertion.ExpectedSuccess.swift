@@ -3,19 +3,6 @@ extension Assertion
     public
     struct ExpectedSuccess
     {
-        #if swift(<5.7)
-
-        public
-        let caught:Error
-
-        public
-        init(caught:Error)
-        {
-            self.caught = caught
-        }
-
-        #else
-
         public
         let caught:any Error
 
@@ -24,8 +11,6 @@ extension Assertion
         {
             self.caught = caught
         }
-
-        #endif
     }
 }
 extension Assertion.ExpectedSuccess:AssertionFailure
