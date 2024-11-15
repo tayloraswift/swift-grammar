@@ -11,10 +11,10 @@ public
 enum Grammar
 {
     // note: this only works on swift >= 5.7
-    /// A shortcut for expressing the type constraints on ``ParsingRule.parse(_:)``.
+    /// A shortcut for expressing the type constraints on ``ParsingRule.parse(_:) [21WW6]``.
     ///
     /// To use this compile-time abstraction, fill in its generic parameters and
-    /// declare that it must conform to ``Any``.
+    /// declare that it must conform to `Any`.
     ///
     /// For example, the following:
     /**
@@ -88,13 +88,13 @@ enum Grammar
     public
     typealias TerminalClass     = TerminalRule
 
-    /// ``Grammar//NoDiagnostics`` was moved to the top-level
+    /// ``Grammar/NoDiagnostics`` was moved to the top-level
     /// namespace of this module.
     @available(*, deprecated, renamed: "NoDiagnostics")
     public
     typealias NoDiagnostics = _NoDiagnostics
 
-    /// ``Grammar//DefaultDiagnostics`` was moved to the top-level
+    /// ``Grammar/DefaultDiagnostics`` was moved to the top-level
     /// namespace of this module.
     @available(*, deprecated, renamed: "DefaultDiagnostics")
     public
