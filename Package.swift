@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package:Package = .init(
-    name: "Swift Grammar",
+    name: "swift-grammar",
     platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
     products: [
         .library(name: "Grammar", targets: ["Grammar"]),

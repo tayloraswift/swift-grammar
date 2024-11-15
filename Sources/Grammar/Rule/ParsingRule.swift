@@ -7,7 +7,7 @@ protocol ParsingRule<Terminal>
     /// Parsing rules must be associated with a source location type because
     /// some applications may wish to store these indices in the returned
     /// ``Construction``s. If the source location type were not fixed, then
-    /// different calls to ``parse(_:)`` could potentially return constructions
+    /// different calls to ``parse(_:) [21WW6]`` could potentially return constructions
     /// of varying types, which would require additional abstraction, which would
     /// be inefficient.
     ///
@@ -33,12 +33,12 @@ protocol ParsingRule<Terminal>
     ///
     /// Implementations *should* interact with the given ``ParsingInput`` by
     /// calling its methods and subscripts. Don’t overwrite the inout binding or its
-    /// mutable stored properties (``ParsingInput index`` and ``ParsingInput diagnostics``)
+    /// mutable stored properties (``ParsingInput/index`` and ``ParsingInput/diagnostics``)
     /// unless you really know what you’re doing.
     ///
     /// >   Tip:
     ///     Mutating `input` does *not* invalidate its indices. You can always
-    ///     store an ``ParsingInput index`` and dereference it later, as long
+    ///     store an ``ParsingInput/index`` and dereference it later, as long
     ///     as you do not overwrite the inout binding elsewhere.
     static
     func parse<Source>(

@@ -60,7 +60,7 @@ extension Tests
         .init(.init(tests: self, path: [name]))
     }
     @_disfavoredOverload
-    @available(*, deprecated, renamed: "!")
+    @available(*, deprecated)
     public static
     func / (self:Tests, name:String) -> TestGroup
     {
@@ -77,7 +77,7 @@ extension Tests
     {
         self.usesTerminalColors ? "\u{1B}[1m\(string)\u{1B}[0m" : string
     }
-    func color(_ string:String, _ color:TerminalColor) -> String 
+    func color(_ string:String, _ color:TerminalColor) -> String
     {
         self.usesTerminalColors ? "\u{1B}[38;2;\(color.rawValue)m\(string)\u{1B}[39m" : string
     }

@@ -1,2 +1,0 @@
-swift --version &&
-swift build -c release

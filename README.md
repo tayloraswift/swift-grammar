@@ -1,15 +1,12 @@
 <div align="center">
 
-<strong><em><code>grammar</code></em></strong><br><small><code>0.3</code></small>
+***`grammar`***
 
-[![ci build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build.yml)
-[![ci devices build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-devices.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-devices.yml)
-[![ci windows build status](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-windows.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/build-windows.yml)
-
-[![swift package index versions](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ftayloraswift%2Fswift-grammar%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/tayloraswift/swift-grammar)
-[![swift package index platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ftayloraswift%2Fswift-grammar%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/tayloraswift/swift-grammar)
+[![Tests](https://github.com/tayloraswift/swift-grammar/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/Tests.yml)
+[![Documentation](https://github.com/tayloraswift/swift-grammar/actions/workflows/Documentation.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/Documentation.yml)
 
 </div>
+
 
 High-performance constructive parsing, in pure Swift. This module powers the [`swift-json`](https://github.com/tayloraswift/swift-json) library!
 
@@ -45,16 +42,13 @@ To use `swift-grammar` in a project, add the following to your `Package.swift` f
 ```swift
 let package = Package(
     ...
-    dependencies:
-    [
+    dependencies: [
         // other dependencies
-        .package(url: "https://github.com/tayloraswift/swift-grammar", from: "0.3.3"),
+        .package(url: "https://github.com/tayloraswift/swift-grammar", from: "0.4.0"),
     ],
-    targets:
-    [
+    targets: [
         .target(name: "example",
-            dependencies:
-            [
+            dependencies: [
                 .product(name: "Grammar", package: "swift-grammar"),
                 // other dependencies
             ]),
@@ -63,6 +57,16 @@ let package = Package(
 )
 ```
 
-## toolchain requirement
 
-`swift-grammar` requires Swift 5.8 or newer.
+## Requirements
+
+The swift-grammar library requires Swift 5.8 or later.
+
+| Platform | Status |
+| -------- | ------ |
+| 🐧 Linux | [![Tests](https://github.com/tayloraswift/swift-grammar/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/Tests.yml) |
+| 🍏 Darwin | [![Tests](https://github.com/tayloraswift/swift-grammar/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/Tests.yml) |
+| 🍏 Darwin (iOS) | [![iOS](https://github.com/tayloraswift/swift-grammar/actions/workflows/iOS.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/iOS.yml) |
+| 🍏 Darwin (tvOS) | [![tvOS](https://github.com/tayloraswift/swift-grammar/actions/workflows/tvOS.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/tvOS.yml) |
+| 🍏 Darwin (visionOS) | [![visionOS](https://github.com/tayloraswift/swift-grammar/actions/workflows/visionOS.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/visionOS.yml) |
+| 🍏 Darwin (watchOS) | [![watchOS](https://github.com/tayloraswift/swift-grammar/actions/workflows/watchOS.yml/badge.svg)](https://github.com/tayloraswift/swift-grammar/actions/workflows/watchOS.yml) |

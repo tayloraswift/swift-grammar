@@ -72,7 +72,7 @@ extension TestGroup
         self.context ! name
     }
     @_disfavoredOverload
-    @available(*, deprecated, renamed: "!")
+    @available(*, deprecated)
     public static
     func / (self:TestGroup, name:String) -> TestGroup
     {
