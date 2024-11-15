@@ -27,7 +27,7 @@ extension TestContext
     {
         .init(.init(tests: self.tests, path: self.path + [name]))
     }
-    @available(*, deprecated, renamed: "!")
+    @available(*, deprecated)
     public static
     func / (self:Self, name:String) -> TestGroup
     {

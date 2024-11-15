@@ -15,7 +15,7 @@ struct ParsingError<Index>:TraceableError, CustomStringConvertible
     /// The underlying parsing error.
     public
     let underlying:Error
-    /// The index of the first invalid terminal in the input, or the ``Collection endIndex``
+    /// The index of the first invalid terminal in the input, or the ``Collection/endIndex``
     /// of the input.
     ///
     /// If the parser attempted to apply multiple rules via backtracking, this
