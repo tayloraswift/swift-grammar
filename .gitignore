@@ -1,9 +1,5 @@
 .build/
+.build.ssgc/
 .vscode/
 .devcontainer/
-.swift-version
-
-/swift-biome/
-/*.ss
-
-Package.catalog 
+.ssgc/
