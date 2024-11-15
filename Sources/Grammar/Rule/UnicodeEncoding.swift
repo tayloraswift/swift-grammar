@@ -820,8 +820,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x61` (`'a'`).
     ///
     /// To match `'A'` or `'a'` exactly, use the
-    /// ``UnicodeEncoding/A.Uppercase`` or
-    /// ``UnicodeEncoding/A.Lowercase`` rules.
+    /// ``UppercaseA`` or
+    /// ``LowercaseA`` rules.
     public
     enum A:TerminalRule
     {
@@ -868,8 +868,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x62` (`'b'`).
     ///
     /// To match `'B'` or `'b'` exactly, use the
-    /// ``UnicodeEncoding/B.Uppercase`` or
-    /// ``UnicodeEncoding/B.Lowercase`` rules.
+    /// ``UppercaseB`` or
+    /// ``LowercaseB`` rules.
     public
     enum B:TerminalRule
     {
@@ -916,8 +916,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x63` (`'c'`).
     ///
     /// To match `'C'` or `'c'` exactly, use the
-    /// ``UnicodeEncoding/C.Uppercase`` or
-    /// ``UnicodeEncoding/C.Lowercase`` rules.
+    /// ``UppercaseC`` or
+    /// ``LowercaseC`` rules.
     public
     enum C:TerminalRule
     {
@@ -964,8 +964,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x64` (`'d'`).
     ///
     /// To match `'D'` or `'d'` exactly, use the
-    /// ``UnicodeEncoding/D.Uppercase`` or
-    /// ``UnicodeEncoding/D.Lowercase`` rules.
+    /// ``UppercaseD`` or
+    /// ``LowercaseD`` rules.
     public
     enum D:TerminalRule
     {
@@ -1012,8 +1012,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x65` (`'e'`).
     ///
     /// To match `'E'` or `'e'` exactly, use the
-    /// ``UnicodeEncoding/E.Uppercase`` or
-    /// ``UnicodeEncoding/E.Lowercase`` rules.
+    /// ``UppercaseE`` or
+    /// ``LowercaseE`` rules.
     public
     enum E:TerminalRule
     {
@@ -1060,8 +1060,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x66` (`'f'`).
     ///
     /// To match `'F'` or `'f'` exactly, use the
-    /// ``UnicodeEncoding/F.Uppercase`` or
-    /// ``UnicodeEncoding/F.Lowercase`` rules.
+    /// ``UppercaseF`` or
+    /// ``LowercaseF`` rules.
     public
     enum F:TerminalRule
     {
@@ -1108,8 +1108,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x67` (`'g'`).
     ///
     /// To match `'G'` or `'g'` exactly, use the
-    /// ``UnicodeEncoding/G.Uppercase`` or
-    /// ``UnicodeEncoding/G.Lowercase`` rules.
+    /// ``UppercaseG`` or
+    /// ``LowercaseG`` rules.
     public
     enum G:TerminalRule
     {
@@ -1156,8 +1156,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x68` (`'h'`).
     ///
     /// To match `'H'` or `'h'` exactly, use the
-    /// ``UnicodeEncoding/H.Uppercase`` or
-    /// ``UnicodeEncoding/H.Lowercase`` rules.
+    /// ``UppercaseH`` or
+    /// ``LowercaseH`` rules.
     public
     enum H:TerminalRule
     {
@@ -1204,8 +1204,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x69` (`'i'`).
     ///
     /// To match `'I'` or `'i'` exactly, use the
-    /// ``UnicodeEncoding/I.Uppercase`` or
-    /// ``UnicodeEncoding/I.Lowercase`` rules.
+    /// ``UppercaseI`` or
+    /// ``LowercaseI`` rules.
     public
     enum I:TerminalRule
     {
@@ -1252,8 +1252,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x6a` (`'j'`).
     ///
     /// To match `'J'` or `'j'` exactly, use the
-    /// ``UnicodeEncoding/J.Uppercase`` or
-    /// ``UnicodeEncoding/J.Lowercase`` rules.
+    /// ``UppercaseJ`` or
+    /// ``LowercaseJ`` rules.
     public
     enum J:TerminalRule
     {
@@ -1300,8 +1300,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x6b` (`'k'`).
     ///
     /// To match `'K'` or `'k'` exactly, use the
-    /// ``UnicodeEncoding/K.Uppercase`` or
-    /// ``UnicodeEncoding/K.Lowercase`` rules.
+    /// ``UppercaseK`` or
+    /// ``LowercaseK`` rules.
     public
     enum K:TerminalRule
     {
@@ -1348,8 +1348,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x6c` (`'l'`).
     ///
     /// To match `'L'` or `'l'` exactly, use the
-    /// ``UnicodeEncoding/L.Uppercase`` or
-    /// ``UnicodeEncoding/L.Lowercase`` rules.
+    /// ``UppercaseL`` or
+    /// ``LowercaseL`` rules.
     public
     enum L:TerminalRule
     {
@@ -1396,8 +1396,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x6d` (`'m'`).
     ///
     /// To match `'M'` or `'m'` exactly, use the
-    /// ``UnicodeEncoding/M.Uppercase`` or
-    /// ``UnicodeEncoding/M.Lowercase`` rules.
+    /// ``UppercaseM`` or
+    /// ``LowercaseM`` rules.
     public
     enum M:TerminalRule
     {
@@ -1444,8 +1444,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x6e` (`'n'`).
     ///
     /// To match `'N'` or `'n'` exactly, use the
-    /// ``UnicodeEncoding/N.Uppercase`` or
-    /// ``UnicodeEncoding/N.Lowercase`` rules.
+    /// ``UppercaseN`` or
+    /// ``LowercaseN`` rules.
     public
     enum N:TerminalRule
     {
@@ -1492,8 +1492,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x6f` (`'o'`).
     ///
     /// To match `'O'` or `'o'` exactly, use the
-    /// ``UnicodeEncoding/O.Uppercase`` or
-    /// ``UnicodeEncoding/O.Lowercase`` rules.
+    /// ``UppercaseO`` or
+    /// ``LowercaseO`` rules.
     public
     enum O:TerminalRule
     {
@@ -1540,8 +1540,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x70` (`'p'`).
     ///
     /// To match `'P'` or `'p'` exactly, use the
-    /// ``UnicodeEncoding/P.Uppercase`` or
-    /// ``UnicodeEncoding/P.Lowercase`` rules.
+    /// ``UppercaseP`` or
+    /// ``LowercaseP`` rules.
     public
     enum P:TerminalRule
     {
@@ -1588,8 +1588,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x71` (`'q'`).
     ///
     /// To match `'Q'` or `'q'` exactly, use the
-    /// ``UnicodeEncoding/Q.Uppercase`` or
-    /// ``UnicodeEncoding/Q.Lowercase`` rules.
+    /// ``UppercaseQ`` or
+    /// ``LowercaseQ`` rules.
     public
     enum Q:TerminalRule
     {
@@ -1636,8 +1636,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x72` (`'r'`).
     ///
     /// To match `'R'` or `'r'` exactly, use the
-    /// ``UnicodeEncoding/R.Uppercase`` or
-    /// ``UnicodeEncoding/R.Lowercase`` rules.
+    /// ``UppercaseR`` or
+    /// ``LowercaseR`` rules.
     public
     enum R:TerminalRule
     {
@@ -1684,8 +1684,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x73` (`'s'`).
     ///
     /// To match `'S'` or `'s'` exactly, use the
-    /// ``UnicodeEncoding/S.Uppercase`` or
-    /// ``UnicodeEncoding/S.Lowercase`` rules.
+    /// ``UppercaseS`` or
+    /// ``LowercaseS`` rules.
     public
     enum S:TerminalRule
     {
@@ -1732,8 +1732,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x74` (`'t'`).
     ///
     /// To match `'T'` or `'t'` exactly, use the
-    /// ``UnicodeEncoding/T.Uppercase`` or
-    /// ``UnicodeEncoding/T.Lowercase`` rules.
+    /// ``UppercaseT`` or
+    /// ``LowercaseT`` rules.
     public
     enum T:TerminalRule
     {
@@ -1780,8 +1780,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x75` (`'u'`).
     ///
     /// To match `'U'` or `'u'` exactly, use the
-    /// ``UnicodeEncoding/U.Uppercase`` or
-    /// ``UnicodeEncoding/U.Lowercase`` rules.
+    /// ``UppercaseU`` or
+    /// ``LowercaseU`` rules.
     public
     enum U:TerminalRule
     {
@@ -1828,8 +1828,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x76` (`'v'`).
     ///
     /// To match `'V'` or `'v'` exactly, use the
-    /// ``UnicodeEncoding/V.Uppercase`` or
-    /// ``UnicodeEncoding/V.Lowercase`` rules.
+    /// ``UppercaseV`` or
+    /// ``LowercaseV`` rules.
     public
     enum V:TerminalRule
     {
@@ -1876,8 +1876,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x77` (`'w'`).
     ///
     /// To match `'W'` or `'w'` exactly, use the
-    /// ``UnicodeEncoding/W.Uppercase`` or
-    /// ``UnicodeEncoding/W.Lowercase`` rules.
+    /// ``UppercaseW`` or
+    /// ``LowercaseW`` rules.
     public
     enum W:TerminalRule
     {
@@ -1924,8 +1924,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x78` (`'x'`).
     ///
     /// To match `'X'` or `'x'` exactly, use the
-    /// ``UnicodeEncoding/X.Uppercase`` or
-    /// ``UnicodeEncoding/X.Lowercase`` rules.
+    /// ``UppercaseX`` or
+    /// ``LowercaseX`` rules.
     public
     enum X:TerminalRule
     {
@@ -1972,8 +1972,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x79` (`'y'`).
     ///
     /// To match `'Y'` or `'y'` exactly, use the
-    /// ``UnicodeEncoding/Y.Uppercase`` or
-    /// ``UnicodeEncoding/Y.Lowercase`` rules.
+    /// ``UppercaseY`` or
+    /// ``LowercaseY`` rules.
     public
     enum Y:TerminalRule
     {
@@ -2020,8 +2020,8 @@ extension UnicodeEncoding where Terminal:ASCIITerminal
     /// and `0x7a` (`'z'`).
     ///
     /// To match `'Z'` or `'z'` exactly, use the
-    /// ``UnicodeEncoding/Z.Uppercase`` or
-    /// ``UnicodeEncoding/Z.Lowercase`` rules.
+    /// ``UppercaseZ`` or
+    /// ``LowercaseZ`` rules.
     public
     enum Z:TerminalRule
     {
