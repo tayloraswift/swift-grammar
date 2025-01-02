@@ -7,9 +7,9 @@ protocol ParsingRule<Terminal>
     /// Parsing rules must be associated with a source location type because
     /// some applications may wish to store these indices in the returned
     /// ``Construction``s. If the source location type were not fixed, then
-    /// different calls to ``parse(_:) [21WW6]`` could potentially return constructions
-    /// of varying types, which would require additional abstraction, which would
-    /// be inefficient.
+    /// different calls to ``parse(_:) (ParsingInput<ParsingDiagnostics<Source>>)`` could
+    /// potentially return constructions of varying types, which would require additional
+    /// abstraction, which would be inefficient.
     ///
     /// >   Tip:
     ///     Implementations can satisfy this requirement with generics, allowing
